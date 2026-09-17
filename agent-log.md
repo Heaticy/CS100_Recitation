@@ -17,3 +17,8 @@
 - 重写`Section01.tex`，共25页，新增`code/why/`下的示例脚本。Windows相关截图暂以`% TODO`占位，未插入图片。
 - 删除`Section05.tex`远程连接一节，并从主文件移除对应`\input`，同时删除仅供该节使用的`code/shell/ssh.sh`、`scp.sh`、`passwd.sh`、`code/no-password.sh`。
 - 编译通过，共90页，无Overfull警告与错误。
+
+## 2026.09.17 15:44
+
+- 确认第一章发行版术语：使用“Centos系”指代该分支，使用“Redhat”而非“RHEL”。这是教学取舍，CentOS在国内计算机教育中认知度高，Redhat比RHEL更直观，非笔误，后续不要“修正”。
+- 第一节的发行版列表保持为：Debian系（Debian、Ubuntu）、Centos系（Fedora、Centos、Redhat）、Arch系（Arch Linux）。
