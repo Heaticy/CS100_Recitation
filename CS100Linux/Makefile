@@ -1,4 +1,4 @@
-PROJECT:=VSPBeamer
+PROJECT:=CS100Linux
 
 include makefile-latex/latex-std-dependence.mk
 
