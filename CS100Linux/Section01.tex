@@ -11,18 +11,18 @@
 
 \begin{frame}
     \frametitle{Linux是内核，GNU是用户空间}
-    Linux本身只是一个\textbf{操作系统内核}，它负责管理硬件、进程、内存与文件系统。但一个完整的操作系统还需要shell、编译器、常用工具等用户空间程序，而这些由GNU计划提供（\code{bash}、\code{gcc}、\code{coreutils}……）。
+    Linux本身只是一个\textbf{操作系统内核}，它负责管理硬件、进程、内存与文件系统。但一个完整的操作系统，还需要一些常用的\textbf{用户空间程序}（例如\code{bash}和\code{gcc}），而这些由GNU计划提供。
 
-    内核与用户空间工具合并，才构成一个完整的操作系统。因此，严谨地说，我们平时所说的Linux系统，其实是\textbf{GNU/Linux}系统。
+    因此，严谨地说，我们平时所说的Linux系统，其实是\textbf{GNU/Linux}系统。
 \end{frame}
 
 \begin{frame}
-    \frametitle{发行版}
-    把内核、用户空间工具、软件包管理器、桌面环境等打包在一起，就得到了一个\textbf{发行版}（Distribution）。常见的发行版有
+    \frametitle{Linux的发行版}
+    Linux有众多\textbf{发行版}（Distribution），常见的发行版有
     \begin{itemize}
         \item Debian系：Debian、Ubuntu，包管理器为\code{apt}。
-        \item RedHat系：Fedora、CentOS、RHEL，包管理器为\code{yum}、\code{dnf}。
-        \item 独立分支：Arch Linux，包管理器为\code{pacman}。
+        \item Centos系：Fedora、Centos、Redhat，包管理器为\code{yum}、\code{dnf}。
+        \item Arch系：Arch Linux，包管理器为\code{pacman}。
     \end{itemize}
     不同发行版在软件包管理、默认软件与更新策略上有所不同，但都遵循相同的POSIX规范、拥有相同的目录结构。
 
