@@ -1,0 +1,112 @@
+\section{Linux是什么}
+
+\begin{frame}
+    \frametitle{当我们谈及Linux时，我们到底在说什么？}
+    \begin{center}
+        “我只想插一句话，你所说的Linux，实际上是指GNU/Linux。”\footnote{https://www.gnu.org/gnu/linux-and-gnu.html}
+    \end{center} 
+\end{frame}
+
+\begin{frame}
+    \frametitle{操作系统：一段简史}
+    Unix是第一个现代意义上的操作系统，它诞生于20世纪70年代的AT\&T贝尔实验室。在最初的岁月中，Unix是相当开放的，以非常低廉的价格授权给学术机构使用。然而到20世纪80年代，AT\&T被反垄断法限制，但逐渐意识到了Unix系统的商业价值，开始收紧使用许可，使Unix系统成为昂贵的商业软件，自由不再。
+\end{frame}
+
+\begin{frame}
+    \frametitle{操作系统：一段简史}
+    历史上，为了在Unix之外重建自由世界，曾有两条不同技术路线的探索
+    \begin{itemize}
+        \item BSD\hspace{1.3pt}: Berkeley Software Distribution.
+        \item GNU: GNU is not Unix.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{BSD：Unix的继承者}
+    BSD的全称是Berkeley Software Distribution。BSD来自伯克利对Unix原始代码的改进与增强，最初是包含Unix专用代码的。然而，当AT\&T开始维权时，BSD不得不重写了所有可追溯到AT\&T的代码，净化出了一个干净且无法律风险的版本。
+
+    BSD可以称之为一个纯正的Unix系统，它是Unix系统的直接后裔，今天比较流行的版本有FreeBSD、OpenBSD、NetBSD。相当遗憾的是，尽管BSD最终赢得了诉讼，但却错失了最重要的发展机遇，使GNU/Linux后来居上。不过，由于BSD的开源许可非常宽松，允许商业软件使用其代码并保持闭源，因此，当今三大操作系统之一的MacOS事实上就是基于BSD的系统！故MacOS也是一种Unix系统。
+\end{frame}
+
+\begin{frame}
+    \frametitle{GNU：Unix的重构者}
+    GNU的全称是GNU is not Unix，许多开源项目偏爱这类颇具趣味的递归缩写。
+
+    正如它的名称所言，GNU完全没有使用Unix系统的任何代码，目标是参照 Unix 系统的功能，独立开发一套兼容Unix的自由操作系统。可以说，GNU几乎代表了自由软件的精神，而且从一开始，GNU计划的目标就是实现一个完整的操作系统！
+    
+    事实上，他们也几乎成功了！GNU实现了系统所需的所有用户空间工具（或许你听说过bash和gcc），却唯独缺少一个可用的内核。GNU的内核项目称为Hurd，由于技术路线的选择，Hurd的开发进度非常缓慢，迟迟未能推出一个可用的稳定版本。
+\end{frame}
+
+\begin{frame}
+    \frametitle{Linux内核！从GNU到GNU/Linux}
+    而就在这个历史的关键节点上，Linux出现了！
+    
+    Linux的全称同样是一个递归缩写Linux is not Unix，但和GNU不同的是，Linux本身并不是一个完整的操作系统，它只是一个内核，却恰巧在当时填补了GNU计划长期缺乏可用内核的空白。这两者的结合，最终构成了今天的GNU/Linux系统！
+
+    Linux内核和GNU都采用了GPL开源协议，它要求任何使用其代码的项目都必须保持开源且继续使用GPL协议，这是一个非常严格且具有传染性的开源协议。
+\end{frame}
+
+\begin{frame}
+    \frametitle{Linux内核！从GNU到GNU/Linux}
+    因此，今天当我们谈及所谓的Linux系统，讨论Linus Torvalds在Linux内核上做出的贡献时，请同样不要忘记Richard Stallman领导的GNU计划为此做出的努力。
+
+    \textbf{所有Linux系统，实际上都应该被称为GNU/Linux系统！}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Linux发行版}
+    Linux系统有许多具体的发行版，大致可以分为三个分支
+    \begin{itemize}
+        \item Debian系：使用\code{apt}作为包管理器，代表发行版有Debian、Ubuntu。
+        \item Centos\hspace{4.5pt}系：使用\code{yum}作为包管理器，代表发行版有Fedora、Centos、Redhat。
+        \item Arch系：使用\code{pacman}作为包管理器，代表发行版有Arch Linux。
+    \end{itemize}
+    
+    在本课程中，推荐使用Ubuntu 24.04，这是其最新的长期支持版（LTS）。
+\end{frame}
+
+\begin{frame}
+    \frametitle{Windows是一个糟糕的系统，尤其对于开发者而言！}
+    Windows是今天最为流行的操作系统，但它却是一个格格不入的系统！
+    \begin{itemize}
+        \item 路径使用反斜杠\code{\\}作为分割符，但反斜杠又是常用的转义符。
+        \item 路径是以盘符\code{C:}起始，没有根目录的概念。
+        \item 文件名对大小写不敏感，例如\code{image.png}和\code{Image.PNG}是同一个文件。
+        \item 没有标准的\code{/bin}和\code{/lib}目录，软件被安装在\code{C:\\Program Files}下。
+        \item 没有包管理器的概念，软件需要通过浏览器下载并手动安装。
+    \end{itemize}
+
+    究其原因，是因为Windows是当今三大操作系统中唯一和Unix没有继承关系的系统，它不遵守大部分类Unix系统共同遵循的POSIX规范！同时，系统中也充斥着许多糟糕和臃肿的设计。这导致任何在Windows上的开发工作会变得格外困难！
+\end{frame}
+
+\begin{frame}
+    \frametitle{Linux使用的几点提示}
+    \begin{itemize}
+        \item Linux不止是命令行，但也不要惧怕命令行！
+        \item Linux是一个健全的操作系统，你甚至可以玩Minecraft！
+        \item 你不必使用很多软件，但出于各种原因，有时这可能并不容易。
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Linux安装的引导}
+    推荐使用双系统的方式安装Linux系统，不鼓励使用虚拟机
+    \begin{itemize}
+        \item 下载Ubuntu 24.04的系统镜像\footnote{https://ubuntu.com/download/desktop?version=24.04}（ISO）。
+        \item 下载BalenaEtcher\footnote{https://etcher.balena.io}或Rufus\footnote{https://rufus.ie}，这是一个启动盘制作工具。
+        \item 准备一个U盘，将系统镜像通过启动盘制作工具烧入U盘。
+        \item 若Windows启用了Bitlocker，\textbf{请务必先关闭，否则会导致Windows损坏}！
+        \item 在Windows的磁盘管理中，压缩卷，留出未分配空间用于安装Ubuntu系统。
+        \item 将启动盘插入，重启电脑，按键（F2、F10、DEL）进入BIOS，选择从U盘启动。
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Linux安装的引导}
+    从U盘启动后，会有图形界面引导完成Ubuntu系统的安装，有几点要注意
+    \begin{itemize}
+        \item 选择系统语言中文，以便自动安装中文输入法和中文字体。
+        \item 选择安装第三方驱动，以便自动安装NVIDIA显卡驱动。
+        \item 在分区配置中，选择手动分区，选中先前留出的未分配空间创建分区，分区的文件系统推荐选择Btrfs而不是默认的Ext4，分区应挂载于\code{/}下。创建分区会格式化对应区域，因此，\textbf{请务必不要错误的格式化Windows正在使用的区域}！
+    \end{itemize}
+\end{frame}

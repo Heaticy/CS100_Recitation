@@ -1,0 +1,53 @@
+\section{Linux的远程连接}
+
+\begin{frame}
+    \frametitle{远程连接}
+    在未来的课程中，你可能会被提供一台服务器的账号，并被提供以下信息
+    \begin{itemize}
+        \item IP：\code{10.15.28.28}
+        \item 账号：\code{liyx}
+        \item 密码：\code{uLu3bP9DF}
+    \end{itemize}
+    你需要通过SSH以命令行的方式远程登录这台服务器！
+\end{frame}
+
+\begin{frame}
+    \frametitle{命令\code{ssh}}
+    \code{ssh}用于远程登录
+    \begin{Code}*
+        \lstinputlisting{code/shell/ssh.sh}
+    \end{Code}
+    当输入密码后，你就远程登录至服务器了！此时，你在键盘上敲击的任何字符都会通过SSH协议经网络传输到服务器上，可以像本地一样在远程服务器上执行命令！
+    
+    因此可以说，若拿到了一台电脑的SSH权限，就等同于坐在了这台电脑屏幕前！
+\end{frame}
+
+\begin{frame}
+    \frametitle{命令\code{scp}}
+    \code{scp}用于远程复制文件（上传/下载）
+    \begin{Code}*
+        \lstinputlisting{code/shell/scp.sh}
+    \end{Code}
+\end{frame}
+
+\begin{frame}
+    \frametitle{命令\code{passwd}}
+    任何情况下，拿到服务器的SSH账号后，第一件事就是修改密码！
+    \begin{Code}*
+        \lstinputlisting{code/shell/passwd.sh}
+    \end{Code}
+\end{frame}
+
+\begin{frame}
+    \frametitle{免密码登录}
+    远程连接每次都需要输入密码，这相当麻烦！可以使用密钥实现免密登录。
+
+    第一步，生成非对称密钥，\code{-t rsa}代表使用RSA密钥，\code{-b 4096}代表生成4096位的密钥，\code{-C "my-laptop"}代表密钥的注释，交互中对每个问题输入回车保持默认即可，这会生成公钥\code{\~/.ssh/id_rsa.pub}和私钥\code{\~/.ssh/id_rsa}两个文件。
+    \begin{Code}*
+        \lstinputlisting[firstline=1,lastline=1]{code/no-password.sh}
+    \end{Code}
+    第二步，上传公钥至服务器，这需要你最后一次输入密码
+    \begin{Code}*
+        \lstinputlisting[firstline=2,lastline=2]{code/no-password.sh}
+    \end{Code}
+\end{frame}
