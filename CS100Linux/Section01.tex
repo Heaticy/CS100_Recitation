@@ -44,7 +44,7 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{安装软件}
+    \frametitle{软件安装}
     在Windows上安装一个软件，往往要经历这样一番折腾
     \begin{itemize}
         \item 打开浏览器和搜索引擎，在众多结果中辨认官网，避开各类欺诈网站。
@@ -55,30 +55,40 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{安装软件}
-    \begin{columns}[T]
+    \frametitle{软件安装}
+    \begin{columns}
         \begin{column}{0.48\textwidth}
-            \centering
-            % TODO: 左侧内容
+            \setlength{\parskip}{6pt}
+            在Windows上，安装\LaTeX 需要以下步骤
+            \begin{itemize}
+                \item 确定我要下载的东西称为“TeX Live”。
+                \item 访问 \url{https://tug.org/texlive/}
+                \item 点击“install on windows”的页面链接。
+                \item 点击“install-tl-windows.exe”进行下载。
+                \item 运行安装程序，选择安装目录。
+                \item 你可能会无法找到正确的下载对像。
+                \item 你可能会在一大堆安装选项中感到迷失。
+            \end{itemize}
         \end{column}
         \begin{column}{0.48\textwidth}
-            \centering
-            % TODO: 右侧内容
+            \begin{Figure}*
+                \includegraphics[width=1.0\linewidth]{screen-texlive.jpg}
+            \end{Figure}
         \end{column}
     \end{columns}
 \end{frame}
 
 \begin{frame}
-    \frametitle{安装软件：Linux}
+    \frametitle{软件安装}
     在Linux上，安装LaTeX这样庞大的软件只需要一句话
     \begin{Code}*
         \lstinputlisting{code/why/apt-install.sh}
     \end{Code}
-    这背后是\textbf{软件包管理器}，以Ubuntu的\code{apt}为例，它有三个关键特征
+    这里\code{apt}是Ubuntu的\textbf{软件包管理器}，它有三个关键特征
     \begin{itemize}
-        \item 软件包集中管理：所有软件来自统一的软件源，不必去各个网站搜索下载。
-        \item 下载安装方式统一：永远是\code{apt install}，没有“下一步”，也没有捆绑。
-        \item 安装路径固定：可执行程序安装到\code{/bin}，库文件安装到\code{/lib}，配置文件安装到\code{/etc}，无需也难以手动选择。
+        \item 软件包集中化管理：软件集中在官方的软件仓库，不必去浏览器搜索。
+        \item 软件安装方式统一：软件统一用\code{apt install}安装，自动解析依赖。
+        \item 软件安装路径固定：在Linux上，软件安装的路径是有一套严格规范的。例如，执行程序会安装到\code{/bin}，库文件会安装到\code{/lib}，配置文件会安装到\code{/etc}，无需也不能手动选择。
     \end{itemize}
 \end{frame}
 
