@@ -93,27 +93,34 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{系统更新：Windows}
-    Windows的系统更新，大概是它最令人头疼的设计之一
-    \begin{itemize}
-        \item 强制性：更新常常无法拒绝，说装就装。
-        \item 需要重启：更新后必须重启，有时甚至反复重启。
-        \item 不透明：你很难知道这次更新究竟改动了什么。
-        \item 只管自己：更新只覆盖操作系统，浏览器、Office、各种应用仍需各自更新。
-    \end{itemize}
+    \frametitle{系统更新}
+    \begin{columns}
+        \begin{column}{0.53\textwidth}\setlength{\parskip}{6pt}
+            Windows的系统更新常常让人感到恼火
+            \begin{itemize}
+                \item 强制推送：更新可能在工作一半时突然发生。
+                \item 需要重启：更新意味着重启，不可热更新。
+                \item 不透明性：更新改动时常会破坏系统。
+                \item 体验割裂：更新只覆盖操作系统和预装应用。
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \begin{Figure}*
+                \includegraphics[width=1.0\linewidth]{screen-update.jpg}
+            \end{Figure}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}
-    \frametitle{系统更新：Linux}
+    \frametitle{系统更新}
     Linux并不区分“系统软件”与“应用软件”，它们由同一个包管理器统一管理，可以一起更新
     \begin{Code}*
         \lstinputlisting{code/why/apt-upgrade.sh}
     \end{Code}
-    \begin{itemize}
-        \item \code{sudo apt update}：刷新软件包索引，了解有哪些软件可以更新。
-        \item \code{sudo apt upgrade}：真正下载并安装更新。
-    \end{itemize}
-    你可以随时执行这两条命令，更新完成后\textbf{无需重启}。
+    其中，\code{apt update}用于刷新软件包索引，\code{apt upgrade}用于下载并安装更新。
+
+    你可以随时执行这两条命令，更新完成后\textbf{无需重启}！
 \end{frame}
 
 \begin{frame}
