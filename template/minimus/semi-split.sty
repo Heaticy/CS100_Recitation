@@ -1,0 +1,9 @@
+\ProvidesPackage{semi-split}
+
+\NewDocumentCommand{\split@two}{mm}%
+{%
+    % \x@a -> title
+    \def\x@a{#1}%
+    % \x@b -> label
+    \IfValueTF{#2}{\def\x@b{#2}}{\def\x@b{#1}}%
+}%

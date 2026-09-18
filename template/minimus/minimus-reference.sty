@@ -1,0 +1,260 @@
+\ProvidesPackage{minimus-reference}
+
+% -------------------------------- %
+% Load package <etoolbox> : Toolbox for class and package
+\RequirePackage{etoolbox}
+% Load package <xparse> : New way to define command and environment
+\RequirePackage{xparse}
+
+% -------------------------------- %
+% Load package <hyperref> : Hyperlinks for ref/cite/toc
+% hidelinks -> Hide box of hyperlinks
+\PassOptionsToPackage{hidelinks}{hyperref}
+\RequirePackage{hyperref}
+
+% -------------------------------- %
+% Load package <aliascnt> : Create alian for counter
+\RequirePackage{aliascnt}
+% aliascnt must be loaded before cleveref
+% aliascnt's \newaliascnt must be used after cleveref has been loaded
+
+% -------------------------------- %
+% Load package <cleveref> : Clever reference with type
+\RequirePackage{cleveref}
+% \cref -> lowercase ref (section 1.1)
+% \Cref -> uppercase ref (Section 1.1)
+% For zh-cn, just set lowercase and uppercase ref format to the same.
+
+% \crefformat           -> format for single ref
+% \crefformat{type}{format}
+% Example: Figure 1.1
+% |- format
+%   |- #1       -> counter
+%   |- #2/#3    -> hyperref range
+
+% \crefrangeformat      -> format for range ref
+% \crefrangeformat{type}{format}
+% Example: Figure 1.1-1.4
+% |- format
+%   |- #1       -> counter of first
+%   |- #2       -> counter of last
+%   |- #3/#4    -> hyperref range of first
+%   |- #5/#6    -> hyperref range of last
+
+% \crefmultiformat      -> format for multi single ref
+% \crefmultiformat{type}{first}{second}{middle}{last}
+% Example: Figure 1.1, 1.4, 2.8 and 2.9
+% |- first   -> Always, format for first ref
+% |- second  -> If only 2, format for second ref
+% |- middle  -> If more than 2, format for every ref in middle
+% |- last    -> If more than 2, format for last ref
+%   |- #1       -> counter
+%   |- #2       -> hyperref range
+
+% \crefrangemultiformat -> format for multi range ref
+% \crefrangemultiformat{type}{first}{second}{middle}{last}
+% Example: Figure 1.1-1.4, 1.5-1.7, 2.1-2.3 and 2.8-2.9
+% |- first   -> Always, format for first range
+% |- second  -> If only 2, format for second range
+% |- middle  -> If more than 2, format for every range in middle
+% |- last    -> If more than 2, format for last range
+%   |- #1       -> counter of first
+%   |- #2       -> counter of last
+%   |- #3/#4    -> hyperref range of first
+%   |- #5/#6    -> hyperref range of last
+
+% Sometimes, \crefmultiformat and \crefrangemultiformat have to work together
+% It is ok as long as both format are defined
+% Example: Figure 1.1-1.4, 1.5, 2.1-2.3 and 2.9
+
+% -------------------------------- %
+% \make@crefformat@innerjoin{counter}{prefix}{suffix}
+% #1 {counter}  -> set format of which counter
+% #2 {prefix}   -> prefix of reference
+% #3 {suffix}   -> suffix of reference
+% inner join -> connect multi reference inside prefix and suffix
+% Use "--" for range
+% Use ",\," for two
+% Use ",\,“ for multi 
+\NewDocumentCommand{\make@crefformat@innerjoin}{mmm}%
+{%
+    % ----------------
+    \crefformat{#1}%
+    {\CJKsetecglue{}##2{{#2}{##1}{#3}}##3}%
+    \Crefformat{#1}%
+    {\CJKsetecglue{}##2{{#2}{##1}{#3}}##3}%
+    % ----------------
+    \crefrangeformat{#1}%
+    {\CJKsetecglue{}##3{{#2}{##1}}##4--##5{{##2}{#3}}##6}%
+    \Crefrangeformat{#1}%
+    {\CJKsetecglue{}##3{{#2}{##1}}##4--##5{{##2}{#3}}##6}%
+    % ----------------
+    \crefmultiformat{#1}%
+    {\CJKsetecglue{}##2{{#2}{##1}}##3}%
+    {\CJKsetecglue{},\,##2{{##1}{#3}}##3}%
+    {\CJKsetecglue{},\,##2{{##1}}##3}%
+    {\CJKsetecglue{},\,##2{{##1}{#3}}##3}%
+    \Crefmultiformat{#1}%
+    {\CJKsetecglue{}##2{{#2}{##1}}##3}%
+    {\CJKsetecglue{},\,##2{{##1}{#3}}##3}%
+    {\CJKsetecglue{},\,##2{{##1}}##3}%
+    {\CJKsetecglue{},\,##2{{##1}{#3}}##3}%
+    % ----------------
+    \crefrangemultiformat{#1}%
+    {\CJKsetecglue{}##3{{#2}{##1}}##4--##5{{##2}{#3}}##6}%
+    {\CJKsetecglue{},\,##3{{#2}{##1}}##4--##5{{##2}{#3}}##6}%
+    {\CJKsetecglue{},\,##3{{#2}{##1}}##4--##5{{##2}{#3}}##6}%
+    {\CJKsetecglue{},\,##3{{#2}{##1}}##4--##5{{##2}{#3}}##6}%
+    \Crefrangemultiformat{#1}%
+    {\CJKsetecglue{}##3{{#2}{##1}}##4--##5{{##2}{#3}}##6}%
+    {\CJKsetecglue{},\,##3{{#2}{##1}}##4--##5{{##2}{#3}}##6}%
+    {\CJKsetecglue{},\,##3{{#2}{##1}}##4--##5{{##2}{#3}}##6}%
+    {\CJKsetecglue{},\,##3{{#2}{##1}}##4--##5{{##2}{#3}}##6}  
+}%
+
+% -------------------------------- %
+% \make@crefformat@outerjoin{counter}{prefix}{suffix}
+% #1 {counter}  -> set format of which counter
+% #2 {prefix}   -> prefix of reference
+% #3 {suffix}   -> suffix of reference
+% outer join -> connect multi reference outside prefix and suffix
+% Use "至" for range
+% Use "和" for two
+% Use "、“ for multi 
+\NewDocumentCommand{\make@crefformat@outerjoin}{mmm}%
+{%
+    % ----------------
+    \crefformat{#1}%
+    {\CJKsetecglue{}##2{{#2}{##1}{#3}}##3}%
+    \Crefformat{#1}%
+    {\CJKsetecglue{}##2{{#2}{##1}{#3}}##3}%
+    % ----------------
+    \crefrangeformat{#1}%
+    {\CJKsetecglue{}##3{{#2}{##1}{#3}}##4至##5{{#2}{##2}{#3}}##6}%
+    \Crefrangeformat{#1}%
+    {\CJKsetecglue{}##3{{#2}{##1}{#3}}##4至##5{{#2}{##2}{#3}}##6}%
+    % ----------------
+    \crefmultiformat{#1}%
+    {\CJKsetecglue{}##2{{#2}{##1}{#3}}##3}%
+    {\CJKsetecglue{}和##2{{#2}{##1}{#3}}##3}%
+    {\CJKsetecglue{}、##2{{#2}{##1}{#3}}##3}%
+    {\CJKsetecglue{}、##2{{#2}{##1}{#3}}##3}%
+    \Crefmultiformat{#1}%
+    {\CJKsetecglue{}##2{{#2}{##1}{#3}}##3}%
+    {\CJKsetecglue{}和##2{{#2}{##1}{#3}}##3}%
+    {\CJKsetecglue{}、##2{{#2}{##1}{#3}}##3}%
+    {\CJKsetecglue{}、##2{{#2}{##1}{#3}}##3}%
+    % ----------------
+    \crefrangemultiformat{#1}%
+    {\CJKsetecglue{}##3{{#2}{##1}{#3}}##4至##5{{#2}{##2}{#3}}##6}%
+    {\CJKsetecglue{}和##3{{#2}{##1}{#3}}##4至##5{{#2}{##2}{#3}}##6}%
+    {\CJKsetecglue{}、##3{{#2}{##1}{#3}}##4至##5{{#2}{##2}{#3}}##6}%
+    {\CJKsetecglue{}、##3{{#2}{##1}{#3}}##4至##5{{#2}{##2}{#3}}##6}%
+    \Crefrangemultiformat{#1}%
+    {\CJKsetecglue{}##3{{#2}{##1}{#3}}##4至##5{{#2}{##2}{#3}}##6}%
+    {\CJKsetecglue{}和##3{{#2}{##1}{#3}}##4至##5{{#2}{##2}{#3}}##6}%
+    {\CJKsetecglue{}、##3{{#2}{##1}{#3}}##4至##5{{#2}{##2}{#3}}##6}%
+    {\CJKsetecglue{}、##3{{#2}{##1}{#3}}##4至##5{{#2}{##2}{#3}}##6}%
+}%
+
+% -------------------------------- %
+% Only modify cref format for zh-cn
+\@ifpackageloaded{xeCJK}%
+{%
+    % -------------------------------- %
+    % Reference format of part 
+    \make@crefformat@outerjoin{part}{第}{部分}%
+    % Reference format of chapter 
+    \make@crefformat@outerjoin{chapter}{第}{章}%
+    % Reference format of section 
+    \make@crefformat@innerjoin{section}{第}{节}%
+    % Reference format of subsection 
+    \make@crefformat@innerjoin{subsection}{第}{小节}%
+    % Reference format of subsubsection 
+    \make@crefformat@innerjoin{subsubsection}{第}{小节}%
+    % Reference format of appendix 
+    \make@crefformat@innerjoin{appendix}{附录}{}%
+
+    % -------------------------------- %
+    % Reference format of figure
+    \make@crefformat@innerjoin{figure}{图}{}%
+    % Reference format of table
+    \make@crefformat@innerjoin{table}{表}{}%
+    % Reference format of equation
+    \make@crefformat@innerjoin{equation}{式(}{)}%
+    % Reference format of code
+    \make@crefformat@innerjoin{listing}{代码}{}%
+
+    % -------------------------------- %
+    % Reference format of boxdefinition
+    \make@crefformat@innerjoin{boxdefinition}{定义}{}%
+    % Reference format of boxtheorem
+    \make@crefformat@innerjoin{boxtheorem}{定理}{}%
+    % Reference format of boxlemma
+    \make@crefformat@innerjoin{boxlemma}{引理}{}%
+    % Reference format of boxcorollary
+    \make@crefformat@innerjoin{boxcorollary}{推论}{}%
+    % Reference format of boxproposition
+    \make@crefformat@innerjoin{boxproposition}{命题}{}%
+    % Reference format of boxproperty
+    \make@crefformat@innerjoin{boxproperty}{性质}{}%
+    % Reference format of boxformula
+    \make@crefformat@innerjoin{boxformula}{公式}{}%
+    % Reference format of boxequation
+    \make@crefformat@innerjoin{boxequation}{方程}{}%
+    % Reference format of boxexample
+    \make@crefformat@innerjoin{boxexample}{例}{}%
+    % Reference format of boxalgorithm
+    \make@crefformat@innerjoin{boxalgorithm}{算法}{}%
+    % Reference format of boxprocess
+    \make@crefformat@innerjoin{boxprocess}{流程}{}%
+    % Reference format of boxdesignprinciple
+    \make@crefformat@innerjoin{boxdesignprinciple}{设计原则}{}%
+
+    % -------------------------------- %
+    % Define format between different type of reference
+    % range
+    \NewDocumentCommand{\crefrangeconjunction}{}{至}%
+    % multi-single second
+    \NewDocumentCommand{\crefpairconjunction}{}{和}%
+    % multi-single middle
+    \NewDocumentCommand{\crefmiddleconjunction}{}{、}%
+    % multi-single last
+    \NewDocumentCommand{\creflastconjunction}{}{、}%
+    % multi-range second
+    \NewDocumentCommand{\crefpairgroupconjunction}{}{和}%
+    % multi-range middle
+    \NewDocumentCommand{\crefmiddlegroupconjunction}{}{、}%
+    % multi-range last
+    \NewDocumentCommand{\creflastgroupconjunction}{}{、}%
+}{}%
+
+% -------------------------------- %
+% Fix \cref on \section will cause error in beamer class
+% Can not add \@ifclassloaded on these
+\patchcmd\refstepcounter@noarg{\csname p@#1\endcsname}{\csname p@#1\expandafter\endcsname}{}{}%
+\patchcmd\refstepcounter@optarg{\csname p@#2\endcsname}{\csname p@#2\expandafter\endcsname}{}{}%
+
+% -------------------------------- %
+% Fix \cref in beamer lost hyperref
+% It is only a workaround, the ref text will only hyperlink to first target
+\@ifclassloaded{beamer}%
+{%
+    % Backup \cref and \Cref
+    \NewCommandCopy{\crefold}{\cref}%
+    \NewCommandCopy{\Crefold}{\Cref}%
+    % Add hyperlink of fisrt target to \cref and \Cref
+    % Accept nine target (with eight ,) at most
+    \RenewDocumentCommand{\cref}{m>{\SplitArgument{8}{,}}D(){#1}}%
+    {{%
+        \NewDocumentCommand{\split@hyperlinkpatch@cref}{mmmmmmmmm}{\def\first@cref{##1}}%
+        \split@hyperlinkpatch@cref#2%
+        {\hyperlink{\first@cref}{\crefold{#1}}}%
+    }}%
+    \RenewDocumentCommand{\Cref}{m>{\SplitArgument{8}{,}}D(){#1}}%
+    {{%
+        \NewDocumentCommand{\split@hyperlinkpatch@Cref}{mmmmmmmmm}{\def\first@cref{##1}}%
+        \split@hyperlinkpatch@Cref#2%
+        {\hyperlink{\first@cref}{\Crefold{#1}}}%
+    }}%
+}{}%

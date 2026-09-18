@@ -1,0 +1,159 @@
+\ProvidesPackage{minimus-tikz}
+
+% -------------------------------- %
+% Load package <etoolbox> : Toolbox for class and package
+\RequirePackage{etoolbox}
+% Load package <xparse> : New way to define command and environment
+\RequirePackage{xparse} 
+
+% -------------------------------- %
+% Load package <ifthen> : Provide ifthenelse command
+\RequirePackage{ifthen} 
+
+% -------------------------------- %
+% Load package <tikz> : Draw all kinds of figures
+% TikZ -> TikZ ist kein Zeichenprogramm
+\RequirePackage{tikz}
+
+% Support for coordinate calculation
+\usetikzlibrary{calc}
+
+% Support for intersection
+\usetikzlibrary{intersections}
+
+% Draw angles
+\usetikzlibrary{angles}
+
+% Draw simple 3d figure
+\usetikzlibrary{perspective}
+
+% More convenient placement options
+\usetikzlibrary{positioning}
+
+% More shapes for node
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{shapes.arrows}
+\usetikzlibrary{shapes.symbols}
+
+% Enable the quotes syntax
+\usetikzlibrary{quotes}
+
+% Draw nodes between serval points
+\usetikzlibrary{fit}
+
+% Alias "semi thick" to "semithick"
+\tikzset{semi thick/.style={semithick}}
+
+% -------------------------------- %
+% Load package <circuitikz> : Draw circuit diagram
+% europeanresistors : use block shape resistor
+% americaninductors : use 4-bumps shape inductor
+% americanvoltages  : use +/- as symbol of voltage source and voltage marks
+% americancurrents  : use --> as symbol of current source
+% RPvoltages        : rising potential voltages
+% draw from + to - for component
+% draw from - to + for source
+\PassOptionsToPackage{europeanresistors,americaninductors,americanvoltages,americancurrents,RPvoltages}{circuitikz}
+\RequirePackage{circuitikz}
+
+% The following values are the perfect version after long-term adjusting
+
+% Distance of voltage marks
+\ctikzset{voltage/distance from node=0.85}
+
+% Style of resistor  (R)
+\ctikzset{resistors/scale=0.65}
+% Style of capacitor (C)
+\ctikzset{capacitors/scale=0.75}
+% Style of inductor  (L)
+\ctikzset{inductors/scale=0.70}
+% Style of diode     (D)
+\ctikzset{diodes/scale=0.75}
+
+% Style of independent source (vsouce/isource)
+\ctikzset{sources/scale=0.9}
+% Style of control source (cvsource/cisource)
+\ctikzset{csources/scale=0.9}
+
+% Style of mosfet (nmos/pmos)
+% Use both arrow and circle for mosfet
+\ctikzset{tripoles/mos style/arrows}
+
+% Style of logic gate
+% Use ieee style for logic ports
+\ctikzset{logic ports=ieee}
+\ctikzset{logic ports/scale=0.65}
+
+% Style of transformer
+% Remove horizontal line
+\ctikzset{quadpoles/transformer/inner=1.0}
+\ctikzset{quadpoles/transformer/width=1.0}
+
+% Fake tailless vdd vss
+\tikzset{tlvdd/.style={vdd,anchor=north}}
+\tikzset{tlvss/.style={vss,anchor=south}}
+
+% Short name for minimum width and minimum height 
+\tikzset{mw/.style={minimum width=#1}}
+\tikzset{mh/.style={minimum height=#1}}
+
+% Transistor direction style
+% f      +/-      +/-      r      +/-
+%      xscale=  yscale=       rotate=0/90
+\tikzset{f++r+/.style={         ,         ,         }}
+\tikzset{f-+r+/.style={xscale=-1,         ,         }}
+\tikzset{f+-r+/.style={         ,yscale=-1,         }}
+\tikzset{f--r+/.style={xscale=-1,yscale=-1,         }}
+\tikzset{f++r-/.style={         ,         ,rotate=90}}
+\tikzset{f-+r-/.style={xscale=-1,         ,rotate=90}}
+\tikzset{f+-r-/.style={         ,yscale=-1,rotate=90}}
+\tikzset{f--r-/.style={xscale=-1,yscale=-1,rotate=90}}
+
+% Transistor direction command
+% \fliprotate+-+-{text}+-
+%           $1234  5   67
+% ----------------
+% f++r+ -> $1 $3 $6
+% f-+r+ -> $2 $3 $6
+% f+-r+ -> $1 $2 $6
+% f--r+ -> $2 $4 $6
+% f++r- -> $1 $3 $7
+% f-+r- -> $2 $3 $7
+% f+-r- -> $1 $2 $7
+% f--r- -> $2 $4 $7
+\NewDocumentCommand{\fliprotate}{t+t-t+t-mt+t-}%
+{%
+    \IfBooleanT{#1}{\IfBooleanT{#3}{\IfBooleanT{#6}{#5}}}%
+    \IfBooleanT{#2}{\IfBooleanT{#3}{\IfBooleanT{#6}{\ctikzflipx{#5}}}}%
+    \IfBooleanT{#1}{\IfBooleanT{#2}{\IfBooleanT{#6}{\ctikzflipy{#5}}}}%
+    \IfBooleanT{#2}{\IfBooleanT{#4}{\IfBooleanT{#6}{\ctikzflipxy{#5}}}}%
+    \IfBooleanT{#1}{\IfBooleanT{#3}{\IfBooleanT{#7}{\rotatebox{-90}{#5}}}}%
+    \IfBooleanT{#2}{\IfBooleanT{#3}{\IfBooleanT{#7}{\rotatebox{-90}{\ctikzflipx{#5}}}}}%
+    \IfBooleanT{#1}{\IfBooleanT{#2}{\IfBooleanT{#7}{\rotatebox{-90}{\ctikzflipy{#5}}}}}%
+    \IfBooleanT{#2}{\IfBooleanT{#4}{\IfBooleanT{#7}{\rotatebox{-90}{\ctikzflipxy{#5}}}}}%
+}%
+
+% -------------------------------- %
+% Load package <tikz-timing> : Draw timing diagram
+\RequirePackage{tikz-timing}
+
+% Support for timing character E
+\usetikztiminglibrary{either}
+
+% Support for overlay
+\usetikztiminglibrary{overlays}
+
+% Support for counter
+\usetikztiminglibrary{counters}
+
+% Support for advance node
+\usetikztiminglibrary{advnodes}
+
+% Declare both background and foreground
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{background,main,foreground}
+
+% -------------------------------- %
+% Load package <chemfig> : Draw molecule
+\RequirePackage{chemfig}

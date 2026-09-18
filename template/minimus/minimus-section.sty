@@ -1,0 +1,209 @@
+\ProvidesPackage{minimus-section}
+
+% -------------------------------- %
+% Load package <etoolbox> : Toolbox for class and package
+\RequirePackage{etoolbox}
+% Load package <xparse> : New way to define command and environment
+\RequirePackage{xparse}
+% Handler of split argument
+\RequirePackage{semi-split}
+
+% -------------------------------- %
+% Load package <apptools> : Macro about appendix (\IfAppendix)
+\RequirePackage{apptools}
+
+% -------------------------------- %
+% Add auto label and bookmark only short title to section commands
+
+% \section*[short-title]{full-title;label}!
+% #1 *                   -> no number
+% #2 [short-title]       -> title for toc,header,bookmark (default=full-title)
+% #3 {full-title;label}  -> title for text ; label (default=full-title) 
+% #4 !                   -> short-title usage
+% |---- If false         -> short-title will be use in bookmark only
+% |---- If true          -> short-title will be use in toc,header,bookmark
+
+% \@ifclassloaded        -> All of these command can not work with beamer
+% \ifdef                 -> In case of \chapter undefined in article
+
+% Label of \part
+\@ifclassloaded{beamer}{}{\ifdef{\part}%
+{%
+    \NewCommandCopy\partold\part%
+    \RenewDocumentCommand{\part}{so>{\SplitArgument{1}{;}}mt!}%
+    {%
+        \split@two#3%
+        \IfBooleanTF{#1}%
+        {%
+            % Without number
+            \IfValueTF{#2}%
+            {%
+                \IfBooleanTF{#4}%
+                {\partold*[#2]{\x@a}}%
+                {\partold*{\texorpdfstring{\x@a}{#2}}}%
+            }%
+            {%
+                \partold*{\x@a}%
+            }%
+        }%
+        {%
+            % With number
+            \IfValueTF{#2}%
+            {%
+                \IfBooleanTF{#4}%
+                {\partold[#2]{\x@a}}%
+                {\partold{\texorpdfstring{\x@a}{#2}}}%
+            }%
+            {%
+                \partold{\x@a}%
+            }%
+            \ifdefempty{\x@b}{}{\label{part:\x@b}}%
+        }%
+    }%
+}{}}%
+
+% Label of \chapter
+\@ifclassloaded{beamer}{}{\ifdef{\chapter}%
+{%
+    \NewCommandCopy\chapterold\chapter
+    \RenewDocumentCommand{\chapter}{so>{\SplitArgument{1}{;}}mt!}%
+    {%
+        \split@two#3%
+        \IfBooleanTF{#1}%
+        {%
+            % Without number
+            \IfValueTF{#2}%
+            {%
+                \IfBooleanTF{#4}%
+                {\chapterold*[#2]{\x@a}}%
+                {\chapterold*{\texorpdfstring{\x@a}{#2}}}%
+            }%
+            {%
+                \chapterold*{\x@a}%
+            }%
+        }%
+        {%
+            % With number
+            \IfValueTF{#2}%
+            {%
+                \IfBooleanTF{#4}%
+                {\chapterold[#2]{\x@a}}%
+                {\chapterold{\texorpdfstring{\x@a}{#2}}}%
+            }%
+            {%
+                \chapterold{\x@a}%
+            }%
+            % Special treatment for chapter / appendix
+            \ifdefempty{\x@b}{}{\IfAppendix{\label{ap:\x@b}}{\label{chap:\x@b}}}%
+        }%
+    }%
+}{}}%
+
+
+% Label of \section
+\@ifclassloaded{beamer}{}{\ifdef{\section}%
+{%
+    \NewCommandCopy\sectionold\section%
+    \RenewDocumentCommand{\section}{so>{\SplitArgument{1}{;}}mt!}%
+    {%
+        \split@two#3
+        \IfBooleanTF{#1}%
+        {%
+            % Without number
+            \IfValueTF{#2}%
+            {%
+                \IfBooleanTF{#4}%
+                {\sectionold*[#2]{\x@a}}%
+                {\sectionold*{\texorpdfstring{\x@a}{#2}}}%
+            }%
+            {%
+                \sectionold*{\x@a}%
+            }%
+        }%
+        {%
+            % With number
+            \IfValueTF{#2}%
+            {%
+                \IfBooleanTF{#4}%
+                {\sectionold[#2]{\x@a}}%
+                {\sectionold{\texorpdfstring{\x@a}{#2}}}%
+            }%
+            {%
+                \sectionold{\x@a}%
+            }%
+            \ifdefempty{\x@b}{}{\label{sec:\x@b}}%
+        }%
+    }%
+}{}}%
+
+% Label of \subsection
+\@ifclassloaded{beamer}{}{\ifdef{\subsection}%
+{%
+    \NewCommandCopy\subsectionold\subsection%
+    \RenewDocumentCommand{\subsection}{so>{\SplitArgument{1}{;}}mt!}%
+    {%
+        \split@two#3%
+        \IfBooleanTF{#1}%
+        {%
+            % Without number
+            \IfValueTF{#2}%
+            {%
+                \IfBooleanTF{#4}%
+                {\subsectionold*[#2]{\x@a}}%
+                {\subsectionold*{\texorpdfstring{\x@a}{#2}}}%
+            }%
+            {%
+                \subsectionold*{\x@a}%
+            }%
+        }%
+        {%
+            % With number
+            \IfValueTF{#2}%
+            {%
+                \IfBooleanTF{#4}%
+                {\subsectionold[#2]{\x@a}}%
+                {\subsectionold{\texorpdfstring{\x@a}{#2}}}%
+            }%
+            {%
+                \subsectionold{\x@a}%
+            }%
+            \ifdefempty{\x@b}{}{\label{subsec:\x@b}}%
+        }%
+    }%
+}{}}%
+
+% Label of \subsubsection
+\@ifclassloaded{beamer}{}{\ifdef{\subsubsection}%
+{%
+    \NewCommandCopy\subsubsectionold\subsubsection%
+    \RenewDocumentCommand{\subsubsection}{so>{\SplitArgument{1}{;}}mt!}%
+    {%
+        \split@two#3%
+        \IfBooleanTF{#1}%
+        {%
+            % Without number
+            \IfValueTF{#2}%
+            {%
+                \IfBooleanTF{#4}%
+                {\subsubsectionold*[#2]{\x@a}}%
+                {\subsubsectionold*{\texorpdfstring{\x@a}{#2}}}%
+            }%
+            {%
+                \subsubsectionold*{\x@a}%
+            }%
+        }%
+        {%
+            % With number
+            \IfValueTF{#2}%
+            {%
+                \IfBooleanTF{#4}%
+                {\subsubsectionold[#2]{\x@a}}%
+                {\subsubsectionold{\texorpdfstring{\x@a}{#2}}}%
+            }%
+            {%
+                \subsubsectionold{\x@a}%
+            }%
+            \ifdefempty{\x@b}{}{\label{subsubsec:\x@b}}%
+        }%
+    }%
+}{}}%

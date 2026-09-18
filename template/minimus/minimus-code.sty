@@ -1,0 +1,180 @@
+\ProvidesPackage{minimus-code}
+
+% -------------------------------- %
+% Load package <etoolbox> : Toolbox for class and package
+\RequirePackage{etoolbox}
+% Load package <xparse> : New way to define command and environment
+\RequirePackage{xparse}
+% Handler of split argument
+\RequirePackage{semi-split}
+
+% -------------------------------- %
+% Load package <algorithm2e> : Typeset source code
+\PassOptionsToPackage{tworuled}{algorithm2e}
+\PassOptionsToPackage{linesnumbered}{algorithm2e}
+\PassOptionsToPackage{rightnl}{algorithm2e}
+\RequirePackage{algorithm2e}
+% Disable semicolon at end of the line
+\DontPrintSemicolon
+% Define function block
+\SetKwProg{Function}{function}{}{end}
+% Set comment font to \rmfamily
+\SetCommentSty{textrm}
+
+% -------------------------------- %
+% Environment Algoplain
+% Wrapper for plain algorithm fixed with floating option H
+\NewDocumentEnvironment{Algoplain}{+b}%
+{%
+    \par%
+    \begin{algorithm}[H]%
+        #1%
+    \end{algorithm}%
+}{}%
+
+
+% -------------------------------- %
+% Load package <listings> : Typeset source code
+\RequirePackage{listings}
+
+% Modify listing title
+\@ifpackageloaded{xeCJK}%
+{%
+    % For language=zh-cn
+    % Define the title of \lstinputlisting
+    \renewcommand{\lstlistingname}{代码}%
+    % Define the title of \lstlistoflistings
+    \renewcommand{\lstlistlistingname}{代码}%
+}%
+{%
+    % For language=en-us
+    % Define the title of \lstlistoflistings
+    \renewcommand{\lstlistlistingname}{List of Listings}%
+}%
+
+% Define the base style of listings
+\lstset%
+{%
+    basicstyle=\ttfamily,%
+    keywordstyle=\bfseries\color{blue},%
+    ndkeywordstyle=\bfseries\color{teal},%
+    commentstyle=\color{red},%
+    stringstyle=\color{magenta},%
+    flexiblecolumns,%            
+    numbers=left,%
+    numberstyle=\tiny\ttfamily,%
+    showspaces=false,%
+    showstringspaces=false,%
+    captionpos=t,%
+    frame=lrtb,%
+    breaklines=true,% 
+    columns=fixed,%
+    basewidth=0.5em,%
+    tabsize=4,%
+}%
+
+% Style for Shell
+\lstdefinestyle{bash}%
+{%
+    language=bash,%
+}%
+
+% Style for C
+\lstdefinestyle{c}%
+{%
+    language=C,%
+    identifierstyle=\color{black!50!green},%
+}%
+
+% Style for C++
+\lstdefinestyle{cpp}%
+{%
+    language=C++,%
+    identifierstyle=\color{black!50!green},%
+}%
+
+% Style for Python
+\lstdefinestyle{python}%
+{%
+    language=Python,%
+    identifierstyle=\color{black!50!green},%
+}%
+
+% Style for Scala
+\lstdefinestyle{scala}%
+{%
+    language=Scala,%
+    identifierstyle=\color{black!50!green},%
+}%
+
+% Style for Verilog
+\lstdefinestyle{verilog}%
+{%
+    language=Verilog,%
+    identifierstyle=\color{black!50!green},%
+}%
+
+% Style for RISCV Assembly
+\lstdefinestyle{riscv}%
+{%
+    morekeywords={lui,li,auipc,j,jr,jal,jalr,ret,beq,bne,blt,bgt,ble,bge,bltu,bgtu,bleu,bgeu,lb,lh,lw,lbu,lhu,sb,sh,sw,addi,nop,mv,slti,sltiu,xori,ori,andi,slli,srli,srai,add,sub,neg,sll,srl,sra,xor,or,and,not,slt,sltu},%
+    morecomment=[l][commentstyle]{\#},%
+    identifierstyle=\color{black!50!green},%
+}%
+
+% Style for LaTeX
+\lstdefinestyle{latex}%
+{%
+    language=[LaTeX]TeX,%
+}%
+
+% Style for Plain Text
+\lstdefinestyle{plain}{}
+
+% -------------------------------- %
+% Environment Code
+% ----------------
+% \begin{Code}*[caption;label]{language}
+%     \lstinputlisting{}
+% \end{Code}
+% ----------------
+% #1 *                  -> no number
+% #2 [caption;label]    -> caption and label
+% #3 {language}         -> language (should be a lst style, default=plain)
+\NewDocumentEnvironment{Code}{s>{\SplitArgument{1}{;}}O{}G{plain}b}%
+{%
+    \split@two#2%
+    % Set the lst style and do not add to \lstlistoflistings
+    % The caption of \lstinputlisting[]{} can not handle empty caption properly
+    % So use \captionof{code}{} to take over
+    \lstset{style=#3,nolol=true}%
+    % Disable hypcap here to remove warning for \captionof*
+    \captionsetup{hypcap=false}%
+    % Test if caption needs number
+    \IfBooleanTF{#1}%
+    {%
+        % Make caption*
+        \ifdefempty{\x@a}{}{\captionof*{lstlisting}{\x@a}}%
+    }%
+    {%
+        % Make caption
+        \ifdefempty{\x@a}%
+        {\captionof{lstlisting}{}}%
+        {\captionof{lstlisting}{\x@a}}%
+        % Make label
+        \ifdefempty{\x@b}{}{\label{code:\x@b}}%
+    }%
+    % Body here
+    #4%
+}{}%
+
+% -------------------------------- %
+% Define \code as wrapper of \lstinline
+% \code add dummy math $\hphantom{}$ to keep proper distance inside chinese
+% \code{content} can use {} as delimiter only, and the content
+% 1. For free to use most of the symbol
+% 2. More {} is allowed, but have to be closed.
+% 3. % is not allowed, use \% for workaround
+% 4. \ is not allowed, use \\ for workaround
+% 5. # will output ##, use \# for workaround
+\NewDocumentCommand{\code}{m}{$\hphantom{}$\lstinline{#1}$\hphantom{}$}

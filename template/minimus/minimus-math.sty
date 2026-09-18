@@ -1,0 +1,688 @@
+\ProvidesPackage{minimus-math}
+
+% -------------------------------- %
+% Load package <etoolbox> : Toolbox for class and package
+\RequirePackage{etoolbox}
+% Load package <xparse> : New way to define command and environment
+\RequirePackage{xparse}
+
+% -------------------------------- %
+% Load package <amsmath> : AMS math
+\RequirePackage{amsmath}
+% Load package <amsthm>  : AMS math theorem
+\RequirePackage{amsthm}
+% Load package <amssymb> : AMS math symbol
+\RequirePackage{amssymb}
+
+% Set equation number by section
+\numberwithin{equation}{section}
+
+% -------------------------------- %
+% Load package <siunitx> : Support for si unit
+\RequirePackage{siunitx}
+% Rename \qty series command to \qnum
+% Avoid conflict of \qty provided by physics
+\NewCommandCopy\qnum\qty
+\NewCommandCopy\qnumlist\qtylist
+\NewCommandCopy\qnumrange\qtyrange
+\NewCommandCopy\qnumproduct\qtyproduct
+
+% Redefine all the binary prefix (Prefer KB than Kib)
+\DeclareBinaryPrefix{\kibi}{K}{10}
+\DeclareBinaryPrefix{\mebi}{M}{20}
+\DeclareBinaryPrefix{\gibi}{G}{30}
+\DeclareBinaryPrefix{\tebi}{T}{40}
+\DeclareBinaryPrefix{\pebi}{P}{50}
+\DeclareBinaryPrefix{\exbi}{E}{60}
+\DeclareBinaryPrefix{\zebi}{Z}{70}
+\DeclareBinaryPrefix{\yobi}{Y}{80}
+
+% Define all the binary unit (K KB Kb Kbps)
+% --------
+% K M G T
+\DeclareSIUnit{\Kibi}{K}
+\DeclareSIUnit{\Mebi}{M}
+\DeclareSIUnit{\Gibi}{G}
+\DeclareSIUnit{\Tebi}{T}
+\DeclareSIUnit{\Pebi}{P}
+\DeclareSIUnit{\Exbi}{E}
+\DeclareSIUnit{\Zebi}{Z}
+\DeclareSIUnit{\Yobi}{Y}
+% --------
+% KB MB GB TB
+\DeclareSIUnit{\KB}{\kibi\byte}
+\DeclareSIUnit{\MB}{\mebi\byte}
+\DeclareSIUnit{\GB}{\gibi\byte}
+\DeclareSIUnit{\TB}{\tebi\byte}
+\DeclareSIUnit{\PB}{\pebi\byte}
+\DeclareSIUnit{\EB}{\exbi\byte}
+\DeclareSIUnit{\ZB}{\zebi\byte}
+\DeclareSIUnit{\YB}{\yobi\byte}
+% --------
+% Kb Mb Gb Tb
+\DeclareSIUnit{\Kb}{\kibi\bit}
+\DeclareSIUnit{\Mb}{\mebi\bit}
+\DeclareSIUnit{\Gb}{\gibi\bit}
+\DeclareSIUnit{\Tb}{\tebi\bit}
+\DeclareSIUnit{\Pb}{\pebi\bit}
+\DeclareSIUnit{\Eb}{\exbi\bit}
+\DeclareSIUnit{\Zb}{\zebi\bit}
+\DeclareSIUnit{\Yb}{\yobi\bit}
+% --------
+% Kbps Mbps Gbps Tbps
+\DeclareSIUnit{\bps}{bps}
+\DeclareSIUnit{\Kbps}{\kibi\bps}
+\DeclareSIUnit{\Mbps}{\mebi\bps}
+\DeclareSIUnit{\Gbps}{\gibi\bps}
+\DeclareSIUnit{\Tbps}{\tebi\bps}
+\DeclareSIUnit{\Pbps}{\pebi\bps}
+\DeclareSIUnit{\Ebps}{\exbi\bps}
+\DeclareSIUnit{\Zbps}{\zebi\bps}
+\DeclareSIUnit{\Ybps}{\yobi\bps}
+
+% Format of list
+% Example: 1.0nm, 1.5nm, 2.0nm
+\sisetup{list-separator={, }}
+\sisetup{list-pair-separator={, }}
+\sisetup{list-final-separator={, }}
+\sisetup{list-units=repeat}
+
+% Format of range
+% Example: 1.0 - 2.0nm
+\sisetup{range-phrase={\,\text{\textasciitilde{}}\,}}
+\sisetup{range-units=single}
+
+% Format of product
+% Example: 1.0nm x 1.5nm x 2.0nm
+\sisetup{product-symbol={\times}}
+\sisetup{product-units=repeat}
+
+% Do not group digits
+\sisetup{group-digits=none}
+
+% Use dot between units
+\sisetup{inter-unit-product={\cdot}}
+
+% -------------------------------- %
+% Load package <physics> : Support for derivatives, vector, bracket
+\RequirePackage{physics}
+
+% -------------------------------- %
+% Load package <esint> : More integral symbol
+\RequirePackage{esint}
+
+% -------------------------------- %
+% Load package <extarrows> : More arrow with text
+\RequirePackage{extarrows}
+
+% -------------------------------- %
+% Load package <upgreek> : Upright greek character for math 
+\RequirePackage{upgreek}
+
+% -------------------------------- %
+% Load package <xfrac> : Small inline frac
+\RequirePackage{xfrac}
+
+% -------------------------------- %
+% Load package <mathtools> : Useful tools for math typesettings
+\RequirePackage{mathtools}
+
+% -------------------------------- %
+% Load package <mathrsfs> : Math font mathscr
+\RequirePackage{mathrsfs}
+
+% -------------------------------- %
+% Load package <mathdots> : More dots symbol
+\RequirePackage{mathdots}
+
+% -------------------------------- %
+% Load package <nicematrix> : Draw nice matrix
+\RequirePackage{nicematrix}
+
+% -------------------------------- %
+% Load package <resize> : Switch between inline and displayed mode
+\RequirePackage{relsize}
+
+% -------------------------------- %
+% Load package <yhmath> : Extra wide accent symbol
+\RequirePackage{yhmath}
+
+% -------------------------------- %
+% Load package <accents> : Under accent symbol
+\RequirePackage{accents}
+
+% -------------------------------- %
+% Load package <longdivision> : Auto long division
+\RequirePackage{longdivision}
+
+% -------------------------------- %
+% Load package <mhchem> : Chemistry symbol and equation
+\RequirePackage{mhchem}
+
+% -------------------------------- %
+% Symbol for e,i,j,k
+% For complex -> i,j is im unit for math or physics
+% z=x+iy (math)
+% z=x+iy (physics)
+% For quaternion -> i,j,k are three different im units
+% q=x+iy+jz+kw
+\NewDocumentCommand{\e}{}{\mathrm{e}}
+\RenewDocumentCommand{\i}{}{\mathrm{i}}
+\RenewDocumentCommand{\j}{}{\mathrm{j}}
+\RenewDocumentCommand{\k}{}{\mathrm{k}}
+
+% -------------------------------- %
+% Symbol for vector i,j,k
+% \vb* supported by physics
+\NewDocumentCommand{\vi}{}{\vb*{i}}
+\NewDocumentCommand{\vj}{}{\vb*{j}}
+\NewDocumentCommand{\vk}{}{\vb*{k}}
+
+% -------------------------------- %
+% Symbol for differential dx,dy,dz
+% \dd supported by physics
+\NewDocumentCommand{\dx}{}{\dd{x}}
+\NewDocumentCommand{\dy}{}{\dd{y}}
+\NewDocumentCommand{\dz}{}{\dd{z}}
+
+% -------------------------------- %
+% Symbol for integral, sum, prod, lim
+% \int series supported by esint
+
+% Usage: \Sum[subscript][superscript]
+% Usage: \Lim[from][to]
+% ----------------
+% Define \Sum
+\NewDocumentCommand{\Sum}{O{}O{}}{\sum_{#1}^{#2}}
+% Define \Prod
+\NewDocumentCommand{\Prod}{O{}O{}}{\prod_{#1}^{#2}}
+
+% Define \BigCap
+\NewDocumentCommand{\BigCap}{O{}O{}}{\bigcap_{#1}^{#2}}
+% Define \BigCup
+\NewDocumentCommand{\BigCup}{O{}O{}}{\bigcup_{#1}^{#2}}
+
+% Define \BigOplus
+\NewDocumentCommand{\BigOplus}{O{}O{}}{\bigoplus_{#1}^{#2}}
+% Define \BigOdot
+\NewDocumentCommand{\BigOdot}{O{}O{}}{\bigodot{#1}^{#2}}
+% Define \BigOtimes
+\NewDocumentCommand{\BigOtimes}{O{}O{}}{\bigotimes{#1}^{#2}}
+
+% Define \Int
+\NewDocumentCommand{\Int}{O{}O{}}{\int_{#1}^{#2}}
+% Define \Idnt (d->double)
+\NewDocumentCommand{\Idnt}{O{}O{}}{\iint_{#1}^{#2}}
+% Define \Itnt (t->triple)
+\NewDocumentCommand{\Itnt}{O{}O{}}{\iiint_{#1}^{#2}}
+
+% Define \Ilnt (l->line)    : Same as \Int
+\NewDocumentCommand{\Ilnt}{O{}O{}}{\int_{#1}^{#2}}
+% Define \Ilot (l->line, o->close)   
+\NewDocumentCommand{\Ilot}{O{}O{}}{\oint_{#1}^{#2}}
+
+% Define \Isnt (s->surface) : Same as \Idnt
+\NewDocumentCommand{\Isnt}{O{}O{}}{\iint_{#1}^{#2}}
+% Define \Isot (s->surface, o->close)
+\NewDocumentCommand{\Isot}{O{}O{}}{\oiint_{#1}^{#2}}
+
+% Define \Lim
+\NewDocumentCommand{\Lim}{O{}o}{\lim_{#1\IfValueT{#2}{\to #2}}}
+
+% -------------------------------- %
+% Symbol of set
+\NewDocumentCommand{\N}{}{\mathbb{N}}
+\NewDocumentCommand{\Z}{}{\mathbb{Z}}
+\NewDocumentCommand{\Q}{}{\mathbb{Q}}
+\NewDocumentCommand{\R}{}{\mathbb{R}}
+\NewDocumentCommand{\C}{}{\mathbb{C}}
+\RenewDocumentCommand{\emptyset}{}{\varnothing}
+
+% -------------------------------- %
+% Symbol of text grad,div,curl
+\DeclareMathOperator{\Grad}{grad}
+\DeclareMathOperator{\Div}{div}
+\DeclareMathOperator{\Curl}{curl}
+
+% -------------------------------- %
+% Symbol of probability theory
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+
+% -------------------------------- %
+% Symbol of inverse hyperbolic functions
+\DeclareMathOperator{\arsinh}{arsinh}
+\DeclareMathOperator{\arcosh}{arcosh}
+\DeclareMathOperator{\artanh}{artanh}
+\DeclareMathOperator{\arcoth}{arcoth}
+\DeclareMathOperator{\arsech}{arsech}
+\DeclareMathOperator{\arcsch}{arcsch}
+
+% Symbol for atan2 in cs
+\DeclareMathOperator{\atantwo}{atan2}
+
+% -------------------------------- %
+% Symbol for delta
+\NewDocumentCommand{\delt}{G{}}{\Delta #1}
+\NewDocumentCommand{\detv}{mm}{\frac{\delt #1}{\delt #2}}
+
+% -------------------------------- %
+% Symbol of 0+,0-
+\NewDocumentCommand{\zp}{}{0_{+}}
+\NewDocumentCommand{\zm}{}{0_{-}}
+
+% -------------------------------- %
+% Symbol of special function
+% Beta (Extension of Gamma)
+\NewDocumentCommand{\Beta}{}{\mathrm{B}}
+% PolyGamma (Log Derivative of Gamam)
+\NewDocumentCommand{\PolyGamma}{}{\uppsi}
+
+% Bessel J (Type 1)
+\NewDocumentCommand{\BesselJ}{}{\mathrm{J}}
+% Bessel N (Type 2)
+\NewDocumentCommand{\BesselN}{}{\mathrm{N}}
+% Bessel H (Type 3)
+\NewDocumentCommand{\BesselH}{}{\mathrm{H}}
+% Modified Bessel I (Type 1)
+\NewDocumentCommand{\BesselI}{}{\mathrm{I}}
+% Modified Bessel K (Type 2)
+\NewDocumentCommand{\BesselK}{}{\mathrm{K}}
+
+% Legendre P (Type 1)
+\NewDocumentCommand{\LegendreP}{}{\mathrm{P}}
+% Legendre Q (Type 2)
+\NewDocumentCommand{\LegendreQ}{}{\mathrm{Q}}
+% Spherical Y
+\NewDocumentCommand{\SphericalY}{}{\mathrm{Y}}
+
+% Hermite H
+\NewDocumentCommand{\HermiteH}{}{\mathrm{H}}
+% Fermi F
+\NewDocumentCommand{\FermiF}{}{\mathrm{F}}
+
+% Hodge Operator
+\NewDocumentCommand{\hodge}{}{\star}
+
+% -------------------------------- %
+% Symbol of matrix computations
+% Diag Matrix
+\DeclareMathOperator{\diag}{diag}
+% Subspace
+\NewDocumentCommand{\subspace}{}{\mathcal{S}}
+% Rangespace
+\NewDocumentCommand{\rangespace}{}{\mathcal{R}}
+% Nullspace
+\NewDocumentCommand{\nullspace}{}{\mathcal{N}}
+% Span (\span is already used)
+\DeclareMathOperator{\vspan}{span}
+% Pivot
+\DeclareMathOperator{\piv}{piv}
+% Row Pivot
+\DeclareMathOperator{\rowpiv}{rowpiv}
+% Col Pivot
+\DeclareMathOperator{\colpiv}{colpiv}
+% Big O
+\NewDocumentCommand{\Obig}{}{\mathcal{O}}
+
+% -------------------------------- %
+% Symbol of convex optimization
+% Affine Hull
+\DeclareMathOperator{\aff}{aff}
+% Convex Hull
+\DeclareMathOperator{\conv}{conv}
+% Conic Hull
+\DeclareMathOperator{\cone}{cone}
+% Polyhedra
+\NewDocumentCommand{\polyhedra}{}{\mathcal{P}}
+% Symmetric Matrix
+\NewDocumentCommand{\Symm}{}{\mathbb{S}}
+% Hermitian Matrix
+\NewDocumentCommand{\Herm}{}{\mathbb{H}}
+% Domain
+\DeclareMathOperator{\dom}{dom}
+% Epigraph
+\DeclareMathOperator{\epi}{epi}
+% Hypograph
+\DeclareMathOperator{\hypo}{hypo}
+% Minimize
+\DeclareMathOperator*{\minimize}{minimize}
+% Maximize
+\DeclareMathOperator*{\maximize}{maximize}
+% Find
+\DeclareMathOperator*{\find}{find}
+% Subject To
+\DeclareMathOperator*{\subto}{subject\ to}
+% Relint
+\DeclareMathOperator{\relint}{relint}
+
+% -------------------------------- %
+% Symbol of engineering function
+% Sign Function
+\DeclareMathOperator{\sgn}{sgn}
+% Rectangle Function
+\DeclareMathOperator{\rect}{rect}
+% Sampling Fuunction (sin x/x)
+\DeclareMathOperator{\sinc}{sinc}
+% Complementary Error Function (1-erf x)
+\DeclareMathOperator{\erfc}{erfc}
+% Dirac Function
+\NewDocumentCommand{\dirac}{}{\updelta}
+
+% -------------------------------- %
+% Symbol for deep learning
+\DeclareMathOperator{\softmax}{softmax}
+\DeclareMathOperator{\sigmoid}{sigmoid}
+\DeclareMathOperator{\ReLU}{ReLU}
+
+% -------------------------------- %
+% Symbol of transformation
+% Fourier Transform
+\NewDocumentCommand{\FT}{sg}{\mathcal{F}\IfBooleanT{#1}{^{-1}}\IfValueT{#2}{\qty{#2}}}
+% Laplace Transform
+\NewDocumentCommand{\LT}{sg}{\mathcal{L}\IfBooleanT{#1}{^{-1}}\IfValueT{#2}{\qty{#2}}}
+
+% -------------------------------- %
+% Symbol of physics constant and quantity
+% Boltzmann Constant
+\NewDocumentCommand{\kB}{}{k_{\mathrm{B}}}
+% Electrodynamic Force
+\NewDocumentCommand{\Emf}{}{\mathscr{E}}
+
+% -------------------------------- %
+% Accents
+% Above wide curve
+\NewCommandCopy\xpar\wideparen
+% Above wide hat
+\NewCommandCopy\xhat\widehat
+% Above wide tilde
+\NewCommandCopy\xwav\widetilde
+% Above wide arrow
+\NewCommandCopy\xvec\overrightarrow
+% Above wide line
+\NewCommandCopy\xbar\overline
+% Define \bbar as under version of \bar
+\NewDocumentCommand{\bbar}{m}{\underaccent{\bar}{#1}}
+
+% -------------------------------- %
+% Relsize command
+% \mal -> change inline mode to displayed mode
+% \mas -> change displayed mode to inline mode
+\NewCommandCopy\mal\mathlarger
+\NewCommandCopy\mas\mathsmaller
+
+% -------------------------------- %
+% Short command for \mathrm
+\NewCommandCopy\te\mathrm
+
+% -------------------------------- %
+% Angle bracket
+\def\<#1>{\left\langle#1\right\rangle}
+
+\NewDocumentCommand{\anglebkt}{sm}%
+{%
+    \IfBooleanT{#1}%
+    {\langle#2\rangle}%
+    {\left\langle#2\right\rangle}%
+}%
+
+% Floor
+\NewDocumentCommand{\floor}{sm}%
+{%
+    \IfBooleanT{#1}%
+    {\lfloor#2\rfloor}%
+    {\left\lfloor#2\right\rfloor}%
+}%
+
+% Ceil
+\NewDocumentCommand{\ceil}{sm}%
+{%
+    \IfBooleanT{#1}%
+    {\lceil#2\rceil}%
+    {\left\lceil#2\right\rceil}%
+}%
+
+% -------------------------------- %
+% Macro to force center equation
+
+% Default Behaviour
+% 1. For short equation, it will be at the center of page.
+% 2. For medium equation, it will be at the center of available space beyond the tag (BAD!).
+% 3. For lone equation, it will be at the center of page, and the tag will move to the next line.
+% \forcezero can turn case2. -> case1.
+% \forceline can turn case2. -> case3. 
+
+% Set equation into a zero width math box to force it center
+% Tag will stay at the same line
+% However, if relly set to zero width, it will abnormally reduce vertical spacing before the equation.
+% It's uncertain what the minimum value should be, but 0.4\linewidth usually does the trick. 
+\NewDocumentCommand{\forcezero}{O{0.4}m}{\mathmakebox[#1\linewidth]{#2}}%
+
+% Set equation into a line width math box to force it center
+% Tag will move to the next lien
+\NewDocumentCommand{\forceline}{O{1.0}m}{\mathmakebox[#1\linewidth]{#2}}%
+
+% \mathmakebox is provided by mathtools
+
+% -------------------------------- %
+% Environments for math (Equation, Split, Multline, Align, Gather)
+
+% General Usage
+% 1.  *          -> no tag
+% 2.  [label]    -> label for Equation, Split, Multline. label prefix for Align, Gather.
+% 3.  {factor}   -> vertical space factor for Split, Multline, Align, Gather.
+% 4.  &{width}   -> set total width for Multiline.
+% 5a. !          -> force zero width center for Equation, Split, Multline.
+% 5b. !!         -> force line width center for Equation, Split, Multline.
+
+% The different behaviour of ! and !! is achieved by two "t!" arguments.
+% The purpose of &{width} is using meaningless "t&" to seperate {factor} and {width}
+
+% \jot and \origjot are provided by mathtools
+% \jot adjusts the vertical spacing between lines in a math environment.
+% {factor} -> \setlength{\jot}{factor\origjot}
+% \origjot = 3pt
+
+% ----------------
+% Equation : For short equation
+% Equation is a wrapper for equation
+% ----------------
+% \begin{Equation}*[label]!!
+%     f(x)=x^2+y^2          
+% \end{Equation}
+% #1 *          -> no tag
+% #2 [label]    -> label, add \label{eq:label} if assigned
+% #3 !          -> force zero width center (as !)
+% #4 !          -> force line width center (as !!)
+% #5            -> body
+\NewDocumentEnvironment{Equation}{sot!t!b}%
+{%
+    \IfBooleanTF{#1}%
+    {%
+        \begin{equation*}%
+            \IfBooleanTF{#3}{\IfBooleanTF{#4}{\forceline{#5}}{\forcezero{#5}}}{#5}%
+        \end{equation*}%
+    }%
+    {%
+        \begin{equation}%
+            \IfBooleanTF{#3}{\IfBooleanTF{#4}{\forceline{#5}}{\forcezero{#5}}}{#5}%
+            \IfValueT{#2}{\label{eq:#2}}%
+        \end{equation}%
+    }%
+    \par%
+}{}%
+
+% ----------------
+% Split : For long equation needs more than one line, use & to align.
+% Split is a wrapper for equation + aligned
+% Environment split can not work with \mathmakebox, so use aligned instead.
+% ----------------
+% \begin{Split}*[label]{factor}!!
+%     f(x)&=x^2+y^2\\
+%         &+\alpha+\beta+\gamma
+% \end{Split}
+% #1 *          -> no tag
+% #2 [label]    -> label, add \label{eq:label} if assigned
+% #3 {factor}   -> vertical space, set \jot to factor\jot, default=1.0
+% #4 !          -> force zero width center (as !)
+% #5 !          -> force line width center (as !!)
+% #6            -> body
+\NewDocumentEnvironment{Split}{soG{1.0}t!t!b}%
+{%
+    \setlength{\jot}{#3\origjot}%
+    \IfBooleanTF{#1}%
+    {%
+        \begin{equation*}%
+            \begin{aligned}%
+                #6%
+            \end{aligned}%
+        \end{equation*}%
+    }%
+    {%
+        \begin{equation}%
+            \IfBooleanTF{#4}%
+            {%
+                \IfBooleanTF{#5}%
+                {%
+                    \forceline{\begin{aligned}%
+                        #6%
+                    \end{aligned}}%
+                }%
+                {%
+                    \forcezero{\begin{aligned}%
+                        #6%
+                    \end{aligned}}%
+                }%
+            }%
+            {%
+                \begin{aligned}%
+                    #6%
+                \end{aligned}%
+            }%
+            \IfValueT{#2}{\label{eq:#2}}%
+        \end{equation}%
+    }%
+    \setlength{\jot}{\origjot}
+    \par%
+}{}%
+
+% ----------------
+% Multline : For lone equation more than one line, stepped arrangement.
+% Multline is a wrapper for equation + multlined
+% Environment multline is a standalone version that can be used without equation.
+% However, multline has some bugs with vertical space between preceding text, so use multlined instead.
+% ----------------
+% \begin{Multline}*[label]{factor}&{width}!!
+%     f(x)=x^2+y^2\\
+%         +\alpha+\beta+\gamma
+% \end{Multline}
+% #1 *          -> no tag
+% #2 [label]    -> label, add \label{eq:label} if assigned
+% #3 {factor}   -> vertical space, set \jot to factor\jot, default=1.0
+% #4 &          -> no use, seperator of #3 and #5, should always used with #5
+% #5 {width}    -> set total width to width\linewidth if assigned, or use flexible total width
+% #6 !          -> force zero width center (as !)
+% #7 !          -> force line width center (as !!)
+% #8            -> body
+\NewDocumentEnvironment{Multline}{soG{1.0}t&gt!t!b}%
+{%
+    \setlength{\jot}{#3\origjot}%
+    \IfBooleanTF{#1}%
+    {%
+        \begin{equation*}%
+            \IfValueTF{#5}{\begin{multlined}[#5\linewidth]}{\begin{multlined}}%
+                #8%
+            \end{multlined}%
+        \end{equation*}%
+    }%
+    {%
+        \begin{equation}%
+            \IfBooleanTF{#6}%
+            {%
+                \IfBooleanTF{#7}%
+                {%
+                    \forceline{\IfValueTF{#5}{\begin{multlined}[#5\linewidth]}{\begin{multlined}}%
+                        #8%
+                    \end{multlined}}%
+                }%
+                {%
+                    \forcezero{\IfValueTF{#5}{\begin{multlined}[#5\linewidth]}{\begin{multlined}}%
+                        #8%
+                    \end{multlined}}%
+                }%
+            }%
+            {%
+                \IfValueTF{#5}{\begin{multlined}[#5\linewidth]}{\begin{multlined}}%
+                    #8%
+                \end{multlined}%
+            }%
+            \IfValueT{#2}{\label{eq:#2}}%
+        \end{equation}%
+    }%
+    \setlength{\jot}{\origjot}
+    \par%
+}{}%
+
+% ----------------
+% Align : For equation groups, use & to align.
+% Align is a wrapper for align.
+% -------------------------------- %
+% \begin{Align}*[label]{factor}
+%     f(x)&=x^2+y^2\id{a}\\
+%     g(x)&=\alpha+\beta+\gamma\id{b}
+% \end{Align}
+% \id{} can be used inside Align to add label with eq:#2 prefix for every line
+% #1 *          -> no tag
+% #2 [label]    -> label prefix, for every \id{a} -> \label{eq:labela}
+% #3 {factor}   -> vertical space, set \jot to factor\jot, default=1.0
+% #4            -> body
+\NewDocumentEnvironment{Align}{soG{1.0}b}%
+{%
+    \setlength{\jot}{#3\origjot}%
+    \IfValueT{#2}{\NewDocumentCommand{\id}{m}{\label{eq:#2##1}}}%
+    \IfBooleanTF{#1}%
+    {%
+        \begin{align*}%
+            #4%
+        \end{align*}%
+    }%
+    {%
+        \begin{align}%
+            #4%
+        \end{align}%
+    }%
+    \setlength{\jot}{\origjot}
+    \par%
+}{}%
+
+% ----------------
+% Gather : For equation groups, center align.
+% Gather is a wrapper for gather.
+% -------------------------------- %
+% \begin{Gather}*[label]{factor}
+%     f(x)=x^2+y^2\id{a}\\
+%     g(x)=\alpha+\beta+\gamma\id{b}
+% \end{Gather}
+% \id{} can be used inside Gather to add label with eq:#2 prefix for every line
+% #1 *          -> no tag
+% #2 [label]    -> label prefix, for every \id{a} -> \label{eq:labela}
+% #3 {factor}   -> vertical space, set \jot to factor\jot, default=1.0
+% #4            -> body
+\NewDocumentEnvironment{Gather}{soG{1.0}b}%
+{%
+    \setlength{\jot}{#3\origjot}%
+    \IfValueT{#2}{\NewDocumentCommand{\id}{m}{\label{eq:#2##1}}}%
+    \IfBooleanTF{#1}%
+    {%
+        \begin{gather*}%
+            #4%
+        \end{gather*}%
+    }%
+    {%
+        \begin{gather}%
+            #4%
+        \end{gather}%
+    }%
+    \setlength{\jot}{\origjot}
+    \par%
+}{}%

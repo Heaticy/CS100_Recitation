@@ -1,0 +1,294 @@
+\ProvidesPackage{minimus-float}
+
+% -------------------------------- %
+% Load package <etoolbox> : Toolbox for class and package
+\RequirePackage{etoolbox}
+% Load package <xparse> : New way to define command and environment
+\RequirePackage{xparse} 
+% Handler of split argument
+\RequirePackage{semi-split}
+
+% -------------------------------- %
+% Load package <float> : Provide [H] to disable float
+\RequirePackage{float}
+
+% -------------------------------- %
+% Load package <caption> : Adjust caption format
+\RequirePackage{caption}
+% Set the vertical space between caption and table/figure
+\captionsetup[table]{skip=6.0pt}
+\captionsetup[figure]{skip=6.0pt,belowskip=-8pt}
+\captionsetup[subfigure]{belowskip=0pt}
+
+% -------------------------------- %
+% Load package <subcaption> : Support for subfigure
+\RequirePackage{subcaption}
+% Default behaviour
+% Counter in caption looks like "3.1(a)"
+% Counter in reference looks like "3.1a"
+% Solution: add brackets to counter and set labelformat to simple (or there will be two brackets)
+% ----------------
+% Add brackets to counter
+\renewcommand\thesubfigure{(\alph{subfigure})} 
+\renewcommand\thesubtable{(\alph{subtable})} 
+% Set label format to simple, or we will get "3.1((a))" in caption
+\subcaptionsetup{labelformat=simple}
+
+% -------------------------------- %
+% Load package <tabularray> : Ultimate solution for table
+\RequirePackage{tabularray}
+
+% -------------------------------- %
+% Load package <multirow> : Traditional multirow support
+\RequirePackage{multirow}
+
+% -------------------------------- %
+% Load package <graphicx> : Support for include graphics
+\RequirePackage{graphicx}
+
+% -------------------------------- %
+% Load package <pdfpages> : Support for input pdf pages
+\RequirePackage{pdfpages}
+
+% -------------------------------- %
+% Define line none
+\newlength{\linenone}
+\setlength{\linenone}{0.0pt}
+% Define line split
+\newlength{\linesplit}
+\setlength{\linesplit}{0.2pt}
+% Define line middle
+\newlength{\linemiddle}
+\setlength{\linemiddle}{0.4pt}
+% Define line border
+\newlength{\lineborder}
+\setlength{\lineborder}{1.0pt}
+
+% -------------------------------- %
+% Define extra vspace for long table to align with short table
+% vskip above caption (by \vspace{\ltabcapvskipabove} before \captionof{table}{...})
+\newlength{\ltabcapvskipabove}
+% vskip below caption (by \vspace{\ltabcapvskipbelow} after  \captionof{table}{...})
+\newlength{\ltabcapvskipbelow}
+% vskip above table (by presep=\ltabpresep) (does not work for beamer!)
+\newlength{\ltabpresep}
+% vskip below table (by postsep=\ltabpostsep)
+\newlength{\ltabpostsep}
+
+% For beamer
+% 1.5\bigskipamount is the default value of presep
+\@ifclassloaded{beamer}%
+{%
+    \setlength{\ltabcapvskipabove}{6.3pt}%
+    \setlength{\ltabcapvskipbelow}{2.0pt}%
+    \setlength{\ltabpresep}{1.5\bigskipamount}%
+    \setlength{\ltabpostsep}{10.0pt}%
+}{}%
+
+% For book
+\@ifclassloaded{book}%
+{%
+    \setlength{\ltabcapvskipabove}{0.0pt}%
+    \setlength{\ltabcapvskipbelow}{0.0pt}%
+    \setlength{\ltabpresep}{13.0pt}%
+    \setlength{\ltabpostsep}{20.9pt}%
+}{}%
+
+% -------------------------------- %
+% Table continue text for zh-cn and en-us
+\@ifpackageloaded{xeCJK}%
+{%
+    % For zh-cn
+    \NewDocumentCommand{\text@tablecontinue}{}{续表}%
+}%
+{%
+    % For en-us
+    \NewDocumentCommand{\text@tablecontinue}{}{Continued}%
+}%
+
+% -------------------------------- %
+% Environment Table
+% Design to use with tblr from tabularray
+% ----------------
+% \begin{Table}*[caption;label]&&!!
+%    \begin{tblr}{colspec={XX}}
+%        A&alpha\\
+%        B&beta\\
+%    \end{tblr}
+% \end{Table}
+% ----------------
+% #1 *                  -> no number
+% #2 [caption;label]    -> caption and label
+% #3 &                  -> remove middle line and head
+% #4 &                  -> remove border line
+% #5 !                  -> enable float, use [htbp] instead [H] (as !)
+% #6 !                  -> enable longtable (as !!)
+% #7                    -> body (+b to allow paragraph break)
+\NewDocumentEnvironment{Table}{s>{\SplitArgument{1}{;}}O{}t&t&t!t!+b}%
+{%
+    \split@two#2%
+    % Test if it is long table
+    \IfBooleanTF{#6}%
+    {%
+        % ---- Long Table ----%
+        % Long table do not need table environment!
+        % ----------------
+        % Disable hypcap here to remove warning for \captionof*
+        \captionsetup{hypcap=false}%
+        % Remove default foot text for continue
+        \DefTblrTemplate{contfoot-text}{default}{}%
+        % Long table have its own way to generate caption by outer settings
+        % However, it does not use \caption to do so, which cause \captionsetup not working
+        % So, we have to fully override the definition of firsthead
+        % Define firsthead
+        \DefTblrTemplate{firsthead}{default}%
+        {%
+            % Test if caption needs number
+            % Use \captionof instead of \caption here (\captionof can use outside float)
+            \IfBooleanTF{#1}%
+            {%
+                % Make caption*
+                % Use \vspace{\ltabcapvskipabove} and \vspace{\ltabcapvskipbelow} here
+                \ifdefempty{\x@a}{}{\vspace{\ltabcapvskipabove}\captionof*{table}{\x@a}\vspace{\ltabcapvskipbelow}}%
+            }%
+            {%
+                % Make caption
+                % Use \vspace{\ltabcapvskipabove} and \vspace{\ltabcapvskipbelow} here
+                \ifdefempty{\x@a}{\vspace{\ltabcapvskipabove}\captionof{table}{}\vspace{\ltabcapvskipbelow}}{\vspace{\ltabcapvskipabove}\captionof{table}{\x@a}\vspace{\ltabcapvskipbelow}}%
+                % Make label
+                \ifdefempty{\x@b}{}{\label{tab:\x@b}}%
+            }%
+        }%
+        % Define middlehead
+        \DefTblrTemplate{middlehead}{default}{\captionof*{table}{\text@tablecontinue}}%
+        % Define lasthead
+        \DefTblrTemplate{lasthead}{default}{\captionof*{table}{\text@tablecontinue}}%
+        % Set inner
+        % hline{1,Z}={\lineborder} -> head line and foot line
+        % hline{2}={\linemiddle} -> middle line
+        % rowhead = 1 -> repeat first line for every new page
+        % cells={font=\small} -> set font to small
+        \SetTblrInner[tblr]{hline{1,Z}={\lineborder},hline{2}={\linemiddle},rowhead=1,cells={font=\small}}%
+        % Remove middle line if requested (also set rowhead=0)
+        \IfBooleanT{#3}{\SetTblrInner[tblr]{hline{2}={\linenone},rowhead=0}}
+        % Remove border line if requested
+        \IfBooleanT{#4}{\SetTblrInner[tblr]{hline{1,Z}={\linenone}}}
+        % Set outer
+        % long -> use long table
+        % headsep=0pt -> remove headsep (\captionof have already taken care of this)
+        % entry=none -> do not add an entry in list of table (\captionof have done this)
+        % label=none -> do not step table counter (\captionof have done this)
+        % presep=\ltabpresep   -> vskip above table, align with short table (does not work for beamer!)
+        % postsep=\ltabpostsep -> vskip below table, align with short table
+        \SetTblrOuter[tblr]{long,headsep=0pt,entry=none,label=none,presep=\ltabpresep,postsep=\ltabpostsep}%
+        % Body here
+        #7%
+    }%
+    {%
+        % ---- Short Table ---- %
+        % Set inner
+        % hline{1,Z}={\lineborder} -> head line and foot line
+        % hline{2}={\linemiddle} -> middle line
+        % cells={font=\small} -> set font to small
+        \SetTblrInner[tblr]{hline{1,Z}={\lineborder},hline{2}={\linemiddle},cells={font=\small}}%
+        % Remove middle line if requested (also set rowhead=0)
+        \IfBooleanT{#3}{\SetTblrInner[tblr]{hline{2}={\linenone},rowhead=0}}
+        % Remove border line if requested
+        \IfBooleanT{#4}{\SetTblrInner[tblr]{hline{1,Z}={\linenone}}}
+        % Set outer
+        \SetTblrOuter[tblr]{}%
+        % Use table environment [htbp] / [H]
+        \IfBooleanTF{#5}{\begin{table}[htbp]}{\begin{table}[H]}%
+            % Center the table
+            \centering%
+            % Test if caption needs number
+            % Also use \captionof here because \caption will add extra vertical spaces
+            \IfBooleanTF{#1}%
+            {%
+                % Make caption*
+                \ifdefempty{\x@a}{}{\captionof{table}*{\x@a}}%
+            }%
+            {%
+                % Make caption 
+                \ifdefempty{\x@a}{\captionof{table}{}}{\captionof{table}{\x@a}}%
+                % Make label
+                \ifdefempty{\x@b}{}{\label{tab:\x@b}}%
+            }%
+            % Body here
+            \makebox[\linewidth]{#7}%
+        \end{table}%
+    }%
+}{}%
+
+% -------------------------------- %
+% Environment Figure
+% ----------------
+% \begin{Figure}*[caption;label]!
+%     \includegraphics{Test01.fig.pdf}
+% \end{Table}
+% ----------------
+% #1 *                  -> no number
+% #2 [caption;label]    -> caption and label
+% #3 !                  -> enable float, use [htbp] instead [H] (as !)
+% #4                    -> body (+b to allow paragraph break)
+\NewDocumentEnvironment{Figure}{s>{\SplitArgument{1}{;}}O{}t!+b}%
+{%
+    \split@two#2%
+    \NewCommandCopy{\xbck@a}{\x@a}%
+    \NewCommandCopy{\xbck@b}{\x@b}%
+    % Use figure environment [htbp] / [H]
+    \IfBooleanTF{#3}{\begin{figure}[htbp]}{\begin{figure}[H]}%
+        % Center the figure
+        \centering%
+        % Set parskip in case of multline subfigure
+        \setlength{\parskip}{6pt}%
+        % Body here
+        #4%
+        \def\x@a{\xbck@a}%
+        \def\x@b{\xbck@b}%
+        % Test if caption needs number
+        \IfBooleanTF{#1}%
+        {%
+            % Make caption*
+            \ifdefempty{\x@a}{}{\caption*{\x@a}}%
+        }%
+        {%
+            % Make caption 
+            \ifdefempty{\x@a}{\caption{}}{\caption{\x@a}}%
+            % Make label
+            \ifdefempty{\x@b}{}{\label{fig:\x@b}}%
+        }%
+    \end{figure}%
+}{}%
+
+% -------------------------------- %
+% Command \figuresub
+% Use inside Figure environment
+% ----------------
+% \figuresub*[caption;label]{\includegraphics{Test01.fig.pdf}}{0.5}
+% ----------------
+% #1 *                  -> no number
+% #2 [caption;label]    -> caption and label
+% #3 {graphics}         -> include graphics command
+% #4 {length}           -> width of subfigure (length\linewidth)
+\NewDocumentCommand{\figuresub}{s>{\SplitArgument{1}{;}}O{}mg}%
+{%
+    \split@two#2%
+    % Test if caption needs number
+    \IfBooleanTF{#1}%
+    {%
+        % Make subcaptionbox*
+        % In this case, if caption also has empty text, just use makebox instead 
+        % Test if sub caption width is assigned
+        \IfValueTF{#4}%
+        {\ifdefempty{\x@a}{\makebox[#4\linewidth]{#3}}{\subcaptionbox*{\x@a}[#4\linewidth]{#3}}}%
+        {\ifdefempty{\x@a}{\makebox{#3}}{\subcaptionbox*{\x@a}{#3}}}%
+    }%
+    {%
+        % Make subcaptionbox
+        % Test if sub caption width is assigned
+        \IfValueTF{#4}%
+        {\subcaptionbox{\x@a\ifdefempty{\x@b}{}{\label{fig:\x@b}}}[#4\linewidth]{#3}}%
+        {\subcaptionbox{\x@a\ifdefempty{\x@b}{}{\label{fig:\x@b}}}{#3}}%
+    }%
+}%

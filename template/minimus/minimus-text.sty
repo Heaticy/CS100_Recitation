@@ -1,0 +1,84 @@
+\ProvidesPackage{minimus-text}
+
+% -------------------------------- %
+% Load package <etoolbox> : Toolbox for class and package
+\RequirePackage{etoolbox}
+% Load package <xparse> : New way to define command and environment
+\RequirePackage{xparse}
+
+% -------------------------------- %
+% Load package <ulem> : Provide various types of underlines that can span across lines
+\RequirePackage{ulem}
+
+\@ifpackageloaded{xeCJK}%
+{%
+    % Load package <xeCJKfntef> : Fixed ulem can not work with chinese
+    \RequirePackage{xeCJKfntef}%
+    % \dotcnuline -> only one dot for every chinese character
+    \NewDocumentCommand{\dotcnuline}{m}{\CJKunderdot{#1}}%
+}{}%
+
+% -------------------------------- %
+% Load package <xurl> : Fixed url can not break properly
+\RequirePackage{xurl}
+
+% -------------------------------- %
+% Load package <xcolor> : More colors
+% dvipsnames, svgnames, x11names -> predefined colors set
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+\RequirePackage{xcolor}
+
+% -------------------------------- %
+% Load package <pifont> : Access to postscript symbol 
+\RequirePackage{pifont}
+
+% Number with circle (1-10 only)
+% \ding provides by pifont
+\NewDocumentCommand{\circnum}{m}{\ding{\numexpr 171+#1}}
+\NewDocumentCommand{\circnumdark}{m}{\ding{\numexpr 181+#1}}
+
+% Number in roman format
+\NewDocumentCommand{\romannum}{m}{\romannumeral #1}
+\NewDocumentCommand{\Romannum}{m}{\expandafter\@slowromancap\romannumeral #1@}
+
+% -------------------------------- %
+% Load package <tikz> : Draw all kinds of figure
+% Load tikz and positioning here to support definition of \fg command
+\RequirePackage{tikz}
+\usetikzlibrary{positioning}
+
+% Size correction of hiragana
+\NewDocumentCommand{\vsizecorrector@hira}{}{\vphantom{もりぼゃ}}
+% Size correction of kanji
+\NewDocumentCommand{\vsizecorrector@kanji}{}{\vphantom{中国}}
+
+% Typset furigana (hiragana above kanji)
+% ----------------
+% \fg{kanji}{furigana}
+% ----------------
+% #1 {kanji}
+% #2 {furigana}
+\NewDocumentCommand{\fg}{mm}%
+{%
+    % Use tikzpicture to typset furigana
+    \begin{tikzpicture}[baseline=(kanji.base)]%
+        % Draw kanji
+        \node(kanji)[%
+            inner sep=0pt,%
+        ]{%
+            \vsizecorrector@kanji%
+            #1%
+        };%
+        % Draw furigana
+        \node(furigana)[%
+            above=1pt of kanji,%
+            inner sep=0pt,%
+            xscale=0.55,%
+            yscale=0.55%
+        ]{%
+            \tiny%
+            \vsizecorrector@hira%
+            #2%
+        };%
+    \end{tikzpicture}%
+}%

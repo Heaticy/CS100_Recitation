@@ -1,0 +1,276 @@
+\ProvidesPackage{minimus-colorbox}
+
+% -------------------------------- %
+% Load package <etoolbox> : Toolbox for class and package
+\RequirePackage{etoolbox}
+% Load package <xparse> : New way to define command and environment
+\RequirePackage{xparse} 
+% Handler of split argument
+\RequirePackage{semi-split}
+
+% -------------------------------- %
+% Load package <amsthm> : AMS math theorem
+\RequirePackage{amsthm}
+
+% -------------------------------- %
+% Load package <aliascnt> : Create alian for counter
+\RequirePackage{aliascnt}
+
+% Define base counter for box env
+\newcounter{cntboxdef}[section]
+\newcounter{cntboxthm}[section]
+\newcounter{cntboxexp}[section]
+\newcounter{cntboxalg}[section]
+\newcounter{cntboxdespri}[section]
+
+% Define alias counter for box env
+\newaliascnt{boxdefinition}{cntboxdef}
+\newaliascnt{boxtheorem}{cntboxthm}
+\newaliascnt{boxlemma}{cntboxthm}
+\newaliascnt{boxcorollary}{cntboxthm}
+\newaliascnt{boxproposition}{cntboxthm}
+\newaliascnt{boxproperty}{cntboxthm}
+\newaliascnt{boxformula}{cntboxthm}
+\newaliascnt{boxequation}{cntboxthm}
+\newaliascnt{boxexample}{cntboxexp}
+\newaliascnt{boxalgorithm}{cntboxalg}
+\newaliascnt{boxprocess}{cntboxalg}
+\newaliascnt{boxdesignprinciple}{cntboxdespri}
+
+% -------------------------------- %
+% Load package <tcolorbox> : Provides colored and framed text boxes
+\RequirePackage{tcolorbox}
+
+% Support for breakable box
+\tcbuselibrary{breakable}
+
+% Support for theorem box
+\tcbuselibrary{theorems}
+
+% Commmon settings for tcolorbox
+% breakable                 -> box will break into multi pages if necessary
+% lines before break=1      -> box can break if at least 1 line is placed
+% separator sign            -> for theorem box, use " " for separator of title
+% theorem hanging indent=0pt-> for theorem box, second line of long title will start from left border
+\tcbset{%
+    arc=0.1mm,%
+    colback=black!3!white,%
+    fonttitle=\bfseries\rmfamily,%
+    left=0.2cm,%
+    right=0.2cm,%
+    toptitle=0.05cm,%
+    bottomtitle=0.05cm,%
+    breakable,%
+    lines before break=1,%
+    separator sign={\ },%
+    theorem hanging indent=0pt}
+
+% Define style for box
+% Type def
+\tcbset{boxdefstyle/.style={colframe=gray!80!green!80!black}}
+% Type thm
+\tcbset{boxthmstyle/.style={colframe=gray!70!blue}}
+% Type exp
+\tcbset{boxexpstyle/.style={colframe=black!50!cyan}}
+% Type txt
+\tcbset{boxtxtstyle/.style={colframe=gray!70!red}}
+% Type jpset
+\tcbset{boxjpsetstyle/.style={colframe=blue!50!black,colback=blue!5!white,arc=1.0mm}}
+% Type jpcov
+\tcbset{boxjpcovstyle/.style={colframe=green!50!black,colback=green!5!white,arc=1.0mm}}
+
+% Hints: Use 2^{n-1} # for Level n arguments
+% So Level 3's arguments start with "####" instead of "###"
+
+% Package etoolbox provides useful commands based on \csname \endcsname
+% All the "cs" commands are some how about convert text (e.g a) to command (e.g \a)
+% \csdef{a}{b} = \def\a{b}
+% \csuse{a} = \a
+% \ifcsempty{a}{...}{...} = \ifdefempty{\a}{...}{...}
+
+% -------------------------------- %
+% Generate wrapper for theorem like color box
+% ----------------
+% \make@boxthm{envname}{base}
+% ---------------- Level 1
+% #1 {envname}
+% #2 {base}
+% ----------------
+% \make@boxthm{BoxDefinition}{boxdefinition} will generate env BoxDefinition as wrapper of boxdefinition
+% \begin{BoxDefinition}*[title;label]
+%      ...
+% \end{BoxDefinition}
+% ---------------- Level 2
+% ##1 *                   -> no number
+% ##2 [title;label]       -> title and label
+% ##3                     -> body (+b to allow paragraph break)
+\NewDocumentCommand{\make@boxthm}{mm}%
+{%
+    % Create wrapper env (BoxDefinition) based on base env (boxdefinition)
+    \NewDocumentEnvironment{#1}{s>{\SplitArgument{1}{;}}O{}+b}%
+    {%
+        \split@two##2%
+        % Test if title needs number
+        \IfBooleanTF{##1}%
+        {%
+            % Call base env with * (boxdefinition*)
+            \begin{#2*}{\x@a}%
+                % Set paragraph skip inside box
+                \setlength{\parskip}{3pt}%
+                % Body here
+                ##3%
+            \end{#2*}%
+        }%
+        {%
+            % Call base env without * (boxdefinition)
+            % Only create label when label (\x@b) is not empty
+            \ifdefempty{\x@b}{\begin{#2}{\x@a}{}}{\begin{#2}{\x@a}{\x@b}}%
+                % Set paragraph skip inside box
+                \setlength{\parskip}{3pt}%
+                % Body here
+                ##3%
+            \end{#2}%
+        }%
+    }{}%
+}%
+
+% -------------------------------- %
+% Environment BoxDefinition
+\NewTcbTheorem[number within=section,use counter=boxdefinition]{boxdefinition}{定义}{boxdefstyle}{def}
+\make@boxthm{BoxDefinition}{boxdefinition}
+
+% -------------------------------- %
+% Environment BoxTheorem
+\NewTcbTheorem[number within=section,use counter=boxtheorem]{boxtheorem}{定理}{boxthmstyle}{thm}
+\make@boxthm{BoxTheorem}{boxtheorem}
+
+% -------------------------------- %
+% Environment BoxLemma
+\NewTcbTheorem[number within=section,use counter=boxlemma]{boxlemma}{引理}{boxthmstyle}{lem}
+\make@boxthm{BoxLemma}{boxlemma}
+
+% -------------------------------- %
+% Environment BoxCorollary
+\NewTcbTheorem[number within=section,use counter=boxcorollary]{boxcorollary}{推论}{boxthmstyle}{col}
+\make@boxthm{BoxCorollary}{boxcorollary}
+
+% -------------------------------- %
+% Environment BoxProposition
+\NewTcbTheorem[number within=section,use counter=boxproposition]{boxproposition}{命题}{boxthmstyle}{pps}
+\make@boxthm{BoxProposition}{boxproposition}
+
+% -------------------------------- %
+% Environment BoxProperty
+\NewTcbTheorem[number within=section,use counter=boxproperty]{boxproperty}{性质}{boxthmstyle}{ppt}
+\make@boxthm{BoxProperty}{boxproperty}
+
+% -------------------------------- %
+% Environment BoxFormula
+\NewTcbTheorem[number within=section,use counter=boxformula]{boxformula}{公式}{boxthmstyle}{fml}
+\make@boxthm{BoxFormula}{boxformula}
+
+% -------------------------------- %
+% Environment BoxEquation
+\NewTcbTheorem[number within=section,use counter=boxequation]{boxequation}{方程}{boxthmstyle}{eqt}
+\make@boxthm{BoxEquation}{boxequation}
+
+% -------------------------------- %
+% Environment BoxExample
+\NewTcbTheorem[number within=section,use counter=boxexample]{boxexample}{例}{boxexpstyle}{exp}
+\make@boxthm{BoxExample}{boxexample}
+
+% -------------------------------- %
+% Environment BoxAlgorithm
+\NewTcbTheorem[number within=section,use counter=boxalgorithm]{boxalgorithm}{算法}{boxtxtstyle}{alg}
+\make@boxthm{BoxAlgorithm}{boxalgorithm}
+
+% -------------------------------- %
+% Environment BoxProcess
+\NewTcbTheorem[number within=section,use counter=boxprocess]{boxprocess}{流程}{boxtxtstyle}{pro}
+\make@boxthm{BoxProcess}{boxprocess}
+
+% -------------------------------- %
+% Environment BoxDesignPrinciple
+\NewTcbTheorem[use counter=boxdesignprinciple]{boxdesignprinciple}{设计原则}{boxtxtstyle}{despri}
+\make@boxthm{BoxDesignPrinciple}{boxdesignprinciple}
+
+% -------------------------------- %
+% Generate wrapper for japanese color box
+% ----------------
+% \make@boxjp{envname}{base}
+% ---------------- Level 1
+% #1 {envname}
+% #2 {base}
+% ----------------
+% \make@boxthm{JPSetntence}{jpsentence} will generate env JPSentence as wrapper of jpsentence
+% \begin{JPSentence}{translation}
+%      ...
+% \end{JPSentence}
+% ---------------- Level 2
+% ##1 {translation}       -> write chinese translation (+g to allow paragraph break)
+% ##2                     -> write japanese, body (+b to allow paragraph break)
+\NewDocumentCommand{\make@boxjp}{mm}%
+{%
+    % Create wrapper env (JPSentence) based on base env (jpsentence)
+    \NewDocumentEnvironment{#1}{+g+b}%
+    {%
+        % Call base env
+        \begin{#2}%
+            % Set footnote symbol
+            \renewcommand{\thempfootnote}{\arabic{mpfootnote}}%
+            % Set paragraph skip inside box
+            \setlength{\parskip}{6pt}%
+            % Show japanese (##2 body)
+            ##2%
+            % Show chinese if given (##1)
+            % \tcblower will start the second part of box
+            % \parskip have to be set again for the second part
+            \IfValueT{#1}{\tcblower\setlength{\parskip}{6pt}##1}%
+        \end{#2}%
+    }{}%
+}%
+
+% -------------------------------- %
+% Environment JPSentence
+\NewTColorBox{jpsentence}{}{boxjpsetstyle}
+\make@boxjp{JPSentence}{jpsentence}
+
+% -------------------------------- %
+% Environment JPConversation
+\NewTColorBox{jpconversation}{}{boxjpcovstyle}
+\make@boxjp{JPConversation}{jpconversation}
+
+% -------------------------------- %
+% Generate proof like environment
+% ---------------- 
+% \make@proof{envname}{title}
+% ---------------- Level 1
+% #1 {envname}      -> the name of proof like env to create
+% #2 {title}        -> text at the start of proof
+% ----------------
+% \make@proof{Proof}{...} will generate env Proof (##)
+% \begin{Proof}[\cref{thm:Test}]
+%     So easy.
+% \end{Proof}
+% ---------------- Level 2
+% ##1 {reference}   -> reference to the proof target
+% ##2               -> body (+b to allow paragraph break)
+\NewDocumentCommand{\make@proof}{mm}%
+{%
+    \NewDocumentEnvironment{#1}{O{}+b}%
+    {%
+        \begin{proof}[\bfseries #2]%
+            \dotfill\, ##1\par%
+            ##2%
+        \end{proof}%
+        \hrule\par\vspace{15pt plus 10pt minus 10pt}%
+    }{}%
+}%
+
+% -------------------------------- %
+% Environment Proof
+\make@proof{Proof}{证明}
+
+% -------------------------------- %
+% Environment Solution
+\make@proof{Solution}{解}
