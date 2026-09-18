@@ -47,3 +47,11 @@
 - r1仓库（cs100linux.git）历史经`git subtree add`完整并入顶层并保留（含Marp对齐移植），gitlab上的cs100linux.git未动，可作归档或删除；本地嵌套`.git`与备份`r1-migrate/`在验证内容无损后删除。注意：子模块内仅本地存在的`feature/marp-parity`分支引用随嵌套`.git`一并移除，其内容已vendor进`template/vsp-beamer/vsp-beamer-theme.sty`（逐字节校验一致）。
 - 构建接线：`r1/Makefile`前置定义`CLSS_VSP_BEAMER`等变量指向`../template`（利用`latex-std-dependence.mk`的`?=`可覆盖性），主文件`\input@path`与`\graphicspath`同步改路径；xelatex从源码目录运行，相对路径成立。
 - 全量编译验证通过，共101页，无Overfull警告与错误，与重构前页数一致。
+
+## 2026.09.19 03:10
+
+- 页尾改版：新增`\VSPsetupfootline{left}{middle}{right}`，左中右三格分别为课程与习题课节次、年份、主讲者，替代原页尾（shtu居中页码框/非shtu短标题+节名+页码框），页码不再展示。
+- 页尾模板统一shtu与非shtu变体；shtu背景图底部左右角有校园剪影与书法装饰（实测高约0.50–0.55cm），shtu下三格整行上移至`dp=0.68cm`避开，非shtu保持贴底`dp=0.10cm`。
+- 尾页底部同步展示同一行三格信息（shtu白底用`VSPMuted`，红底用`white!82`）。
+- r1主文件设置三格为`CS100 Recitation 1`/`Fall 2026`/`Yuxuan Li`，模板README同步记录。
+- 编译验证：101页，无Overfull警告与错误；抽查正文页、目录页、尾页渲染，页尾三格与装饰条、正文均无冲突。
