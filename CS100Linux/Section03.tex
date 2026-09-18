@@ -2,7 +2,7 @@
 
 \begin{frame}
     \frametitle{Linux的目录结构}
-    Linux系统的目录结构遵循Filesystem Hierarchy Standard（FHS）。事实上，这几乎是所有类Unix系统遵循的规范，你甚至可以在MacOS上找到相似的目录结构！
+    Linux系统的目录结构遵循文件系统层次标准（Filesystem Hierarchy Standar，FHS）。这实际上是几乎所有类Unix系统遵循的规范：你甚至可以在MacOS上找到相似的目录层次结构！
 \end{frame}
 
 \begin{frame}
@@ -37,7 +37,7 @@
     \begin{Code}*
         \lstinputlisting[firstline=1,lastline=2]{code/fhs/bin.sh}
     \end{Code}
-    \code{/bin}目录也包含大部分通过\code{apt}安装的程序。对于Linux而言，它并不区分“系统自带的命令”和“用户安装的应用程序”，它们本质上都是可执行的二进制程序。
+    \code{/bin}目录也会包含大部分通过\code{apt}安装的程序。对于Linux系统，它不会区分所谓“系统自带的基本命令”和“用户安装的应用程序”，因为它们两者本质上都是可以执行的二进制程序。
 \end{frame}
 
 \begin{frame}
@@ -68,9 +68,18 @@
 
 \begin{frame}
     \frametitle{目录\code{/bin /lib /sbin}}
-    通常来说，动态链接是较为常用的。当你在C程序中写下\code{\#include <stdio.h>}以及\code{printf}并编译时，函数\code{printf}的二进制并不会被链接到你的程序中，真正发生的事情是，当你的程序运行到\code{printf}时，系统会找到\code{libc.so}并运行对应的二进制，这就是所谓的“动态链接”即“运行时链接”。动态链接机制使系统中海量的二进制程序不必重复包含C库的片段，而是可以共享一个C库，从而节约大量空间！
+    通常，动态链接是较为常用的。
+    
+    当你在C程序中写下\code{\#include <stdio.h>}以及\code{printf}并编译时，函数\code{printf}的二进制并不会被链接到你的程序中，真正发生的事情是，当你的程序运行到\code{printf}函数时，系统会找到\code{libc.so}并运行对应的二进制，这就是所谓“运行时链接”的含义。动态链接机制使系统中海量的二进制程序不必重复包含C库的片段，而是可以共享一个C库，从而节约大量空间！
 
-    然而，静态链接在某些情况下也有其意义。当你的C程序最终是在某个裸机的单片机上运行时，根本没有操作系统进行动态链接，此时就需要在编译阶段静态链接用到的函数。这从空间上也很划算，你只需要带上C库中你用到那一部分就可以了！
+\end{frame}
+
+\begin{frame}
+    \frametitle{目录\code{/bin /lib /sbin}}
+    
+    然而，静态链接在某些情况下也有其意义。
+    
+    当你的C程序最终是在某个裸机的单片机上运行时，根本没有操作系统进行动态链接，此时就需要在编译阶段静态链接用到的函数。空间上也很划算，只需要带上C库中真正用到的部分！
 \end{frame}
 
 \begin{frame}
@@ -88,8 +97,8 @@
     \begin{itemize}
         \item \code{/home}是普通用户的家目录，每个用户在\code{/home}下有同名的家目录。
         \item 用户\code{liyuxuan}的家目录位于\code{/home/liyuxuan}。
-        \item \code{/root}是超级用户的家目录，这是\code{root}作为超级用户在架构上的特权，其家目录并非位于\code{/home/root}，而是高挂了一级，直接位于根目录\code{/root}下。
         \item 用户的家目录始终可以用\code{\~}表示（取决于当前登录的用户）。
+        \item \code{/root}是超级用户的家目录，这是\code{root}作为超级用户在架构上享有的额外特权：其家目录并非位于通常的\code{/home/root}，而是相应的高挂了一级，直接位于根目录\code{/root}下。
     \end{itemize}
 \end{frame}
 
@@ -99,7 +108,7 @@
     \begin{Code}*
         \lstinputlisting{code/fhs/etc.sh}
     \end{Code}
-    你可以在这里设置本地的DNS解析，例如给你的课程服务器起一个别名
+    你可以在这里设置本地的DNS解析，例如
     \begin{Code}*
         \lstinputlisting{code/hosts}
     \end{Code}
@@ -118,7 +127,7 @@
     \frametitle{目录\code{/usr}}
     \code{/usr}的全称是Unix System Resource，请注意其和User无关！
 
-    如果你足够细心，仔细观察了\code{ls -l /}的输出，你会注意到\code{/bin /lib /sbin}实际上分别是指向\code{/usr/bin /usr/lib /usr/sbin}的软链接！这是因为早期的实践中，前者存储系统所需的命令和库，后者存储用户安装的命令和库，但是随着时代发展，现在主流的Linux发行版都选择将这两个目录用软链接的方式合并在一起。
+    如果你足够细心，仔细观察了\code{ls -l /}的输出，你会注意到\code{/bin /lib /sbin}实际上分别是指向\code{/usr/bin /usr/lib /usr/sbin}的软链接！这是因为早期的实践中，前者存储系统所需的命令和库，后者存储用户安装的命令和库，但是，随着时代发展，现在主流的Linux发行版都选择将这两个目录用软链接的方式合并在一起，不再区分到底是系统所需还是用户安装。
 \end{frame}
 
 \begin{frame}
@@ -138,14 +147,14 @@
     \begin{Code}*
         \lstinputlisting{code/fhs/media.sh}
     \end{Code}
-    假如U盘的名称是\code{udisk}，那你就会在该位置看到一个名为\code{udisk}的目录，该过程称为挂载（Mount），这和Windows中插入U盘会出现新的盘符的行为是不一样的。
+    假如U盘的名称是\code{udisk}，那么你就会在该位置看到出现了一个名为\code{udisk}的目录，该过程被称为挂载（Mount），这一点和Windows中插入U盘会出现新的盘符的行为是不太一样的。
     
     通常移动存储设备都可以被自动挂载至\code{/media}，极少数情况需要手动挂载至\code{/mnt}。
 \end{frame}
 
 \begin{frame}
     \frametitle{目录\code{/boot}}
-    \code{/boot}目录包含了操作系统正常启动所必须的文件。事实上，在安装系统进行分区时，除了挂载于\code{/}的主分区，还会自动产生一个挂载于\code{/boot/efi}的启动分区。
+    \code{/boot}目录包含了操作系统正常启动所必须的文件。事实上，当在安装系统进行分区时，你可能会注意到除了被挂载于\code{/}的主分区，还会自动产生一个被挂载于\code{/boot/efi}的启动分区。
 \end{frame}
 
 \begin{frame}
@@ -154,12 +163,12 @@
     \begin{Code}*
         \lstinputlisting{code/fhs/dev.sh}
     \end{Code}
-    第一条命令的输出可能会看到\code{nvme0n1p1}和\code{nvme0n1p2}，这对应了NVMe上连接的SSD的第一个分区和第二个分区。第二条命令用于查看磁盘占用，对照可以发现，挂载点\code{/}对应\code{/dev/nvme0n1p1}，挂载点\code{/boot/efi}对应\code{/dev/nvme0n1p2}。
+    第一条命令的输出可能会看到\code{nvme0n1p1}和\code{nvme0n1p2}，这对应了在NVMe上连接的SSD的第一个分区（\code{p1}）和第二个分区（\code{p2}）。第二条命令用于查看磁盘占用，观察该命令的输出可以发现，挂载点\code{/}对应的是\code{/dev/nvme0n1p1}，挂载点\code{/boot/efi}对应的是\code{/dev/nvme0n1p2}。
 \end{frame}
 
 \begin{frame}
     \frametitle{目录\code{/dev}}
-    在Linux系统中，一切皆文件。磁盘设备本身也被视为一个文件，这并不是一个真实存在的文件，而是通过文件读写的方式包装了对磁盘设备的数据写入和读取。挂载的作用，就是将磁盘设备的直接读写转换为所看到的文件的创建、修改、删除。
+    在Linux系统中，\textbf{一切皆文件}。磁盘设备本身也被视为一个文件，这并不是一个真实存在的文件，而是通过文件读写的方式包装了对磁盘设备的数据写入和读取。而挂载的作用，就是将磁盘设备的直接读写操作，转换为我们在文件系统层面所看到的对文件的创建、修改、删除。
 
     设备文件在\code{ls -l}下会显示为\code{b}或\code{c}类型，代表这是一个块设备或字符设备。
 \end{frame}
@@ -170,7 +179,9 @@
     \begin{Code}*
         \lstinputlisting{code/fhs/sys.sh}
     \end{Code}
-    第一条命令将关闭键盘灯，第二条命令将开启键盘灯。这里\code{tee}最终发挥的作用就是将\code{0}和\code{1}写入\code{brightness}文件（重定向\code{>}在这里会有权限问题）。在\code{/sys}下的文件是设备属性的反映，你可以通过对\code{/sys}下文件的读写查看和控制设备属性。
+    第一条命令将关闭键盘灯，第二条命令将开启键盘灯。
+    
+    这里\code{tee}最终发挥的作用就是将\code{0}和\code{1}写入\code{brightness}文件（重定向\code{>}在这里会有权限问题）。\code{/sys}下的文件是设备属性的反映，通过对\code{/sys}下文件的读写可以查看和控制设备属性。
 \end{frame}
 
 \begin{frame}
@@ -179,7 +190,7 @@
     \begin{Code}*
         \lstinputlisting{code/fhs/proc.sh}
     \end{Code}
-    第一条命令会看到大量数字命名的目录，例如\code{248 3533 55991}。第二条命令用于查看全部进程。对照发现，进程号和\code{/proc}下的数字命名的目录是一一对应的！
+    第一条命令会看到大量数字命名的目录，例如\code{248 3533 55991}。第二条命令用于查看全部进程。通过对照，我们可以发现，进程号和\code{/proc}下的数字命名的目录是一一对应的！
 \end{frame}
 
 \begin{frame}
