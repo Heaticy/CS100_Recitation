@@ -31,3 +31,11 @@
 - 优化后图片总计约3.3MB（约12倍压缩），关闭草稿选项后完整PDF约3.1MB，编译约8秒。
 - `CS100Linux.tex`中`\setkeys{Gin}{draft}`（临时草稿选项）保持原样未动。
 - 注意：`origin/`中原图仍被git跟踪，用于将来重新处理，正常编译只使用`image/`根目录下的压缩版。
+
+## 2026.09.19 02:26
+
+- 移植Heaticy/vsp-beamer上游当日两个提交（828f9a7、2ac7093）至打包版`vsp-beamer-theme.sty`：子模块新建`feature/marp-parity`分支（基于v2.1），改动行与上游主题文件逐行一致，并同步README。
+- 改动内容：章节页标题字号22.68pt放大至35.43pt（对应Marp 100px），长标题只在空格与CJK边界换行（新增`\vsp@displaywrap`，字体选择移入节点`font=`键）；`\textbf`重定义为主题色加粗、`\alert`仅变色，课件中22处`\textbf`将随之变为强调色；shtu页码上移（`dp=0.10cm`改`0.20cm`）；代码框线颜色从`VSPTeal`改为`VSPPrimary!45!white`。
+- 已确认`vsp-beamer.cls`与`minimus`内部不使用`\textbf`，重定义不影响模板自身结构。
+- r1子模块指针更新至`feature/marp-parity`，注意该分支尚未推送liyuxuan3003上游，推送前其他克隆无法解析该指针。
+- 关闭草稿选项后重新全量编译，共101页，无Overfull警告与错误。
