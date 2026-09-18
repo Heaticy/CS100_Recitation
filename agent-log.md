@@ -22,3 +22,12 @@
 
 - 确认第一章发行版术语：使用“Centos系”指代该分支，使用“Redhat”而非“RHEL”。这是教学取舍，CentOS在国内计算机教育中认知度高，Redhat比RHEL更直观，非笔误，后续不要“修正”。
 - 第一节的发行版列表保持为：Debian系（Debian、Ubuntu）、Centos系（Fedora、Centos、Redhat）、Arch系（Arch Linux）。
+
+## 2026.09.18 21:20
+
+- 图片体积优化：原图（41MB）移到`CS100Linux/image/origin/`归档，用ImageMagick统一处理生成压缩版到`CS100Linux/image/`。
+- 处理方式：`convert -resize '1600x1600>' -strip -interlace Plane -quality 85`，即最长边压到1600像素、去除元数据、渐进式JPEG、质量85。
+- 所有引用图片由`.png`改为`.jpg`（`Section01.tex`共17处），`fuck-u-nvidia.jpg`保持`.jpg`。
+- 优化后图片总计约3.3MB（约12倍压缩），关闭草稿选项后完整PDF约3.1MB，编译约8秒。
+- `CS100Linux.tex`中`\setkeys{Gin}{draft}`（临时草稿选项）保持原样未动。
+- 注意：`origin/`中原图仍被git跟踪，用于将来重新处理，正常编译只使用`image/`根目录下的压缩版。
