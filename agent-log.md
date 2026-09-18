@@ -14,7 +14,7 @@
 - 修复`vsp-beamer`子模块段间无间距的问题：在`feature/add-parskip`分支上为`vsp-beamer-theme.sty`增加`\parskip=6pt`与`\parindent=0pt`，并同步更新README。该分支仅在本地提交，尚未推送上游。
 - 大改第一章：`\section{Linux是什么}`改为`\section{为什么使用Linux？}`。
 - 移除操作系统史话（Unix/BSD/GNU的历史叙述），重构为四步：Linux与GNU/Linux及发行版的关系；Windows的痛点（安装软件、系统更新、路径与命令、开发环境）与Linux的对比；Linux作为成熟桌面系统的能力（文档表格、网络通信、图形图像、开发工具、工程软件、游戏、显卡）；WSL与双系统的入门方案。
-- 重写`Section01.tex`，共25页，新增`code/why/`下的示例脚本。Windows相关截图暂以`% TODO`占位，未插入图片。
+- 重写`Section01.tex`，共25页，新增`code/init/`下的示例脚本。Windows相关截图暂以`% TODO`占位，未插入图片。
 - 删除`Section05.tex`远程连接一节，并从主文件移除对应`\input`，同时删除仅供该节使用的`code/shell/ssh.sh`、`scp.sh`、`passwd.sh`、`code/no-password.sh`。
 - 编译通过，共90页，无Overfull警告与错误。
 

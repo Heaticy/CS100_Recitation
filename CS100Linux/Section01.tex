@@ -82,7 +82,7 @@
     \frametitle{软件安装}
     Linux上，安装LaTeX这样庞大的软件只需要一句话
     \begin{Code}*
-        \lstinputlisting{code/why/apt-install.sh}
+        \lstinputlisting{code/intro/apt-install.sh}
     \end{Code}
     这里\code{apt}是Ubuntu的\textbf{软件包管理器}，它有三个关键特征
     \begin{itemize}
@@ -116,7 +116,7 @@
     \frametitle{系统更新}
     Linux并不区分“系统软件”与“应用软件”，它们由同一个包管理器统一管理，可以一起更新
     \begin{Code}*
-        \lstinputlisting{code/why/apt-upgrade.sh}
+        \lstinputlisting{code/intro/apt-upgrade.sh}
     \end{Code}
     其中，\code{apt update}用于刷新软件包索引，\code{apt upgrade}用于下载并安装更新。
 
@@ -168,7 +168,7 @@
     \frametitle{开发环境}
     Linux上，C编译器和Python解释器都是很常规的命令行工具，很容易使用
     \begin{Code}*
-        \lstinputlisting{code/why/dev.sh}
+        \lstinputlisting{code/intro/dev.sh}
     \end{Code}
     至于你在哪里编写\code{main.c}和\code{main.py}？这是编辑器的工作，你可以使用最流行的VSCode或历史悠久的Vim，但这不重要：用什么编写代码和用什么运行代码，是毫无关系的两件事。
 
@@ -401,11 +401,11 @@
     \frametitle{WSL：最简单的开始方式}
     WSL的安装需要在\textbf{正确的网络环境}下，在PowerShell上执行
     \begin{Code}*
-        \lstinputlisting[firstline=1,lastline=1]{code/why/wsl.sh}
+        \lstinputlisting[firstline=1,lastline=1]{code/intro/wsl.sh}
     \end{Code}
     WSL在安装后（可能需要重启一次）可以通过以下命令启动
     \begin{Code}*
-        \lstinputlisting[firstline=2,lastline=2]{code/why/wsl.sh}
+        \lstinputlisting[firstline=2,lastline=2]{code/intro/wsl.sh}
     \end{Code}
 \end{frame}
 
@@ -442,4 +442,9 @@
         \item 在Linux上我们更推荐使用VSCode的开源构建版本VSCodium。
         \item \url{https://vscodium.com/}
     \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{}
+    
 \end{frame}
