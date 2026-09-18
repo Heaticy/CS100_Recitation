@@ -155,7 +155,7 @@
     \begin{vspquote}{Windows是编程学习的最大阻碍}
         Windows糟糕的命令行体验使得许多教程无法使用：我该在哪里敲这个命令？
     \end{vspquote}
-    Windows上编程，往往要先请出一个庞大的IDE
+    Windows上编程，往往要先请出一个庞大的\textbf{IDE}（Integrated Design Environment）
     \begin{itemize}
         \item 开发C/C++通常要安装体积巨大的Visual Studio，其使用专有的MSVC编译器。
         \item 开发Python通常要安装Anaconda，其核心的环境管理功能被臃肿的GUI界面层层包裹。
@@ -174,8 +174,6 @@
 
     每个工具只做好一件事，再通过命令行组合起来，这正是Unix哲学。
 \end{frame}
-
-\subsection{Linux能做到什么？}
 
 \begin{frame}
     \frametitle{Linux不只是命令行}
@@ -364,8 +362,8 @@
             \end{Figure}
         \end{column}
         \begin{column}{0.48\textwidth}
-            \begin{Figure}*[Steam]
-                \includegraphics[width=\linewidth]{screen-steam.png}  
+            \begin{Figure}*[Age of Empires II]
+                \includegraphics[width=\linewidth]{screen-age-of-empires.png}  
             \end{Figure}
         \end{column}
     \end{columns}
@@ -387,43 +385,61 @@
     \end{columns}
 \end{frame}
 
-\subsection{如何开始？}
-
 \begin{frame}
     \frametitle{开始使用Linux}
-    即使完全不熟悉Linux也没有关系，有两种平滑的入门方式
+    本课程提供了两种使用Linux系统的方式
     \begin{itemize}
-        \item \textbf{WSL}（Windows Subsystem for Linux）：在Windows中直接运行一个真实的Linux子系统，适合先熟悉命令行与开发环境。
-        \item \textbf{双系统}：为Linux划分一块磁盘空间，开机时选择进入哪个系统，适合希望完整体验Linux的用户。
+        \item \textbf{WSL}（Windows Subsystem for Linux）：适用于Windows的Linux子系统，是微软官方提供的功能，本质上可以认为是一个在Windows上运行但\textbf{只有命令行环境的Linux虚拟机}。该方案适用于想继续使用Windows作为主力系统，只是想获得一个Linux开发环境的学生。
+        \item \textbf{双系统}：你可以在磁盘上划出一块空间，在保留当且Window系统的情况安装完整的Linux系统，开机时可以选择启动哪个系统。该方案适用于希望完整体验Linux桌面环境的学生。
+        \item 推荐使用Ubuntu 26.04或Ubuntu 24.04，但你也可以使用其他Linux发行版。
+        \item 此外，对于MacOS用户，你可以直接在MacOS上进行开发，无需Linux虚拟机！
     \end{itemize}
-    无论哪种方式，都请使用\textbf{Ubuntu 24.04}或\textbf{Ubuntu 26.04}。
+    我们真诚鼓励所有学生尝试双系统方案\footnote{HEAD TA承诺为在安装双系统的过程中划遇到技术问题的学生提供技术支持。}，体验在一个完整的Linux桌面系统上工作。
 \end{frame}
 
 \begin{frame}
     \frametitle{WSL：最简单的开始方式}
-    在Windows上以管理员身份打开PowerShell，执行
+    WSL的安装需要在\textbf{正确的网络环境}下，在PowerShell上执行
     \begin{Code}*
-        \lstinputlisting{code/why/wsl.sh}
+        \lstinputlisting[firstline=1,lastline=1]{code/why/wsl.sh}
     \end{Code}
-    重启后，你就拥有了一个完整的Ubuntu终端，文件系统与Windows互通，可以随时开始练习命令、配置开发环境。
+    WSL在安装后（可能需要重启一次）可以通过以下命令启动
+    \begin{Code}*
+        \lstinputlisting[firstline=2,lastline=2]{code/why/wsl.sh}
+    \end{Code}
 \end{frame}
 
 \begin{frame}
-    \frametitle{双系统：准备工作}
+    \frametitle{WSL：最简单的开始方式}
+    \begin{itemize}
+        \item WSL只有命令行环境，但这不意味着你需要在命令行上编写代码。推荐在Windows上安装VSCode作为代码编辑器，VSCode可以通过“连接到WSL”访问WSL上的文件。
+        \item VSCode下载链接：\url{https://code.visualstudio.com/Download}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{双系统：更好的选择}
     \begin{itemize}
         \item 下载Ubuntu 24.04或26.04的系统镜像（ISO）。
         \item 使用BalenaEtcher或Rufus将镜像写入U盘，制作启动盘。
         \item 若Windows启用了BitLocker，\textbf{请务必先关闭，否则可能导致Windows损坏}。
         \item 在Windows的磁盘管理中压缩卷，留出未分配空间用于安装Ubuntu。
+        \item \url{https://ubuntu.com/download/desktop?version=24.04}
+        \item \url{https://ubuntu.com/download/desktop?version=26.04}
+        \item \url{https://etcher.balena.io/}
+        \item \url{https://rufus.ie/en/}
     \end{itemize}
 \end{frame}
 
 \begin{frame}
-    \frametitle{双系统：分区与安装}
+    \frametitle{双系统：更好的选择}
     \begin{itemize}
         \item 将启动盘插入电脑，重启，按F2、F10或DEL进入BIOS，选择从U盘启动。
         \item 在图形界面中完成安装，注意选择中文语言和第三方驱动。
-        \item 在分区配置中选择手动分区，在未分配空间上创建分区并挂载至\code{/}，文件系统推荐Btrfs而非默认的Ext4。
+        \item 在分区配置中选择手动分区，在未分配空间上创建分区并挂载至\code{/}。
+        \item 文件系统推荐Btrfs而非默认的Ext4。
+        \item \textbf{创建分区会格式化对应区域，请务必不要格式化Windows正在使用的分区！}
+        \item 在Linux上我们更推荐使用VSCode的开源构建版本VSCodium。
+        \item \url{https://vscodium.com/}
     \end{itemize}
-    \textbf{创建分区会格式化对应区域，请务必不要格式化Windows正在使用的分区！}
 \end{frame}

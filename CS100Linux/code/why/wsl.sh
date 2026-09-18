@@ -1,1 +1,2 @@
-wsl --install -d Ubuntu-24.04
+wsl --install -d Ubuntu-26.04
+wsl
