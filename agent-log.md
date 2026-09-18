@@ -39,3 +39,11 @@
 - 已确认`vsp-beamer.cls`与`minimus`内部不使用`\textbf`，重定义不影响模板自身结构。
 - r1子模块指针更新至`feature/marp-parity`，注意该分支尚未推送liyuxuan3003上游，推送前其他克隆无法解析该指针。
 - 关闭草稿选项后重新全量编译，共101页，无Overfull警告与错误。
+
+## 2026.09.19 02:55
+
+- 结构重构：去除全部子模块，改为仓库内共享模板。决策原因：上游实际开发在Heaticy/vsp-beamer，课程经`liyuxuan3003/VSPBeamer`打包层+子模块指针消费，链路过长且多次出现本地分支指针不可解析的问题；vendor后主题更新简化为「上游diff套用到`template/vsp-beamer/`」一跳。
+- 新结构：`template/`（vsp-beamer、minimus、makefile-latex三个原子模块内容直接纳入仓库）+`r1/`（源码平铺：tex、Makefile、code/、image/）+顶层agent工作流文件。
+- r1仓库（cs100linux.git）历史经`git subtree add`完整并入顶层并保留（含Marp对齐移植），gitlab上的cs100linux.git未动，可作归档或删除；本地嵌套`.git`与备份`r1-migrate/`在验证内容无损后删除。注意：子模块内仅本地存在的`feature/marp-parity`分支引用随嵌套`.git`一并移除，其内容已vendor进`template/vsp-beamer/vsp-beamer-theme.sty`（逐字节校验一致）。
+- 构建接线：`r1/Makefile`前置定义`CLSS_VSP_BEAMER`等变量指向`../template`（利用`latex-std-dependence.mk`的`?=`可覆盖性），主文件`\input@path`与`\graphicspath`同步改路径；xelatex从源码目录运行，相对路径成立。
+- 全量编译验证通过，共101页，无Overfull警告与错误，与重构前页数一致。
