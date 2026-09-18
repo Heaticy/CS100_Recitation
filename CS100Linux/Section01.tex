@@ -189,6 +189,22 @@
 \end{frame}
 
 \begin{frame}
+    \frametitle{Linux不只是命令行}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{Figure}*[Nautilus]
+                \includegraphics[width=\linewidth]{screen-nautilus.png}  
+            \end{Figure}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{Figure}*[Synaptic]
+                \includegraphics[width=\linewidth]{screen-synaptic.png}  
+            \end{Figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
     \frametitle{Linux也有丰富的软件生态}
     Linux常常被质疑的另外一点是软件生态：我需要使用的软件会不会没有Linux支持？
     \begin{itemize}
@@ -211,6 +227,22 @@
 \end{frame}
 
 \begin{frame}
+    \frametitle{文档与表格}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{Figure}*[Markdown]
+                \includegraphics[width=\linewidth]{screen-markdown.png}  
+            \end{Figure}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{Figure}*[LaTeX]
+                \includegraphics[width=\linewidth]{screen-latex.png}  
+            \end{Figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
     \frametitle{网络与通信}
     \begin{itemize}
         \item 浏览器可以使用开源的Firefox，当然Chrome也是同样可用的。
@@ -219,42 +251,76 @@
 \end{frame}
 
 \begin{frame}
+    \frametitle{网络与通信}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{Figure}*[Firefox]
+                \includegraphics[width=\linewidth]{screen-firefox.png}  
+            \end{Figure}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{Figure}*[Thunderbird]
+                \includegraphics[width=\linewidth]{screen-thunderbird.png}  
+            \end{Figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
     \frametitle{图形与影像}
     \begin{itemize}
-        \item 位图处理可以使用开源的GIMP，替代Adobe Photoshop。
-        \item 矢量绘图可以使用开源的Inkscape，替代Adobe Illustrator。
-        \item 照片处理和管理可以使用开源的RawTherapee和Digikam，替代Adobe Lightroom。
-        \item 三维创作可以使用开源的Blender，它是该领域的主力生产工具！
+        \item 位图处理：可以使用开源的GIMP，替代Adobe Photoshop。
+        \item 矢量绘图：可以使用开源的Inkscape，替代Adobe Illustrator。
+        \item 照片处理：可以使用开源的RawTherapee和Digikam，替代Adobe Lightroom。
+        \item 三维创作：可以使用开源的Blender，它是该领域的主力生产工具！
     \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{图形与影像}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{Figure}*[Inkscape]
+                \includegraphics[width=\linewidth]{screen-inkscape.png}  
+            \end{Figure}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{Figure}*[Blender]
+                \includegraphics[width=\linewidth]{screen-blender.png}  
+            \end{Figure}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}
     \frametitle{开发工具}
     \begin{itemize}
-        \item C/C++：使用\code{gcc}、\code{g++}、\code{make}。ARM开发也不必依赖Keil，\code{gcc-arm-none-eabi}即可，Keil更多是习惯而非必需。
-        \item Python：使用\code{python}、\code{pip}，配合\code{conda}、\code{uv}管理环境。
-        \item 代码编辑器：VSCode同样可用，VSCodium则是去除遥测的版本。
+        \item C/C++开发：直接使用\code{gcc}、\code{g++}、\code{make}等命令。
+        \item Python开发：直接使用\code{python}命令，配合\code{uv}、\code{conda}管理虚拟环境。
+        \item ARM嵌入式开发不必依赖Keil，可以使用\code{gcc-arm-none-eabi}的开源工具链替代。
+        \item 代码编辑器：VSCode同样可用，VSCodium则是更为纯净的开源构建版本。
     \end{itemize}
 \end{frame}
 
 \begin{frame}
     \frametitle{工程软件}
     \begin{itemize}
-        \item 电路板设计：KiCad
-        \item 机械加工：FreeCAD
-        \item FPGA：Vivado提供Linux版，纯仿真可用Verilator与GTKWave。
-        \item 数值计算：Mathematica、MATLAB均有Linux版，开源有Octave。
+        \item 电路设计：使用开源的KiCad（立创EDA也是基于KiCAD！），替代Altium等商业应用。
+        \item 机械设计：使用开源的FreeCad，替代Inventor和SolidWorks等商业应用。
+        \item FPGA：Vivado提供Linux版本，仿真可以使用开源的Verilator与GTKWave。
+        \item 符号计算：Mathematica提供Linux版本。
+        \item 数值计算：Matlab提供Linux版本，有命令兼容的开源替代Octave可有。
     \end{itemize}
 \end{frame}
 
 \begin{frame}
     \frametitle{游戏}
     \begin{itemize}
-        \item Minecraft原生支持Linux，可以直接玩。
-        \item Steam提供了兼容层Proton，绝大多数Windows游戏可以直接运行，帝国时代2也不在话下。
-        \item Valve自家的SteamOS就是基于Linux的系统，Steam Deck掌机运行的就是它。
+        \item 游戏常常被认为是Windows平台的专属，但其实Linux上也可以畅玩大部分游戏！
+        \item Minecraft原生支持Linux系统，可以直接玩（仅Java版，不支持Bedrock版）。
+        \item Steam提供了兼容层Proton，\textbf{绝大多数Steam游戏都可以直接运行}！
+        \item Steam OS自身就是一个基于Arch Linux修改的系统。
     \end{itemize}
-    这些都可以在课堂上现场演示。
 \end{frame}
 
 \begin{frame}
