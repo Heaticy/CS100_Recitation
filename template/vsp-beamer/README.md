@@ -24,6 +24,7 @@ VSPBeamer是LumosLaTeX计划的一部分：https://github.com/liyuxuan3003/Lumos
 - 16:9页面布局，字号由1280x720画布换算得到。
 - 使用Latin Modern西文字体和系统Noto CJK SC中文字体。
 - 段间提供6pt间距，避免多段落页面粘连。
+- 页尾提供课程、年份与主讲者三格信息栏。
 - 强调语义与Marp对齐：`\textbf`主题色加粗，`\alert`仅变色。
 - 章节页标题放大到100px，长标题只在空格和CJK边界换行。
 
@@ -80,6 +81,7 @@ git submodule add git@github.com:liyuxuan3003/VSPBeamer.git vsp-beamer
 |------|------|
 | `\VSPsetspeaker[label]{name}{detail}` | 设置封面的标签、姓名和详情，并同步`\author`和`\institute` |
 | `\VSPspeakerblock` | 输出封面的演讲者信息块 |
+| `\VSPsetupfootline{left}{middle}{right}` | 设置页尾三格信息，左为课程与习题课节次，中为年份，右为主讲者，尾页底部同步展示 |
 
 ### `\VSPsetupLogo`、`\VSPsetupNameLogo`、`\VSPbrandmark`
 
