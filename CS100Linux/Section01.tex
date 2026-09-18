@@ -445,6 +445,25 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{}
-    
+    \frametitle{C语言的最小工作示例}
+    首先，安装C/C++开发环境（\code{build-essential}打包了\code{gcc}、\code{g++}、\code{make}等工具）
+    \begin{Code}*
+        \lstinputlisting{code/intro/build-essential.sh}
+    \end{Code}
+    随后，创建一个\code{main.c}的文件，写入以下内容
+    \begin{Code}*{c}
+        \lstinputlisting{code/intro/main.c}
+    \end{Code}
+\end{frame}
+
+\begin{frame}
+    \frametitle{C语言的最小工作示例}
+    通过以下命令将\code{main.c}编译为执行程序\code{MyProgram}（Linux的执行程序没有后缀）
+    \begin{Code}*
+        \lstinputlisting{code/intro/gcc-simple.sh}
+    \end{Code}
+    通过以下命令运行\code{MyProgram} 
+    \begin{Code}*
+        \lstinputlisting{code/intro/run-program.sh}
+    \end{Code}
 \end{frame}
