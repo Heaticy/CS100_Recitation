@@ -201,23 +201,28 @@
 \setbeamertemplate{footline}{%
   \leavevmode
   \ifvsp@shtu
-    % Lift the row above the campus artwork strip baked into the shtu
-    % background (up to .55cm tall in the bottom corners).
-    \def\vsp@footdp{0.68cm}%
+    % The shtu background image carries artwork in the bottom corners, so the
+    % three-slot row would be occluded; it renders on the end frame only.
+    \hbox{%
+      \begin{beamercolorbox}[wd=\paperwidth,ht=0.31cm,dp=0.20cm,center]{footline}%
+        \tikz[baseline=(p.base)]\node[draw=VSPTeal,text=VSPMuted,rounded corners=1.3pt,
+        inner xsep=4pt,inner ysep=1.5pt,font=\usebeamerfont{page number}] (p)
+        {\insertframenumber\,/\,\inserttotalframenumber};
+      \end{beamercolorbox}%
+    }
   \else
-    \def\vsp@footdp{0.10cm}%
+    \hbox{%
+      \begin{beamercolorbox}[wd=.38\paperwidth,ht=0.31cm,dp=0.10cm,leftskip=.72cm]{footline}%
+        \color{VSPMuted}\usebeamerfont{footline}\vsp@footleft
+      \end{beamercolorbox}%
+      \begin{beamercolorbox}[wd=.24\paperwidth,ht=0.31cm,dp=0.10cm,center]{footline}%
+        \color{VSPMuted}\usebeamerfont{footline}\vsp@footmid
+      \end{beamercolorbox}%
+      \begin{beamercolorbox}[wd=.38\paperwidth,ht=0.31cm,dp=0.10cm,rightskip=.72cm plus1fil]{footline}%
+        \hfill\color{VSPMuted}\usebeamerfont{footline}\vsp@footright
+      \end{beamercolorbox}%
+    }
   \fi
-  \hbox{%
-    \begin{beamercolorbox}[wd=.38\paperwidth,ht=0.31cm,dp=\vsp@footdp,leftskip=.72cm]{footline}%
-      \color{VSPMuted}\usebeamerfont{footline}\vsp@footleft
-    \end{beamercolorbox}%
-    \begin{beamercolorbox}[wd=.24\paperwidth,ht=0.31cm,dp=\vsp@footdp,center]{footline}%
-      \color{VSPMuted}\usebeamerfont{footline}\vsp@footmid
-    \end{beamercolorbox}%
-    \begin{beamercolorbox}[wd=.38\paperwidth,ht=0.31cm,dp=\vsp@footdp,rightskip=.72cm plus1fil]{footline}%
-      \hfill\color{VSPMuted}\usebeamerfont{footline}\vsp@footright
-    \end{beamercolorbox}%
-  }
 }
 
 \setbeamertemplate{title page}{%
