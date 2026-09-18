@@ -2,12 +2,7 @@
 
 \begin{frame}
     \frametitle{软件包管理器}
-    在Windows系统上，软件的下载、安装、更新是一个相当无序的过程：软件的安装程序需要通过浏览器从不同网站下载，安装程序需要手动运行，安装路径也非常随意。软件的更新则更是混乱，有些完全不支持更新，有些则会后台静默的热更新。
-\end{frame}
-
-\begin{frame}
-    \frametitle{软件包管理器}
-    在Linux系统中，几乎所有发行版都采用了某种软件包管理器，例如，Ubuntu的软件包管理器就是\code{apt}，你可以用\code{apt}命令完成大部分软件的下载、安装、更新！
+    在Linux系统中，几乎所有发行版都采用了某种软件包管理器，例如，Ubuntu的软件包管理器就是\code{apt}，你可以用\code{apt}命令完成大部分软件的搜索、下载、安装、更新、卸载！
 \end{frame}
 
 \begin{frame}
@@ -16,7 +11,7 @@
     \begin{Code}*
         \lstinputlisting[firstline=1,lastline=2]{code/shell/apt.sh}
     \end{Code}
-    其中，\code{update}的作用是刷新软件包索引，以了解有哪些软件可以更新，\code{upgrade}的作用是真正更新软件包，\code{sudo}的含义是以\code{root}身份运行。在Linux系统中，系统软件和应用软件是一体的，安装完系统后，应当立即运行上述两条命令进行更新。
+    其中，\code{update}的作用是刷新软件包索引，以了解有哪些软件可以更新，\code{upgrade}的作用是真正更新软件包，\code{sudo}的含义是以\code{root}身份（Linux下的超级用户）运行。在Linux系统中，系统软件和应用软件是一体的。在安装完系统后，应当立即运行一次上述两条命令进行系统更新。
 
     使用\code{sudo}需输入密码。在Linux下输入密码是没有回显的，盲输按回车即可。
 \end{frame}
@@ -36,7 +31,7 @@
     \begin{Code}*
         \lstinputlisting{code/shell/pwd.sh}
     \end{Code}
-    你可能会得到类似\code{/home/liyuxuan}的结果，事实上，当前路径总是会显示在命令提示符上，只不过当前用户的家目录会用\code{\~}表示，终端启动时默认位于家目录。
+    你可能会得到类似于\code{/home/liyuxuan}的结果。事实上，当前路径总是会显示在你的命令提示符上，只不过当前用户的家目录会用\code{\~}省略表示。终端启动时，通常默认位于家目录。
 \end{frame}
 
 \begin{frame}
@@ -119,7 +114,7 @@
     \begin{Code}*
         \lstinputlisting[firstline=1,lastline=1]{code/shell/vim.sh}
     \end{Code}
-    Vim有一套非常高效的快捷键体系，但它的使用方式常常会让新手感到困惑，牢记以下几点可以让你至少把它当成一个普通编辑器来使用。Vim在启动默认处于普通模式，此时，键盘上几乎每一个按键都是快捷键！你会发现你无法编辑文件，正确的做法是按下\code{I}，这会让你进入插入模式，这就和普通编辑器一致了。完成后，你需要按\code{ESC}回到普通模式，输入\code{:wq}进行保存和退出（记住这一点尤为重要\footnote{关于Vim一个经久不衰的笑话是：如何退出Vim？}）。
+    Vim有一套非常高效的快捷键体系，但它的使用方式常常会让新手感到困惑，牢记以下几点可以让你至少把它当成一个普通编辑器来使用。Vim启动默认处于普通模式，键盘上几乎每个按键都是快捷键！你会发现你无法编辑文件，正确的做法是按下\code{I}，这会让你进入插入模式，这就和普通编辑器一致了。完成后，你需要按\code{ESC}回到普通模式，输入\code{:wq}进行保存和退出\footnote{关于Vim一个经久不衰的笑话是：如何退出Vim？}。
 \end{frame}
 
 \begin{frame}
@@ -177,7 +172,7 @@
     \begin{Code}*
         \lstinputlisting[firstline=3,lastline=3]{code/shell/rm.sh}
     \end{Code}
-    其中，\code{sudo}用于提权，\code{rm}用于删除，\code{-r}允许递归删除，\code{-f}允许强制删除，这会跳过部分带保护的文件的删除确认，最后，删除对象是\code{/}即根目录，因此这条命令会高效且悄无声息的抹去这台Linux系统上的一切数据，甚至包括操作系统自身！
+    其中，\code{sudo}用于提权，\code{rm}用于删除，\code{-r}允许递归删除，\code{-f}允许强制删除，这会跳过部分带保护的文件的删除确认，最后，删除对象是\code{/}即根目录，因此这条命令会高效且悄无声息的抹去这台Linux系统上的一切数据，甚至包括操作系统自身（WSL上执行抹除Windows）！
 
     \textbf{能力越大，责任越大}，请谨慎对待你手中掌握的权限。
 \end{frame}
