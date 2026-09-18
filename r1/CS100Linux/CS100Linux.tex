@@ -1,0 +1,37 @@
+\makeatletter\def\input@path{{vsp-beamer}{minimus}}\makeatother
+
+\documentclass[red,tutorial,sectionpages,shtu]{vsp-beamer}
+
+\graphicspath{{image}{vsp-beamer/assets/}}
+
+\usepackage{minimus-section}
+\usepackage{minimus-text}
+\usepackage{minimus-math}
+\usepackage{minimus-float}
+\usepackage{minimus-code}
+\usepackage{minimus-colorbox}
+\usepackage{minimus-reference}
+\usepackage{minimus-bibtex}
+
+\title{About Linux}
+\subtitle{CS100}
+\VSPsetspeaker{Yuxuan Li (liyx22025@shanghaitech.edu.cn)}{VSPLab@SIST}
+
+%\setkeys{Gin}{draft}
+
+\begin{document}
+
+\VSPtitleframe
+
+\begin{frame}{目录}
+    \tableofcontents[hideallsubsections]
+\end{frame}
+
+\input{Section01.tex}
+\input{Section02.tex}
+\input{Section03.tex}
+\input{Section04.tex}
+
+\VSPendframe{谢谢观看}
+
+\end{document}

@@ -1,0 +1,129 @@
+\section{Linux的权限管理}
+
+\begin{frame}
+    \frametitle{超级用户}
+    Linux系统的超级用户称为\code{root}，通常来说，修改家目录外的文件都需要\code{root}权限，普通用户可以通过\code{sudo}临时提权以\code{root}身份执行命令（\code{sudo}的含义是Superuser Do）
+    \begin{Code}*
+        \lstinputlisting[firstline=1,lastline=2]{code/shell/sudo.sh}
+    \end{Code}
+    当使用\code{sudo}时，你会被要求输入自己的密码（接下来一段时间不用再次输入）。
+\end{frame}
+
+\begin{frame}
+    \frametitle{超级用户}
+    Linux系统中，使用\code{su}命令（Superuser）可以切换至\code{root}用户，此时你会被要求输入\code{root}用户的密码。然而，大部分发行版出于安全原因都禁止直接以\code{root}用户登录，未设置\code{root}密码，这种情况下，输入任何密码都会被认为是错误的！但有趣的是，你可以使用下面的命令
+    \begin{Code}*
+        \lstinputlisting[firstline=3,lastline=3]{code/shell/sudo.sh}
+    \end{Code}
+    换言之，临时以超级用户身份宣布将自己提升至超级用户，只需要输入自己的密码！
+\end{frame}
+
+\begin{frame}
+    \frametitle{超级用户}
+    当然，这并非意味着任何用户都可以轻松登录\code{root}用户！
+    
+    因为其实并不是所有用户都有使用\code{sudo}的权限。通常来说，在一台多人使用的服务器中，只有极少数作为管理员的用户才能使用\code{sudo}命令。给予\code{sudo}的权限等同于提供\code{root}用户！
+\end{frame}
+
+\begin{frame}
+    \frametitle{超级用户}
+    在\code{root}下工作是危险的！引入\code{sudo}机制的意义在于，让那些可以使用\code{root}用户的人平常仍然在自己的低权限用户下工作，仅在必要时，显式以\code{sudo}获得临时提权，避免误操作。
+\end{frame}
+
+\begin{frame}
+    \frametitle{权限管理机制}
+    Linux系统有一套完善的权限管理机制，它可以保证多个用户同时使用，但各个用户又无法触碰他人的数据。即便在只有一个用户的个人电脑上，理解权限管理的概念也是很有价值的。
+\end{frame}
+
+\begin{frame}
+    \frametitle{权限管理机制}
+    尝试以下命令
+    \begin{Code}*
+        \lstinputlisting{code/ls-list-shell.sh}
+    \end{Code}
+    你应当会看到以下输出
+    \begin{Code}*
+        \lstinputlisting{code/ls-list-result.txt}
+    \end{Code}
+\end{frame}
+
+\begin{frame}
+    \frametitle{文件所有权}
+    Linux中每个文件都有两个所有权的概念：\textbf{所有者}（User）、\textbf{所属组}（Group）
+    \begin{itemize}
+        \item 所有者位于\code{ls -l}输出的第三列，该例中所有者为\code{liyuxuan}
+        \item 所属组位于\code{ls -l}输出的第四列，该例中所属组为\code{liyuxuan}
+    \end{itemize}
+    所属组的概念服务于一个文件需要被多个用户共享的情况。不过，每个用户都会对应一个同名且仅包含其自身的主组，例如，这里的组\code{liyuxuan}就只包含了\code{liyuxuan}这一个用户。
+    
+    默认情况下，创建文件的用户和其主组会自动成为文件的所有者和所属组。
+\end{frame}
+
+\begin{frame}
+    \frametitle{文件权限}
+    Linux中的权限有三类：\textbf{可读}（\code{r}）、\textbf{可写}（\code{w}）、\textbf{可执行}（\code{x}）
+    \begin{itemize}
+        \item \code{r}：最高位（\code{r=4}），读取文件，列出目录中的文件，“可读”。
+        \item \code{w}：中间位（\code{w=2}），修改文件，增删目录中的文件，“可写”。
+        \item \code{x}：最低位（\code{x=1}），执行文件，进入目录，“可执行”。
+    \end{itemize}
+    例如，\code{rwx}代表可读可写可执行（记为\code{7}），\code{r--}代表只读（记为\code{4}）。
+
+    在Linux中，执行文件是通过权限而非后缀区分的！例如脚本\code{test.py}只有在添加执行权限之后才能以\code{./test.py}的方式运行，否则就只能显式调用解释器\code{python test.py}运行。
+\end{frame}
+
+\begin{frame}
+    \frametitle{文件权限}
+    Linux中每个文件对于三种用户角色（所有者、所属组、其他人）都会定义\code{rwx}权限
+    \begin{itemize}
+        \item \code{rw-rw-r--}，所有者\code{rw-}，所属组\code{rw-}，其他人\code{r--}，记为\code{644}。
+        \item \code{rwxrwxr-x}，所有者\code{rwx}，所属组\code{rwx}，其他人\code{r-x}，记为\code{755}。
+        \item \code{rwxrwxrwx}，所有者\code{rwx}，所属组\code{rwx}，其他人\code{rwx}，记为\code{777}。
+    \end{itemize}
+    实际上\code{644}、\code{755}、\code{777}分别是文件、目录、软链接的默认权限。
+    
+    默认情况下创建的文件，对所有者和所属组是可读可写，对其他人可读。目录一般应当是可以进入的，所以均增加了可执行。软链接的权限没有意义，实际取决于被链接文件的权限。
+\end{frame}
+
+\begin{frame}
+    \frametitle{文件权限}
+    既然默认对其他人是可读的，那每个用户的隐私如何保证？答案在家目录的权限
+    \begin{Code}*
+        \lstinputlisting{code/ls-home.sh}
+    \end{Code}
+    注意到家目录\code{liyuxuan}的权限是\code{750}而非默认的\code{755}，这保护了下面的文件！
+\end{frame}
+
+\begin{frame}
+    \frametitle{工作目录的创建尝试}
+    尽管用户应当在自己的家目录\code{\~}即\code{/home/liyuxuan}下工作，但实践中\code{\~}下往往会产生许多杂乱的用户配置文件和用户安装软件。如果有\code{root}权限，也可以选择在额外创建一个和家目录平级的\code{/home/workspace}作为自己专用的工作目录（\code{/home}下创建目录需要\code{root}权限）
+    \begin{Code}*
+        \lstinputlisting{code/workspace.sh}
+    \end{Code}
+    接下来要做两件事：将目录的所有权转给自己，将目录的权限设置为\code{750}。
+\end{frame}
+
+\begin{frame}
+    \frametitle{命令\code{chown}}
+    \code{chown}用于修改所有权（Change Ownership），冒号前后分别指定所有者和所属组
+    \begin{Code}*
+        \lstinputlisting{code/shell/chmod.sh}
+    \end{Code}
+    由于在执行命令前，该目录还属于\code{root}，故需加上\code{sudo}进行提权。
+\end{frame}
+
+\begin{frame}
+    \frametitle{命令\code{chmod}}
+    \code{chmod}用于修改权限（Change Mode），可以直接用数字标识
+    \begin{Code}*
+        \lstinputlisting[firstline=1,lastline=1]{code/shell/chown.sh}
+    \end{Code}
+    \code{chmod}的用法很灵活，例如为\code{test.py}添加执行权限
+    \begin{Code}*
+        \lstinputlisting[firstline=2,lastline=2]{code/shell/chown.sh}
+    \end{Code}
+    谨慎处理权限问题！遇到权限不足时随意设置\code{sudo chmod 777}是不负责任的行为。
+\end{frame}
+
+
+

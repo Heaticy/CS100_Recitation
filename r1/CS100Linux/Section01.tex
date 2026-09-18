@@ -1,0 +1,469 @@
+\section{为什么使用Linux？}
+
+\begin{frame}
+    \frametitle{当我们谈及Linux时，我们到底在说什么？}
+    \begin{center}
+        “我只想插一句话，你所说的Linux，实际上是指GNU/Linux。”\footnote{https://www.gnu.org/gnu/linux-and-gnu.html}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Linux是内核，GNU是用户空间}
+    Linux本身只是一个\textbf{操作系统内核}，它负责管理硬件、进程、内存与文件系统。但一个完整的操作系统，还需要一些常用的\textbf{用户空间程序}（例如\code{bash}和\code{gcc}），而这些由GNU计划提供。
+
+    因此，严谨地说，我们平时所说的Linux系统，其实是\textbf{GNU/Linux}系统。
+\end{frame}
+
+\begin{frame}
+    \frametitle{Linux的发行版}
+    Linux有众多\textbf{发行版}（Distribution），常见的发行版有
+    \begin{itemize}
+        \item Debian系：Debian、Ubuntu，包管理器为\code{apt}。
+        \item Centos系：Fedora、Centos、Redhat，包管理器为\code{yum}和\code{dnf}。
+        \item Arch系：Arch Linux，包管理器为\code{pacman}。
+    \end{itemize}
+    不同发行版在包管理器、默认桌面、维护策略等有一些不同，但使用起来是差不多的。
+
+    \textbf{本课程假定你使用Ubuntu系统}（推荐Ubuntu 24.04或Ubuntu 26.04）。
+\end{frame}
+
+\begin{frame}
+    \frametitle{有些事情本不应如此繁琐}
+    \begin{vspquote}{Windows是糟糕的}
+        Windows预装在每一台笔记本上，我们中的大多数人都习惯了，但“习惯”并不等于“合理”。
+        
+        Windows上的许多操作之所以繁琐，只是因为我们习惯了它繁琐的样子。
+    \end{vspquote}
+    接下来，我们用几个具体的例子，对比同一件事在Windows和Linux上的做法
+    \begin{enumerate}
+        \item 软件安装
+        \item 系统更新
+        \item 路径与命令
+        \item 开发环境
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{软件安装}
+    Windows上安装一个软件，往往要经历这样一番折腾
+    \begin{itemize}
+        \item 打开浏览器和搜索引擎，在众多结果中辨认官网，避开各类欺诈网站。
+        \item 安装程序在下载后需要手动运行，需要一路点击“下一步”。
+        \item 安装路径很随意，有的默认装进\code{C:\\Program Files}，有的需装进\code{C:\\}下的独立目录。
+        \item 许多“科普”还会告诉你软件不要装\code{C:\\}要装\code{D:\\}，最终散布在各个盘符，难以管理。
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{软件安装}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \setlength{\parskip}{6pt}
+            Windows上，安装\LaTeX 需要以下步骤
+            \begin{itemize}
+                \item 确定我要下载的东西称为“TeX Live”。
+                \item 访问 \url{https://tug.org/texlive/}
+                \item 点击“install on windows”的页面链接。
+                \item 点击“install-tl-windows.exe”进行下载。
+                \item 运行安装程序，选择安装目录。
+                \item 你可能会无法找到正确的下载对像。
+                \item 你可能会在一大堆安装选项中感到迷失。
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{Figure}*
+                \includegraphics[width=1.0\linewidth]{win-texlive.jpg}
+            \end{Figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{软件安装}
+    Linux上，安装LaTeX这样庞大的软件只需要一句话
+    \begin{Code}*
+        \lstinputlisting{code/intro/apt-install.sh}
+    \end{Code}
+    这里\code{apt}是Ubuntu的\textbf{软件包管理器}，它有三个关键特征
+    \begin{itemize}
+        \item 软件包集中化管理：软件集中在官方的软件仓库，不必去浏览器搜索。
+        \item 软件安装方式统一：软件统一用\code{apt install}安装，自动解析依赖。
+        \item 软件安装路径固定：在Linux上，软件安装的路径是有一套严格规范的。例如，执行程序会安装到\code{/bin}，库文件会安装到\code{/lib}，配置文件会安装到\code{/etc}，无需也不能手动选择。
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{系统更新}
+    \begin{columns}
+        \begin{column}{0.53\textwidth}\setlength{\parskip}{6pt}
+            Windows的系统更新常常让人感到恼火
+            \begin{itemize}
+                \item 强制推送：更新可能在工作一半时突然发生。
+                \item 需要重启：更新意味着重启，不可热更新。
+                \item 不透明性：更新改动时常会破坏系统。
+                \item 体验割裂：更新只覆盖操作系统和预装应用。
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \begin{Figure}*
+                \includegraphics[width=1.0\linewidth]{win-update.jpg}
+            \end{Figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{系统更新}
+    Linux并不区分“系统软件”与“应用软件”，它们由同一个包管理器统一管理，可以一起更新
+    \begin{Code}*
+        \lstinputlisting{code/intro/apt-upgrade.sh}
+    \end{Code}
+    其中，\code{apt update}用于刷新软件包索引，\code{apt upgrade}用于下载并安装更新。
+
+    你可以随时执行这两条命令，更新完成后\textbf{无需重启}！
+\end{frame}
+
+\begin{frame}
+    \frametitle{路径与命令}
+    Windows在路径与命令的设计上自成一派，与几乎所有其他操作系统都不同
+    \begin{itemize}
+        \item 路径用反斜杠\code{\\}而非正斜杠\code{/}分隔，且从盘符\code{C:}或\code{D:}开始，没有统一的根目录。
+        \item 路径的反斜杠\code{\\}是大多数编程语言中的转义符，表示\code{\\}本身要用\code{\\\\}转义。于是经常需要将\code{C:\\Users\\liyuxuan}这样的路径写成\code{C:\\\\Users\\\\liyuxuan}，既别扭又容易出错。
+        \item 系统目录组织混乱，且存在\code{C:\\Program Files}和\code{C:\\Program Files (x86)}这种极为糟糕的关键系统目录名称选择：路径中的空格和括号是灾难！命令行中对此需要特殊处理。
+        \item Windows的命令行\code{cmd}非常难用，命令名称和选项格式与主流操作系统格格不入：无法使用\code{cd}、\code{ls}、\code{mkdir}、\code{cp}、\code{rm}等常用命令，使用\code{/}而非\code{-}或\code{--}表示选项（例如\code{dir /a}）。
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{POSIX：类Unix系统的共同规范}
+    \begin{vspquote}{Windows才是那个异类}
+        Windows的这些特性并非来自深思熟虑的工程设计，而是一次次历史妥协的结果。
+        
+        Windows虽然是全球最流行的桌面操作系统，但它才是那个异类！
+    \end{vspquote}
+    Windows之外的几乎所有操作系统（包括Linux的各个发行版和MacOS）都遵循了一套统一的接口标准——\textbf{POSIX}（Portable Operating System Interface），它规定了命令、路径、进程、文件等应当如何工作。POSIX是所有类Unix系统共同遵循的规范，具体来说，它意味着
+    \begin{itemize}
+        \item 存在统一的\code{/}根目录，使用正斜杠\code{/}作为路径分隔符（例如\code{/home/liyuxuan}）。
+        \item 存在\code{/bin}、\code{/lib}、\code{/etc}等标准目录，这被称为\textbf{FHS}（Filesystem Hierarchy Standard）。
+        \item 存在\code{cd}、\code{ls}、\code{mkdir}、\code{cp}、\code{rm}等标准命令，\code{-}表示短选项（\code{-l}），\code{--}表示长选项（\code{--help}）。
+    \end{itemize}
+    Windows是主流操作系统中唯一与Unix没有继承关系、也不遵循POSIX的系统！
+\end{frame}
+
+\begin{frame}
+    \frametitle{开发环境}
+    \begin{vspquote}{Windows是编程学习的最大阻碍}
+        Windows糟糕的命令行体验使得许多教程无法使用：我该在哪里敲这个命令？
+    \end{vspquote}
+    Windows上编程，往往要先请出一个庞大的\textbf{IDE}（Integrated Design Environment）
+    \begin{itemize}
+        \item 开发C/C++通常要安装体积巨大的Visual Studio，其使用专有的MSVC编译器。
+        \item 开发Python通常要安装Anaconda，其核心的环境管理功能被臃肿的GUI界面层层包裹。
+        \item 把“编译、运行”包装在层层按钮之后，容易让人困在表象，忽略背后真正发生了什么。
+        \item 当真的需要敲命令时，又要面对糟糕的\code{cmd}，甚至不知道命令该在哪里输入。
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{开发环境}
+    Linux上，C编译器和Python解释器都是很常规的命令行工具，很容易使用
+    \begin{Code}*
+        \lstinputlisting{code/intro/dev.sh}
+    \end{Code}
+    至于你在哪里编写\code{main.c}和\code{main.py}？这是编辑器的工作，你可以使用最流行的VSCode或历史悠久的Vim，但这不重要：用什么编写代码和用什么运行代码，是毫无关系的两件事。
+
+    每个工具只做好一件事，再通过命令行组合起来，这正是Unix哲学。
+\end{frame}
+
+\begin{frame}
+    \frametitle{Linux不只是命令行}
+    Linux是一个成熟的桌面操作系统：它有完善的图形界面，日常使用与任何系统无异！
+    \begin{itemize}
+        \item 你可以用鼠标点击连接蓝牙和无线网络（我并不知道通过命令行怎么做）。
+        \item 在\code{cd}和\code{ls}之外，Ubuntu也有图形化的文件浏览器Nautilus（文件）。
+        \item 在\code{apt}之外，Ubuntu也有图形化的软件商店Synaptic（新立得）。
+        \item 高效的命令行是Linux强大的一面，但不代表一切事情都需要通过命令行完成。
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Linux不只是命令行}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{Figure}*[Nautilus]
+                \includegraphics[width=\linewidth]{screen-nautilus.jpg}  
+            \end{Figure}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{Figure}*[Synaptic]
+                \includegraphics[width=\linewidth]{screen-synaptic.jpg}  
+            \end{Figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Linux也有丰富的软件生态}
+    Linux常常被质疑的另外一点是软件生态：我需要使用的软件会不会没有Linux支持？
+    \begin{itemize}
+        \item 有些商业软件实际上有非常全面的Linux支持，商业软件和开源系统并不矛盾。
+        \item 有些商业软件实际上有功能相当甚至更好的开源软件替代！
+        \item 当然，我们需要承认，确实有一部分软件只提供了Windows支持。
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{文档与表格}
+    \begin{itemize}
+        \item 图形化编辑文档本身，其实就是一件糟糕的事。
+        \item Word：Markdown或LaTeX写作是更好的选择，内容与格式分离，纯文本便于版本管理。
+        \item PowerPoint：Markdown有Marp，LaTeX有Beamer，幻灯片本质只是一种特殊的文档。
+        \item Excel：表格数据可以用\code{.csv}存储，表格分析可以用\code{pandas}等Python库处理。
+        \item 当然，如果仍然需要传统Office软件，开源的有LibreOffice可用，商业的有WPS可用。
+        \item PDF阅读器通常是系统预装的，Ubuntu会搭配Evince（文档查看器）。
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{文档与表格}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{Figure}*[Markdown]
+                \includegraphics[width=\linewidth]{screen-markdown.jpg}  
+            \end{Figure}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{Figure}*[LaTeX]
+                \includegraphics[width=\linewidth]{screen-latex.jpg}  
+            \end{Figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{网络与通信}
+    \begin{itemize}
+        \item 浏览器可以使用开源的Firefox，当然Chrome也是同样可用的。
+        \item 邮件客户端可以使用开源的Thunderbird，它的体验远好于现在的Outlook (New)。
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{网络与通信}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{Figure}*[Firefox]
+                \includegraphics[width=\linewidth]{screen-firefox.jpg}  
+            \end{Figure}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{Figure}*[Thunderbird]
+                \includegraphics[width=\linewidth]{screen-thunderbird.jpg}  
+            \end{Figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{图形与影像}
+    \begin{itemize}
+        \item 位图处理：可以使用开源的GIMP，替代Adobe Photoshop。
+        \item 矢量绘图：可以使用开源的Inkscape，替代Adobe Illustrator。
+        \item 照片处理：可以使用开源的RawTherapee和Digikam，替代Adobe Lightroom。
+        \item 三维创作：可以使用开源的Blender，它是该领域的主力生产工具！
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{图形与影像}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{Figure}*[Inkscape]
+                \includegraphics[width=\linewidth]{screen-inkscape.jpg}  
+            \end{Figure}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{Figure}*[Blender]
+                \includegraphics[width=\linewidth]{screen-blender.jpg}  
+            \end{Figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{开发工具}
+    \begin{itemize}
+        \item C/C++开发：直接使用\code{gcc}、\code{g++}、\code{make}等命令。
+        \item Python开发：直接使用\code{python}命令，配合\code{uv}、\code{conda}管理虚拟环境。
+        \item ARM嵌入式开发不必依赖Keil，可以使用\code{gcc-arm-none-eabi}的开源工具链替代。
+        \item 代码编辑器：VSCode同样可用，VSCodium则是更为纯净的开源构建版本。
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{开发工具}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{Figure}*[C++]
+                \includegraphics[width=\linewidth]{screen-cpp.jpg}  
+            \end{Figure}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{Figure}*[Python]
+                \includegraphics[width=\linewidth]{screen-python.jpg}  
+            \end{Figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{工程软件}
+    \begin{itemize}
+        \item 电路设计：使用开源的KiCad（立创EDA也是基于KiCAD！），替代Altium等商业应用。
+        \item 机械设计：使用开源的FreeCad，替代Inventor和SolidWorks等商业应用。
+        \item FPGA：Vivado提供Linux版本，仿真可以使用开源的Verilator与GTKWave。
+        \item 符号计算：Mathematica提供Linux版本。
+        \item 数值计算：Matlab提供Linux版本，有命令兼容的开源替代Octave可有。
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{工程软件}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{Figure}*[KiCad]
+                \includegraphics[width=\linewidth]{screen-kicad.jpg}  
+            \end{Figure}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{Figure}*[FreeCAD]
+                \includegraphics[width=\linewidth]{screen-freecad.jpg}  
+            \end{Figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{游戏}
+    \begin{itemize}
+        \item 游戏常常被认为是Windows平台的专属，但其实Linux上也可以畅玩大部分游戏！
+        \item Minecraft原生支持Linux系统，可以直接玩（仅Java版，不支持Bedrock版）。
+        \item Steam提供了兼容层Proton，\textbf{绝大多数Steam游戏都可以直接运行}！
+        \item Steam OS自身就是一个基于Arch Linux修改的系统。
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{游戏}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{Figure}*[Minecraft]
+                \includegraphics[width=\linewidth]{screen-minecraft.jpg}  
+            \end{Figure}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{Figure}*[Age of Empires II]
+                \includegraphics[width=\linewidth]{screen-age-of-empires.jpg}  
+            \end{Figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{关于显卡}
+    \begin{columns}
+        \begin{column}{0.53\textwidth}\setlength{\parskip}{6pt}%
+            曾几何时，在Linux上使用NVIDIA显卡是一件痛苦的事情，甚至因此诞生了Linus Torvalds非常著名的“FUCK YOU NVIDIA”的演讲名场面。
+
+            但那已经是十多年前的事了。如今NVIDIA的显卡在Linux上都有良好的官方驱动支持，绝大多数情况下，对于游戏和神经网络训练，显卡开箱即用。
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \begin{Figure}*
+                \includegraphics[width=\linewidth]{fuck-u-nvidia.jpg}  
+            \end{Figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{开始使用Linux}
+    本课程提供了两种使用Linux系统的方式
+    \begin{itemize}
+        \item \textbf{WSL}（Windows Subsystem for Linux）：适用于Windows的Linux子系统，是微软官方提供的功能，本质上可以认为是一个在Windows上运行但\textbf{只有命令行环境的Linux虚拟机}。该方案适用于想继续使用Windows作为主力系统，只是想获得一个Linux开发环境的学生。
+        \item \textbf{双系统}：你可以在磁盘上划出一块空间，在保留当且Window系统的情况安装完整的Linux系统，开机时可以选择启动哪个系统。该方案适用于希望完整体验Linux桌面环境的学生。
+        \item 推荐使用Ubuntu 26.04或Ubuntu 24.04，但你也可以使用其他Linux发行版。
+        \item 此外，对于MacOS用户，你可以直接在MacOS上进行开发，无需Linux虚拟机！
+    \end{itemize}
+    我们真诚鼓励所有学生尝试双系统方案\footnote{HEAD TA承诺为在安装双系统的过程中划遇到技术问题的学生提供技术支持。}，体验在一个完整的Linux桌面系统上工作。
+\end{frame}
+
+\begin{frame}
+    \frametitle{WSL：最简单的开始方式}
+    WSL的安装需要在\textbf{正确的网络环境}下，在PowerShell上执行
+    \begin{Code}*
+        \lstinputlisting[firstline=1,lastline=1]{code/intro/wsl.sh}
+    \end{Code}
+    WSL在安装后（可能需要重启一次）可以通过以下命令启动
+    \begin{Code}*
+        \lstinputlisting[firstline=2,lastline=2]{code/intro/wsl.sh}
+    \end{Code}
+\end{frame}
+
+\begin{frame}
+    \frametitle{WSL：最简单的开始方式}
+    \begin{itemize}
+        \item WSL只有命令行环境，但这不意味着你需要在命令行上编写代码。推荐在Windows上安装VSCode作为代码编辑器，VSCode可以通过“连接到WSL”访问WSL上的文件。
+        \item VSCode下载链接：\url{https://code.visualstudio.com/Download}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{双系统：更好的选择}
+    \begin{itemize}
+        \item 下载Ubuntu 24.04或26.04的系统镜像（ISO）。
+        \item 使用BalenaEtcher或Rufus将镜像写入U盘，制作启动盘。
+        \item 若Windows启用了BitLocker，\textbf{请务必先关闭，否则可能导致Windows损坏}。
+        \item 在Windows的磁盘管理中压缩卷，留出未分配空间用于安装Ubuntu。
+        \item \url{https://ubuntu.com/download/desktop?version=24.04}
+        \item \url{https://ubuntu.com/download/desktop?version=26.04}
+        \item \url{https://etcher.balena.io/}
+        \item \url{https://rufus.ie/en/}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{双系统：更好的选择}
+    \begin{itemize}
+        \item 将启动盘插入电脑，重启，按F2、F10或DEL进入BIOS，选择从U盘启动。
+        \item 在图形界面中完成安装，注意选择中文语言和第三方驱动。
+        \item 在分区配置中选择手动分区，在未分配空间上创建分区并挂载至\code{/}。
+        \item 文件系统推荐Btrfs而非默认的Ext4。
+        \item \textbf{创建分区会格式化对应区域，请务必不要格式化Windows正在使用的分区！}
+        \item 在Linux上我们更推荐使用VSCode的开源构建版本VSCodium。
+        \item \url{https://vscodium.com/}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{C语言的最小工作示例}
+    首先，安装C/C++开发环境（\code{build-essential}打包了\code{gcc}、\code{g++}、\code{make}等工具）
+    \begin{Code}*
+        \lstinputlisting{code/intro/build-essential.sh}
+    \end{Code}
+    随后，创建一个\code{main.c}的文件，写入以下内容
+    \begin{Code}*{c}
+        \lstinputlisting{code/intro/main.c}
+    \end{Code}
+\end{frame}
+
+\begin{frame}
+    \frametitle{C语言的最小工作示例}
+    通过以下命令将\code{main.c}编译为执行程序\code{MyProgram}（Linux的执行程序没有后缀）
+    \begin{Code}*
+        \lstinputlisting{code/intro/gcc-simple.sh}
+    \end{Code}
+    通过以下命令运行\code{MyProgram} 
+    \begin{Code}*
+        \lstinputlisting{code/intro/run-program.sh}
+    \end{Code}
+\end{frame}

@@ -1,0 +1,275 @@
+\section{Linux的基本命令}
+
+\begin{frame}
+    \frametitle{软件包管理器}
+    在Linux系统中，几乎所有发行版都采用了某种软件包管理器，例如，Ubuntu的软件包管理器就是\code{apt}，你可以使用\code{apt}命令完成大部分软件的搜索、下载、安装、更新、卸载！
+\end{frame}
+
+\begin{frame}
+    \frametitle{命令\code{apt}}
+    通过\code{apt}可以进行更新，更新会分为两步
+    \begin{Code}*
+        \lstinputlisting[firstline=1,lastline=2]{code/shell/apt.sh}
+    \end{Code}
+    其中，\code{update}的作用是刷新软件包索引，以了解有哪些软件可以更新，\code{upgrade}的作用是真正更新软件包，\code{sudo}的含义是以\code{root}身份（Linux下的超级用户）运行。在Linux系统中，系统软件和应用软件是一体的。在安装完系统后，应当立即运行一次上述两条命令进行系统更新。
+
+    使用\code{sudo}需输入密码。在Linux下输入密码是没有回显的，盲输按回车即可。
+\end{frame}
+
+\begin{frame}
+    \frametitle{命令\code{apt}}
+    通过\code{apt}可以安装软件，例如以下命令会安装\code{vim}，这是一个命令行上的编辑器
+    \begin{Code}*
+        \lstinputlisting[firstline=3,lastline=3]{code/shell/apt.sh}
+    \end{Code}
+    你不需要指定安装路径！这在Linux系统下有一套严格的规范。
+\end{frame}
+
+\begin{frame}
+    \frametitle{命令\code{pwd}}
+    \code{pwd}用于显示当前路径（Print Working Directory）
+    \begin{Code}*
+        \lstinputlisting{code/shell/pwd.sh}
+    \end{Code}
+    你可能会得到类似于\code{/home/liyuxuan}的结果。事实上，当前路径总是会显示在你的命令提示符上，只不过当前用户的家目录会用\code{\~}省略表示。终端启动时，通常默认位于家目录。
+\end{frame}
+
+\begin{frame}
+    \frametitle{命令\code{ls}}
+    \code{ls}用于显示当前路径下的文件（List Directory Contents）
+    \begin{Code}*
+        \lstinputlisting[firstline=1,lastline=1]{code/shell/ls.sh}
+    \end{Code}
+    搭配\code{-l}显示详细信息，搭配\code{-a}显示隐藏文件，也可以查看指定路径的文件
+    \begin{Code}*
+        \lstinputlisting[firstline=2,lastline=4]{code/shell/ls.sh}
+    \end{Code}
+    Linux命令中，参数以空格分割，选项以\code{-}或\code{--}开头（短选项/长选项）。
+\end{frame}
+
+\begin{frame}
+    \frametitle{命令\code{cd}}
+    \code{cd}用于移动当前路径（Change Directory）
+    \begin{Code}*
+        \lstinputlisting[firstline=1,lastline=1]{code/shell/cd.sh}
+    \end{Code}
+    回到家目录，你可以尝试不同的路径表示方法
+    \begin{Code}*
+        \lstinputlisting[firstline=2,lastline=3]{code/shell/cd.sh}
+    \end{Code}
+    Linux中，若路径以根目录\code{/}开头，那就是绝对路径，否则是相对路径。
+\end{frame}
+
+\begin{frame}
+    \frametitle{命令\code{cd}}
+    有两个特殊的目录：用\code{.}代表当前目录，用\code{..}代表上一级目录
+    \begin{Code}*
+        \lstinputlisting[firstline=4,lastline=5]{code/shell/cd.sh}
+    \end{Code}
+    Linux中，所有以\code{.}开头的文件都是隐藏文件，用\code{ls -a}查看。
+\end{frame}
+
+\begin{frame}
+    \frametitle{命令\code{touch}}
+    \code{touch}用于刷新时间戳，但如果目标文件不存在，它会创建一个空文件
+    \begin{Code}*
+        \lstinputlisting[firstline=1,lastline=1]{code/shell/touch.sh}
+    \end{Code}
+    你可以用\code{ls -l}查看文件的时间戳（即最后修改时间）。
+\end{frame}
+
+\begin{frame}
+    \frametitle{命令\code{mkdir}}
+    \code{mkdir}用于创建目录（Make Directory）
+    \begin{Code}*
+        \lstinputlisting[firstline=1,lastline=1]{code/shell/mkdir.sh}
+    \end{Code}
+    你可以在\code{ls -l}中观察第一列，若以\code{d}开头则为目录，若以\code{-}开头则为普通文件。
+\end{frame}
+
+\begin{frame}
+    \frametitle{命令\code{echo}}
+    \code{echo}用于打印文字，请注意任何包含空格的参数需要用双引号包裹
+    \begin{Code}*
+        \lstinputlisting[firstline=1,lastline=1]{code/shell/echo.sh}
+    \end{Code}
+    通过\code{>}和\code{>>}可以将命令行上的输出重定向到文件，\code{>}是覆盖，\code{>>}是追加
+    \begin{Code}*
+        \lstinputlisting[firstline=2,lastline=3]{code/shell/echo.sh}
+    \end{Code}
+\end{frame}
+
+\begin{frame}
+    \frametitle{命令\code{cat}}
+    \code{cat}用于查看文件内容（Concatenate）
+    \begin{Code}*
+        \lstinputlisting[firstline=1,lastline=1]{code/shell/cat.sh}
+    \end{Code}
+    该命令实际上是Concatenate的缩写，但不妨理解为一只猫挠了一下文件（\^{}\_\^{}）。
+\end{frame}
+
+\begin{frame}
+    \frametitle{命令\code{vim}}
+    \code{vim}是一个命令行上的代码编辑器（你可以用它来编辑任何文本文件！）
+    \begin{Code}*
+        \lstinputlisting[firstline=1,lastline=1]{code/shell/vim.sh}
+    \end{Code}
+    Vim有一套非常高效的快捷键体系，但它的使用方式常常会让新手感到困惑，牢记以下几点可以让你至少把它当成一个普通编辑器来使用。Vim启动默认处于普通模式，键盘上几乎每个按键都是快捷键！你会发现你无法编辑文件，正确的做法是按下\code{I}，这会让你进入插入模式，这就和普通编辑器一致了。完成后，你需要按\code{ESC}回到普通模式，输入\code{:wq}进行保存和退出\footnote{关于Vim一个经久不衰的笑话是：如何退出Vim？}。
+
+    Vim常用于编辑需要\code{root}权限的配置文件：这种情况下你无法使用VSCode或VSCodium！
+\end{frame}
+
+\begin{frame}
+    \frametitle{命令\code{mv}}
+    \code{mv}用于重命名或移动文件（Move File）
+    \begin{Code}*
+        \lstinputlisting[firstline=1,lastline=3]{code/shell/mv.sh}
+    \end{Code}
+    \begin{itemize}
+        \item 若目标是一个已经存在的目录，文件会被移动到该目录下。
+        \item 若目标不存在或不是目录，文件会被重命名并移动至目标指定的路径。
+    \end{itemize}
+    \code{mv}不区分操作对象是文件还是目录，也可以用来重命名或移动目录。
+\end{frame}
+
+\begin{frame}
+    \frametitle{命令\code{cp}}
+    \code{cp}用于复制文件（Copy File）
+    \begin{Code}*
+        \lstinputlisting[firstline=1,lastline=3]{code/shell/cp.sh}
+    \end{Code}
+    搭配\code{-r}选项可以递归复制目录
+    \begin{Code}*
+        \lstinputlisting[firstline=4,lastline=4]{code/shell/cp.sh}
+    \end{Code}
+\end{frame}
+
+\begin{frame}
+    \frametitle{命令\code{rm}}
+    \code{rm}用于删除文件（Remove File）
+    \begin{Code}*
+        \lstinputlisting[firstline=1,lastline=1]{code/shell/rm.sh}
+    \end{Code}
+    搭配\code{-r}选项可以删除目录
+    \begin{Code}*
+        \lstinputlisting[firstline=2,lastline=2]{code/shell/rm.sh}
+    \end{Code}
+    特别需要强调的是，Linux的删除是没有回收站的，三思而后行！
+\end{frame}
+
+\begin{frame}
+    \frametitle{按下回车前请三思}
+    命令行非常高效且强大，但错误的使用会造成格外严重的后果！
+    \begin{itemize}
+        \item 我正在操作的文件是我想要操作的吗？
+        \item 我是否位于正确的目录？这是在本地还是在服务器？
+        \item 我是否真的理解我在做什么？尤其是当这条命令是由AI提供的。
+    \end{itemize}
+    胆大心细，勇敢的探索和学习，谨慎的实施和执行，\textbf{对自己的行为负责}。
+\end{frame}
+
+\begin{frame}
+    \frametitle{著名的危险命令}
+    以下是一条非常著名的危险命令，\textcolor{red}{\textbf{绝对不要在任何情况下尝试！}}
+    \begin{Code}*
+        \lstinputlisting[firstline=3,lastline=3]{code/shell/rm.sh}
+    \end{Code}
+    其中，\code{sudo}用于提权，\code{rm}用于删除，\code{-r}允许递归删除，\code{-f}允许强制删除，这会跳过部分带保护的文件的删除确认，最后，删除对象是\code{/}即根目录，因此这条命令会高效且悄无声息的抹去这台Linux系统上的一切数据，甚至包括操作系统自身（WSL上执行还会抹除Windows）！
+
+    \textbf{能力越大，责任越大}，请谨慎对待你手中掌握的权限。
+\end{frame}
+
+\begin{frame}
+    \frametitle{命令\code{ln}}
+    \code{ln}用于创建链接（Link File），选项\code{-s}代表创建的是软链接
+    \begin{Code}*
+        \lstinputlisting[firstline=1,lastline=1]{code/shell/ln.sh}
+    \end{Code}
+    软链接的工作方式类似于快捷方式：当访问\code{link}时，其实是在访问\code{dir}目录下的内容，但和快捷方式有所不同的是，你的路径不会发生跳转，你仍然会位于\code{/home/liyuxuan/link}下。
+
+    软链接在\code{ls -l}下会显示为\code{l}类型，代表这是一个链接。
+\end{frame}
+
+\begin{frame}
+    \frametitle{软链接与硬链接}
+    链接分为两种，软链接（由\code{ln -s}创建）和硬链接（由\code{ln}创建）
+    \begin{itemize}
+        \item 软链接类似于C++语言中的指针（本质上是存储地址的变量）。
+        \item 硬链接类似于C++语言中的引用（本质上是一个别名）。
+    \end{itemize}
+    在文件系统层面，文件名和文件本体（inode）通常是一一对应的。硬链接不创建新的文件，而是令一个文件inode能关联到多个文件名上。换言之，如果将硬链接理解为文件名和inode间的链接关系，那么所有文件其实都是硬链接：有些inode只关联到一个文件名，有些inode会关联到多个文件名。硬链接命令的作用是在inode和文件名之间创建额外的链接。当删除文件时，本质上是在减少inode的链接计数，当inode的链接计数归零时，空间才会真正被释放。
+\end{frame}
+
+\begin{frame}
+    \frametitle{软链接与硬链接}
+    软链接则是完全不同的东西，它是一个独立的文件（有自己的inode），只不过这个特殊的文件存储的内容是一个路径，使得你在访问它的时候实际访问到的是别的地方，由此实现了链接。
+    \begin{itemize}
+        \item 软链接可以链接目录或文件，硬链接通常只被允许链接文件。
+        \item 软链接可以跨文件系统链接，硬链接则不可以（inode对每个文件系统独立）。
+        \item 软链接只是一个普通文件，删除软链接无影响，删除源则所有软链接失效。
+    \end{itemize}
+    最佳实践：除非你很清楚自己要做什么，\textbf{总是使用软链接}！
+\end{frame}
+
+\begin{frame}
+    \frametitle{获取帮助}
+    几乎所有的命令都可以通过\code{--help}选项查看帮助
+    \begin{Code}*
+        \lstinputlisting[firstline=1,lastline=1]{code/shell/man.sh}
+    \end{Code}
+    除此之外，使用\code{man}可以查看某个命令文档
+    \begin{Code}*
+        \lstinputlisting[firstline=2,lastline=2]{code/shell/man.sh}
+    \end{Code}
+\end{frame}
+
+\begin{frame}
+    \frametitle{命令补全}
+    你不必完整输入命令！下面展示了输入命令时如何通过按Tab来自动补全
+    \begin{Code}*
+        \lstinputlisting{code/how-to-tab.sh}
+    \end{Code}
+    简而言之，按Tab可以帮助你补全命令和已经存在的路径。但请理解补全不是魔法，它并不能预知你的想法，例如这里的\code{vsp}肯定无法补全出来，因为这是你将要创建的目录的名称。
+\end{frame}
+
+\begin{frame}
+    \frametitle{命令历史}
+    你不必重复输入已经输入过的命令！按向上键和向下键可以翻阅输入过的历史命令。
+
+    除此之外，使用\code{history}可以查看所有输入过的命令
+    \begin{Code}*
+        \lstinputlisting[firstline=1,lastline=1]{code/shell/history.sh}
+    \end{Code}
+
+    如果你要搜索包含特定内容的历史命令，可以用管道\code{|}连接\code{grep}
+    \begin{Code}*
+        \lstinputlisting[firstline=2,lastline=2]{code/shell/history.sh}
+    \end{Code}
+
+    管道\code{|}用于将一个命令的输出重定向到一个命令的输入，\code{grep}用于文本匹配。
+\end{frame}
+
+\begin{frame}
+    \frametitle{命令\code{tar}}
+    在Linux中，经常会看到\code{.tar.gz}后缀的压缩包
+    \begin{itemize}
+        \item \code{.tar}代表归档，即将多个文件打包为单个文件，由\code{tar}命令完成。
+        \item \code{.gz}代表压缩，即将单个文件进行压缩，由\code{gz}命令完成。
+    \end{itemize}
+    但事实上，通过恰当的选项，可以用\code{tar}命令一步完成\code{.tar.gz}的压缩和解压缩。
+\end{frame}
+
+\begin{frame}
+    \frametitle{命令\code{tar}}
+    \code{tar}用于压缩的命令是
+    \begin{Code}*
+        \lstinputlisting[firstline=1,lastline=1]{code/shell/tar.sh}
+    \end{Code}
+    \code{tar}用于解压的命令是
+    \begin{Code}*
+        \lstinputlisting[firstline=2,lastline=2]{code/shell/tar.sh}
+    \end{Code}
+    其中，选项\code{-c}代表Create，选项\code{-x}代表Extract，选项\code{-v}代表Verbose，这会列出所有压缩和解压的文件（需要静默输出时可以省略），选项\code{-z}代表使用Gzip格式的压缩算法，选项\code{-f}代表File，即指定操作的归档文件。这些选项中\code{-f}必须放在最后，因为其后要跟随一个参数。
+    
+    此外，在Linux的命令中，短选项允许连写是一个普遍支持的特性。
+\end{frame}
