@@ -55,3 +55,10 @@
 - 尾页底部同步展示同一行三格信息（shtu白底用`VSPMuted`，红底用`white!82`）。
 - r1主文件设置三格为`CS100 Recitation 1`/`Fall 2026`/`Yuxuan Li`，模板README同步记录。
 - 编译验证：101页，无Overfull警告与错误；抽查正文页、目录页、尾页渲染，页尾三格与装饰条、正文均无冲突。
+
+## 2026.09.19 03:28
+
+- 修正三格页尾在shtu下的行为：shtu背景图底部左右角有装饰，三格行会重叠，因此shtu页尾恢复居中页码框，`\VSPsetupfootline`三格信息仅在尾页底部展示；无背景图的变体仍逐页展示三格。该行为同步至模板README与上游文档。
+- 上游同步：`/home/lichf/workspace/vsp-beamer`（Heaticy/vsp-beamer）提交`5820e7e`并推送GitHub与GitLab镜像，含三格页尾、shtu行为、尾页信息行与文档；已跑`make check`全量通过（非shtu模板页尾空槽、shtu页码框均渲染验证）。
+- 新增`.gitlab-ci.yml`：`build`作业每次推送编译并产出`dist/CS100-Recitation1.pdf`（保留14天）；`release`作业打tag时编译并创建GitLab release，PDF以`CS100-Recitation1.pdf`命名挂为可下载产物。runner使用`latex-runner`标签（与vsp-beamer仓库一致）。
+- 推送本仓库至gitlab（cs100/cs100_recitation）。首次release：`git tag v0.1.0 && git push origin v0.1.0`。
