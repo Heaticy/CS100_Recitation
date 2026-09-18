@@ -38,7 +38,7 @@
     \begin{enumerate}
         \item 软件安装
         \item 系统更新
-        \item 命令格式
+        \item 路径与命令
         \item 开发环境
     \end{enumerate}
 \end{frame}
@@ -124,56 +124,53 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{路径与命令：Windows}
+    \frametitle{路径与命令}
     Windows在路径与命令的设计上自成一派，与几乎所有其他操作系统都不同
     \begin{itemize}
-        \item 路径用反斜杠\code{\\}分隔，且从盘符\code{C:}、\code{D:}开始，没有统一的根目录。
-        \item 反斜杠\code{\\}又是大多数编程语言中的转义符，于是路径常常要写成\code{C:\\Users\\liyuxuan}，别扭又容易出错。
-        \item \code{cmd}与\code{Powershell}的命令名称和格式都与主流格格不入，选项写法也不统一。
-        \item 不同盘符相互独立，“根”不止一个。
+        \item 路径用反斜杠\code{\\}而非正斜杠\code{/}分隔，且从盘符\code{C:}或\code{D:}开始，没有统一的根目录。
+        \item 路径的反斜杠\code{\\}是大多数编程语言中的转义符，表示\code{\\}本身要用\code{\\\\}转义。于是经常需要将\code{C:\\Users\\liyuxuan}这样的路径写成\code{C:\\\\Users\\\\liyuxuan}，既别扭又容易出错。
+        \item 系统目录组织混乱，且存在\code{C:\\Program Files}和\code{C:\\Program Files (x86)}这种极为糟糕的关键系统目录名称选择：路径中的空格和括号是灾难！命令行中对此需要特殊处理。
+        \item Windows的命令行\code{cmd}非常难用，命令名称和选项格式与主流操作系统格格不入：无法使用\code{cd}、\code{ls}、\code{mkdir}、\code{cp}、\code{rm}等常用命令，使用\code{/}而非\code{-}或\code{--}表示选项（例如\code{dir /a}）。
     \end{itemize}
 \end{frame}
 
 \begin{frame}
     \frametitle{POSIX：类Unix系统的共同规范}
-    这些差异并非偶然。类Unix系统共同遵循一套接口标准——\textbf{POSIX}（Portable Operating System Interface），它规定了命令、路径、进程、文件等应当如何工作。
-
-    遵循POSIX的系统有
+    \begin{vspquote}{Windows才是那个异类}
+        Windows的这些特性并非来自深思熟虑的工程设计，而是一次次历史妥协的结果。
+        
+        Windows虽然是全球最流行的桌面操作系统，但它才是那个异类！
+    \end{vspquote}
+    Windows之外的几乎所有操作系统（包括Linux的各个发行版和MacOS）都遵循了一套统一的接口标准——\textbf{POSIX}（Portable Operating System Interface），它规定了命令、路径、进程、文件等应当如何工作。POSIX是所有类Unix系统共同遵循的规范，具体来说，它意味着
     \begin{itemize}
-        \item Linux与各种发行版
-        \item macOS（它本质上基于BSD，也是一种Unix系统）
-        \item FreeBSD、OpenBSD等
+        \item 存在统一的\code{/}根目录，使用正斜杠\code{/}作为路径分隔符（例如\code{/home/liyuxuan}）。
+        \item 存在\code{/bin}、\code{/lib}、\code{/etc}等标准目录，这被称为\textbf{FHS}（Filesystem Hierarchy Standard）。
+        \item 存在\code{cd}、\code{ls}、\code{mkdir}、\code{cp}、\code{rm}等标准命令，\code{-}表示短选项（\code{-l}），\code{--}表示长选项（\code{--help}）。
+    \end{itemize}
+    Windows是主流操作系统中唯一与Unix没有继承关系、也不遵循POSIX的系统！
+\end{frame}
+
+\begin{frame}
+    \frametitle{开发环境}
+    \begin{vspquote}{Windows是编程学习的最大阻碍}
+        Windows糟糕的命令行体验使得许多教程无法使用：我该在哪里敲这个命令？
+    \end{vspquote}
+    Windows上编程，往往要先请出一个庞大的IDE
+    \begin{itemize}
+        \item 开发C/C++通常要安装体积巨大的Visual Studio，其使用专有的MSVC编译器。
+        \item 开发Python通常要安装Anaconda，其核心的环境管理功能被臃肿的GUI界面层层包裹。
+        \item 把“编译、运行”包装在层层按钮之后，容易让人困在表象，忽略背后真正发生了什么。
+        \item 当真的需要敲命令时，又要面对糟糕的\code{cmd}，甚至不知道命令该在哪里输入。
     \end{itemize}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Windows才是那个异类}
-    Windows是主流操作系统中唯一与Unix没有继承关系、也不遵循POSIX的系统，它才是那个异类。因此在Linux上
-    \begin{itemize}
-        \item 有统一的\code{/}根目录，用\code{/}分隔路径。
-        \item 有标准的\code{cd}、\code{ls}、\code{cp}等命令。
-        \item \code{-}开头是短选项（\code{-l}），\code{--}开头是长选项（\code{--help}）。
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \frametitle{开发环境：Windows}
-    在Windows上编写C或Python，往往要先请出一个庞大的IDE
-    \begin{itemize}
-        \item 写C要安装体积巨大的Visual Studio，连同大量可能永远用不到的组件。
-        \item 写Python常通过Anaconda，同样捆绑了海量的库和图形界面。
-        \item 这些软件把“编译、运行”包装在层层按钮之后，容易让人困在表象，忽略背后真正发生了什么。
-        \item 而当需要敲命令时，又要面对糟糕的\code{cmd}，甚至不知道命令该在哪里输入。
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \frametitle{开发环境：Linux}
-    在Linux上，编译一个C程序只需要
+    \frametitle{开发环境}
+    Linux上，C编译器和Python解释器都是很常规的命令行工具，很容易使用
     \begin{Code}*
         \lstinputlisting{code/why/dev.sh}
     \end{Code}
-    Python通常开箱即用，也可以通过\code{apt}、\code{conda}或\code{uv}轻松安装。编辑器与编译解耦，可以按自己的喜好配置（Vim、VSCode……）。
+    至于你在哪里编写\code{main.c}和\code{main.py}？这是编辑器的工作，你可以使用最流行的VSCode或历史悠久的Vim，但这不重要：用什么编写代码和用什么运行代码，是毫无关系的两件事。
 
     每个工具只做好一件事，再通过命令行组合起来，这正是Unix哲学。
 \end{frame}
@@ -182,50 +179,60 @@
 
 \begin{frame}
     \frametitle{Linux不只是命令行}
-    Linux是一个成熟的桌面操作系统：它有完善的图形界面，日常使用与任何系统无异。
+    Linux是一个成熟的桌面操作系统：它有完善的图形界面，日常使用与任何系统无异！
     \begin{itemize}
-        \item 有文件资源管理器（GNOME的Nautilus、KDE的Dolphin）。
-        \item 有图形化的软件商店，软件的安装与更新同样可以点几下鼠标完成。
-        \item 命令行只是它更强大的一面，但绝不是全部。
+        \item 你可以用鼠标点击连接蓝牙和无线网络（我并不知道通过命令行怎么做）。
+        \item 在\code{cd}和\code{ls}之外，Ubuntu也有图形化的文件浏览器Nautilus（文件）。
+        \item 在\code{apt}之外，Ubuntu也有图形化的软件商店Synaptic（新立得）。
+        \item 高效的命令行是Linux强大的一面，但不代表一切事情都需要通过命令行完成。
     \end{itemize}
-    在下面这些领域，Linux要么有开源替代，要么有成熟的商业支持。
+\end{frame}
+
+\begin{frame}
+    \frametitle{Linux也有丰富的软件生态}
+    Linux常常被质疑的另外一点是软件生态：我需要使用的软件会不会没有Linux支持？
+    \begin{itemize}
+        \item 有些商业软件实际上有非常全面的Linux支持，商业软件和开源系统并不矛盾。
+        \item 有些商业软件实际上有功能相当甚至更好的开源软件替代！
+        \item 当然，我们需要承认，确实有一部分软件只提供了Windows支持。
+    \end{itemize}
 \end{frame}
 
 \begin{frame}
     \frametitle{文档与表格}
-    图形化编辑文档本身，其实就是一件糟糕的事
     \begin{itemize}
-        \item Word → 用Markdown或LaTeX写作，内容与格式分离，纯文本便于版本管理。
-        \item PowerPoint → Markdown有Marp，LaTeX有Beamer，幻灯片本质上只是一种特殊的文档。
-        \item Excel → 数据本质上是表格，用\code{.csv}存储，用\code{pandas}等Python库处理。
-        \item 如果仍需要传统Office，开源的有LibreOffice，商业的有WPS。
-        \item PDF阅读器系统自带。
+        \item 图形化编辑文档本身，其实就是一件糟糕的事。
+        \item Word：Markdown或LaTeX写作是更好的选择，内容与格式分离，纯文本便于版本管理。
+        \item PowerPoint：Markdown有Marp，LaTeX有Beamer，幻灯片本质只是一种特殊的文档。
+        \item Excel：表格数据可以用\code{.csv}存储，表格分析可以用\code{pandas}等Python库处理。
+        \item 当然，如果仍然需要传统Office软件，开源的有LibreOffice可用，商业的有WPS可用。
+        \item PDF阅读器通常是系统预装的，Ubuntu会搭配Evince（文档查看器）。
     \end{itemize}
 \end{frame}
 
 \begin{frame}
     \frametitle{网络与通信}
     \begin{itemize}
-        \item 浏览器：Firefox
-        \item 邮件客户端：Thunderbird
-        \item 密码管理器：pass、KeePassXC
+        \item 浏览器可以使用开源的Firefox，当然Chrome也是同样可用的。
+        \item 邮件客户端可以使用开源的Thunderbird，它的体验远好于现在的Outlook (New)。
     \end{itemize}
 \end{frame}
 
 \begin{frame}
-    \frametitle{图形与图像}
+    \frametitle{图形与影像}
     \begin{itemize}
-        \item 矢量绘图：Inkscape
-        \item 位图处理：GIMP
-        \item 照片管理：DigiKam、RawTherapee
+        \item 位图处理可以使用开源的GIMP，替代Adobe Photoshop。
+        \item 矢量绘图可以使用开源的Inkscape，替代Adobe Illustrator。
+        \item 照片处理和管理可以使用开源的RawTherapee和Digikam，替代Adobe Lightroom。
+        \item 三维创作可以使用开源的Blender，它是该领域的主力生产工具！
     \end{itemize}
 \end{frame}
 
 \begin{frame}
     \frametitle{开发工具}
     \begin{itemize}
-        \item C/C++：\code{gcc}、\code{g++}、\code{make}。ARM开发也不必依赖Keil，\code{gcc-arm-none-eabi}即可，Keil更多是习惯而非必需。
-        \item Python：系统自带\code{python}，配合\code{conda}、\code{uv}管理环境。
+        \item C/C++：使用\code{gcc}、\code{g++}、\code{make}。ARM开发也不必依赖Keil，\code{gcc-arm-none-eabi}即可，Keil更多是习惯而非必需。
+        \item Python：使用\code{python}、\code{pip}，配合\code{conda}、\code{uv}管理环境。
         \item 代码编辑器：VSCode同样可用，VSCodium则是去除遥测的版本。
     \end{itemize}
 \end{frame}
