@@ -62,3 +62,12 @@
 - 上游同步：`/home/lichf/workspace/vsp-beamer`（Heaticy/vsp-beamer）提交`5820e7e`并推送GitHub与GitLab镜像，含三格页尾、shtu行为、尾页信息行与文档；已跑`make check`全量通过（非shtu模板页尾空槽、shtu页码框均渲染验证）。
 - 新增`.gitlab-ci.yml`：`build`作业每次推送编译并产出`dist/CS100-Recitation1.pdf`（保留14天）；`release`作业打tag时编译并创建GitLab release，PDF以`CS100-Recitation1.pdf`命名挂为可下载产物。runner使用`latex-runner`标签（与vsp-beamer仓库一致）。
 - 推送本仓库至gitlab（cs100/cs100_recitation）。首次release：`git tag v0.1.0 && git push origin v0.1.0`。
+
+## 2026.09.19 14:48
+
+- 新增r0习题课（环境配置），从marp版`CS100-Fall2025-Recitation-00.md`迁移为beamer格式。
+- 合并伪动画重复页：第一节6页合并为2页（编辑器/编译器/IDE一页、我们到底需要什么一页），其余各节同样精简；原marp的`trans`过渡页改为`\section`自动章节页，`toc_a`目录页保留为`\tableofcontents`。
+- 代码块统一使用`Code`环境包裹`\lstinputlisting`（与r1一致），代码素材落在`r0/code/`下按主题分目录；图片素材复制自`env_setup/img/`到`r0/img/`。
+- 修复`\code{...}+\code{...}`在xeCJK+listings下的peek冲突：改为单个`\code{Ctrl+Alt+T}`的写法，避免`+`被xeCJK的`__xeCJK_listings_peek_active_loop`误解析。
+- 编译验证：39页，无Overfull警告与错误；抽查封面、内容页、代码页、尾页渲染正常。
+- CI更新：`build`与`release`作业同时编译r0和r1，产出`CS100-Recitation0.pdf`与`CS100-Recitation1.pdf`；顶层README补充r0目录说明。
