@@ -14,6 +14,13 @@ CS100_Recitation
 |  |- Makefile
 |  |- CS100Linux.tex
 |  |- Section01.tex…
+|- r0/                # 习题课零（环境配置），在该目录下运行make编译
+|  |- build/
+|  |- code/           # 课堂演示代码
+|  |- img/            # 课件图片
+|  |- Makefile
+|  |- CS100EnvSetup.tex
+|  |- Section01.tex…
 |- AGENTS.md          # agent工作流约定
 |- agent-request.md
 |- agent-log.md
