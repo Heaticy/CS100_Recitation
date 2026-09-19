@@ -28,10 +28,10 @@ release:
     - make -j -C r0
     - make -j -C r1
     - mkdir -p dist
-    - cp r0/build/CS100EnvSetup.pdf dist/CS100-Recitation0.pdf
-    - cp r1/build/CS100Linux.pdf dist/CS100-Recitation1.pdf
+    - cp r0/build/CS100EnvSetup.pdf dist/CS100_Recitation0.pdf
+    - cp r1/build/CS100Linux.pdf dist/CS100_Recitation1.pdf
   artifacts:
-    name: "CS100-Recitations-$CI_COMMIT_TAG"
+    name: "CS100_Recitations-$CI_COMMIT_TAG"
     paths:
       - dist/
     expire_in: never
@@ -41,7 +41,7 @@ release:
     description: 'CS100习题课课件PDF，对应tag $CI_COMMIT_TAG。'
     assets:
       links:
-        - name: 'CS100-Recitation0.pdf'
-          url: '${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/raw/dist/CS100-Recitation0.pdf?inline=false'
-        - name: 'CS100-Recitation1.pdf'
-          url: '${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/raw/dist/CS100-Recitation1.pdf?inline=false'
+        - name: 'CS100_Recitation0.pdf'
+          url: '${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/raw/dist/CS100_Recitation0.pdf?inline=false'
+        - name: 'CS100_Recitation1.pdf'
+          url: '${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/raw/dist/CS100_Recitation1.pdf?inline=false'
