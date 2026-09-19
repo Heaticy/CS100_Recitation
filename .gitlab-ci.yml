@@ -28,8 +28,8 @@ release:
     - make -j -C r0
     - make -j -C r1
     - mkdir -p dist
-    - cp r0/build/CS100EnvSetup.pdf dist/CS100_Recitation0.pdf
-    - cp r1/build/CS100Linux.pdf dist/CS100_Recitation1.pdf
+    - cp r0/build/CS100_Recitation0.pdf dist/CS100_Recitation0.pdf
+    - cp r1/build/CS100_Recitation1.pdf dist/CS100_Recitation1.pdf
   artifacts:
     name: "CS100_Recitations-$CI_COMMIT_TAG"
     paths:
