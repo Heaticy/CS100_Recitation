@@ -1,4 +1,4 @@
-PROJECT:=CS100Linux
+PROJECT:=CS100_Recitation1
 
 TEMPLATE:=../template
 CLSS_VSP_BEAMER:=$(wildcard ${TEMPLATE}/vsp-beamer/*.cls)
