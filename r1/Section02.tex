@@ -44,7 +44,7 @@
     \begin{Code}*
         \lstinputlisting[firstline=2,lastline=4]{code/shell/ls.sh}
     \end{Code}
-    Linux命令中，参数以空格分割，选项以\code{-}或\code{--}开头（短选项/长选项）。
+    Linux命令中，参数以空格分隔，选项以\code{-}或\code{--}开头（短选项/长选项）。
 \end{frame}
 
 \begin{frame}
@@ -165,18 +165,18 @@
         \item 我是否位于正确的目录？这是在本地还是在服务器？
         \item 我是否真的理解我在做什么？尤其是当这条命令是由AI提供的。
     \end{itemize}
-    胆大心细，勇敢的探索和学习，谨慎的实施和执行，\textbf{对自己的行为负责}。
+    胆大心细，勇敢地探索和学习，谨慎地实施和执行，\alert{对自己的行为负责}。
 \end{frame}
 
 \begin{frame}
     \frametitle{著名的危险命令}
-    以下是一条非常著名的危险命令，\textcolor{red}{\textbf{绝对不要在任何情况下尝试！}}
+    以下是一条非常著名的危险命令，\alert{绝对不要在任何情况下尝试！}
     \begin{Code}*
         \lstinputlisting[firstline=3,lastline=3]{code/shell/rm.sh}
     \end{Code}
-    其中，\code{sudo}用于提权，\code{rm}用于删除，\code{-r}允许递归删除，\code{-f}允许强制删除，这会跳过部分带保护的文件的删除确认，最后，删除对象是\code{/}即根目录，因此这条命令会高效且悄无声息的抹去这台Linux系统上的一切数据，甚至包括操作系统自身（WSL上执行还会抹除Windows）！
+    其中，\code{sudo}用于提权，\code{rm}用于删除，\code{-r}允许递归删除，\code{-f}允许强制删除，这会跳过部分带保护的文件的删除确认，最后，删除对象是\code{/}即根目录，因此这条命令会高效且悄无声息地抹去这台Linux系统上的一切数据，甚至包括操作系统自身（WSL上执行还会抹除Windows）！
 
-    \textbf{能力越大，责任越大}，请谨慎对待你手中掌握的权限。
+    \alert{能力越大，责任越大}，请谨慎对待你手中掌握的权限。
 \end{frame}
 
 \begin{frame}
@@ -208,7 +208,7 @@
         \item 软链接可以跨文件系统链接，硬链接则不可以（inode对每个文件系统独立）。
         \item 软链接只是一个普通文件，删除软链接无影响，删除源则所有软链接失效。
     \end{itemize}
-    最佳实践：除非你很清楚自己要做什么，\textbf{总是使用软链接}！
+    最佳实践：除非你很清楚自己要做什么，\alert{总是使用软链接}！
 \end{frame}
 
 \begin{frame}

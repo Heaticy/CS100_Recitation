@@ -49,7 +49,7 @@
 
 \begin{frame}
     \frametitle{文件所有权}
-    Linux中每个文件都有两个所有权的概念：\textbf{所有者}（User）、\textbf{所属组}（Group）
+    Linux中每个文件都有两个所有权的概念：\alert{所有者}（User）、\alert{所属组}（Group）
     \begin{itemize}
         \item 所有者位于\code{ls -l}输出的第三列，该例中所有者为\code{liyuxuan}
         \item 所属组位于\code{ls -l}输出的第四列，该例中所属组为\code{liyuxuan}
@@ -61,7 +61,7 @@
 
 \begin{frame}
     \frametitle{文件权限}
-    Linux中的权限有三类：\textbf{可读}（\code{r}）、\textbf{可写}（\code{w}）、\textbf{可执行}（\code{x}）
+    Linux中的权限有三类：\alert{可读}（\code{r}）、\alert{可写}（\code{w}）、\alert{可执行}（\code{x}）
     \begin{itemize}
         \item \code{r}：最高位（\code{r=4}），读取文件，列出目录中的文件，“可读”。
         \item \code{w}：中间位（\code{w=2}），修改文件，增删目录中的文件，“可写”。
@@ -107,7 +107,7 @@
     \frametitle{命令\code{chown}}
     \code{chown}用于修改所有权（Change Ownership），冒号前后分别指定所有者和所属组
     \begin{Code}*
-        \lstinputlisting{code/shell/chmod.sh}
+        \lstinputlisting{code/shell/chown.sh}
     \end{Code}
     由于在执行命令前，该目录还属于\code{root}，故需加上\code{sudo}进行提权。
 \end{frame}
@@ -116,11 +116,11 @@
     \frametitle{命令\code{chmod}}
     \code{chmod}用于修改权限（Change Mode），可以直接用数字标识
     \begin{Code}*
-        \lstinputlisting[firstline=1,lastline=1]{code/shell/chown.sh}
+        \lstinputlisting[firstline=1,lastline=1]{code/shell/chmod.sh}
     \end{Code}
     \code{chmod}的用法很灵活，例如为\code{test.py}添加执行权限
     \begin{Code}*
-        \lstinputlisting[firstline=2,lastline=2]{code/shell/chown.sh}
+        \lstinputlisting[firstline=2,lastline=2]{code/shell/chmod.sh}
     \end{Code}
     谨慎处理权限问题！遇到权限不足时随意设置\code{sudo chmod 777}是不负责任的行为。
 \end{frame}

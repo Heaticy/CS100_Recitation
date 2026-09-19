@@ -9,14 +9,14 @@
 
 \begin{frame}
     \frametitle{Linux是内核，GNU是用户空间}
-    Linux本身只是一个\textbf{操作系统内核}，它负责管理硬件、进程、内存与文件系统。但一个完整的操作系统，还需要一些常用的\textbf{用户空间程序}（例如\code{bash}和\code{gcc}），而这些由GNU计划提供。
+    Linux本身只是一个\alert{操作系统内核}，它负责管理硬件、进程、内存与文件系统。但一个完整的操作系统，还需要一些常用的\alert{用户空间程序}（例如\code{bash}和\code{gcc}），而这些由GNU计划提供。
 
-    因此，严谨地说，我们平时所说的Linux系统，其实是\textbf{GNU/Linux}系统。
+    因此，严谨地说，我们平时所说的Linux系统，其实是\alert{GNU/Linux}系统。
 \end{frame}
 
 \begin{frame}
     \frametitle{Linux的发行版}
-    Linux有众多\textbf{发行版}（Distribution），常见的发行版有
+    Linux有众多\alert{发行版}（Distribution），常见的发行版有
     \begin{itemize}
         \item Debian系：Debian、Ubuntu，包管理器为\code{apt}。
         \item Centos系：Fedora、Centos、Redhat，包管理器为\code{yum}和\code{dnf}。
@@ -24,7 +24,7 @@
     \end{itemize}
     不同发行版在包管理器、默认桌面、维护策略等有一些不同，但使用起来是差不多的。
 
-    \textbf{本课程假定你使用Ubuntu系统}（推荐Ubuntu 24.04或Ubuntu 26.04）。
+    \alert{本课程假定你使用Ubuntu系统}（推荐Ubuntu 24.04或Ubuntu 26.04）。
 \end{frame}
 
 \begin{frame}
@@ -63,10 +63,10 @@
             \begin{itemize}
                 \item 确定我要下载的东西称为“TeX Live”。
                 \item 访问 \url{https://tug.org/texlive/}
-                \item 点击“install on windows”的页面链接。
+                \item 点击“install on windows”页面上的链接。
                 \item 点击“install-tl-windows.exe”进行下载。
                 \item 运行安装程序，选择安装目录。
-                \item 你可能会无法找到正确的下载对像。
+                \item 你可能会无法找到正确的下载对象。
                 \item 你可能会在一大堆安装选项中感到迷失。
             \end{itemize}
         \end{column}
@@ -80,11 +80,11 @@
 
 \begin{frame}
     \frametitle{软件安装}
-    Linux上，安装LaTeX这样庞大的软件只需要一句话
+    Linux上，安装\LaTeX 这样庞大的软件只需要一句话
     \begin{Code}*
         \lstinputlisting{code/intro/apt-install.sh}
     \end{Code}
-    这里\code{apt}是Ubuntu的\textbf{软件包管理器}，它有三个关键特征
+    这里\code{apt}是Ubuntu的\alert{软件包管理器}，它有三个关键特征
     \begin{itemize}
         \item 软件包集中化管理：软件集中在官方的软件仓库，不必去浏览器搜索。
         \item 软件安装方式统一：软件统一用\code{apt install}安装，自动解析依赖。
@@ -120,7 +120,7 @@
     \end{Code}
     其中，\code{apt update}用于刷新软件包索引，\code{apt upgrade}用于下载并安装更新。
 
-    你可以随时执行这两条命令，更新完成后\textbf{无需重启}！
+    你可以随时执行这两条命令，更新完成后\alert{无需重启}！
 \end{frame}
 
 \begin{frame}
@@ -141,10 +141,10 @@
         
         Windows虽然是全球最流行的桌面操作系统，但它才是那个异类！
     \end{vspquote}
-    Windows之外的几乎所有操作系统（包括Linux的各个发行版和MacOS）都遵循了一套统一的接口标准——\textbf{POSIX}（Portable Operating System Interface），它规定了命令、路径、进程、文件等应当如何工作。POSIX是所有类Unix系统共同遵循的规范，具体来说，它意味着
+    Windows之外的几乎所有操作系统（包括Linux的各个发行版和MacOS）都遵循了一套统一的接口标准——\alert{POSIX}（Portable Operating System Interface），它规定了命令、路径、进程、文件等应当如何工作。POSIX是所有类Unix系统共同遵循的规范，具体来说，它意味着
     \begin{itemize}
         \item 存在统一的\code{/}根目录，使用正斜杠\code{/}作为路径分隔符（例如\code{/home/liyuxuan}）。
-        \item 存在\code{/bin}、\code{/lib}、\code{/etc}等标准目录，这被称为\textbf{FHS}（Filesystem Hierarchy Standard）。
+        \item 存在\code{/bin}、\code{/lib}、\code{/etc}等标准目录，这被称为\alert{FHS}（Filesystem Hierarchy Standard）。
         \item 存在\code{cd}、\code{ls}、\code{mkdir}、\code{cp}、\code{rm}等标准命令，\code{-}表示短选项（\code{-l}），\code{--}表示长选项（\code{--help}）。
     \end{itemize}
     Windows是主流操作系统中唯一与Unix没有继承关系、也不遵循POSIX的系统！
@@ -155,7 +155,7 @@
     \begin{vspquote}{Windows是编程学习的最大阻碍}
         Windows糟糕的命令行体验使得许多教程无法使用：我该在哪里敲这个命令？
     \end{vspquote}
-    Windows上编程，往往要先请出一个庞大的\textbf{IDE}（Integrated Design Environment）
+    Windows上编程，往往要先请出一个庞大的\alert{IDE}（Integrated Development Environment）
     \begin{itemize}
         \item 开发C/C++通常要安装体积巨大的Visual Studio，其使用专有的MSVC编译器。
         \item 开发Python通常要安装Anaconda，其核心的环境管理功能被臃肿的GUI界面层层包裹。
@@ -319,11 +319,11 @@
 \begin{frame}
     \frametitle{工程软件}
     \begin{itemize}
-        \item 电路设计：使用开源的KiCad（立创EDA也是基于KiCAD！），替代Altium等商业应用。
+        \item 电路设计：使用开源的KiCad（立创EDA也是基于KiCad！），替代Altium等商业应用。
         \item 机械设计：使用开源的FreeCad，替代Inventor和SolidWorks等商业应用。
         \item FPGA：Vivado提供Linux版本，仿真可以使用开源的Verilator与GTKWave。
         \item 符号计算：Mathematica提供Linux版本。
-        \item 数值计算：Matlab提供Linux版本，有命令兼容的开源替代Octave可有。
+        \item 数值计算：Matlab提供Linux版本，也有命令兼容的开源替代Octave可用。
     \end{itemize}
 \end{frame}
 
@@ -348,7 +348,7 @@
     \begin{itemize}
         \item 游戏常常被认为是Windows平台的专属，但其实Linux上也可以畅玩大部分游戏！
         \item Minecraft原生支持Linux系统，可以直接玩（仅Java版，不支持Bedrock版）。
-        \item Steam提供了兼容层Proton，\textbf{绝大多数Steam游戏都可以直接运行}！
+        \item Steam提供了兼容层Proton，\alert{绝大多数Steam游戏都可以直接运行}！
         \item Steam OS自身就是一个基于Arch Linux修改的系统。
     \end{itemize}
 \end{frame}
@@ -389,17 +389,17 @@
     \frametitle{开始使用Linux}
     本课程提供了两种使用Linux系统的方式
     \begin{itemize}
-        \item \textbf{WSL}（Windows Subsystem for Linux）：适用于Windows的Linux子系统，是微软官方提供的功能，本质上可以认为是一个在Windows上运行但\textbf{只有命令行环境的Linux虚拟机}。该方案适用于想继续使用Windows作为主力系统，只是想获得一个Linux开发环境的学生。
-        \item \textbf{双系统}：你可以在磁盘上划出一块空间，在保留当且Window系统的情况安装完整的Linux系统，开机时可以选择启动哪个系统。该方案适用于希望完整体验Linux桌面环境的学生。
+        \item \alert{WSL}（Windows Subsystem for Linux）：适用于Windows的Linux子系统，是微软官方提供的功能，本质上可以认为是一个在Windows上运行但\alert{只有命令行环境的Linux虚拟机}。该方案适用于想继续使用Windows作为主力系统，只是想获得一个Linux开发环境的学生。
+        \item \alert{双系统}：你可以在磁盘上划出一块空间，在保留当前Windows系统的情况下，安装完整的Linux系统。开机时可以选择启动哪个系统。该方案适合希望体验Linux桌面环境的学生。
         \item 推荐使用Ubuntu 26.04或Ubuntu 24.04，但你也可以使用其他Linux发行版。
         \item 此外，对于MacOS用户，你可以直接在MacOS上进行开发，无需Linux虚拟机！
     \end{itemize}
-    我们真诚鼓励所有学生尝试双系统方案\footnote{HEAD TA承诺为在安装双系统的过程中划遇到技术问题的学生提供技术支持。}，体验在一个完整的Linux桌面系统上工作。
+    我们真诚鼓励所有学生尝试双系统方案\footnote{HEAD TA承诺为在安装双系统的过程中遇到技术问题的学生提供技术支持。}，体验在一个完整的Linux桌面系统上工作。
 \end{frame}
 
 \begin{frame}
     \frametitle{WSL：最简单的开始方式}
-    WSL的安装需要在\textbf{正确的网络环境}下，在PowerShell上执行
+    WSL的安装需要在\alert{正确的网络环境}下，在PowerShell上执行
     \begin{Code}*
         \lstinputlisting[firstline=1,lastline=1]{code/intro/wsl.sh}
     \end{Code}
@@ -422,7 +422,7 @@
     \begin{itemize}
         \item 下载Ubuntu 24.04或26.04的系统镜像（ISO）。
         \item 使用BalenaEtcher或Rufus将镜像写入U盘，制作启动盘。
-        \item 若Windows启用了BitLocker，\textbf{请务必先关闭，否则可能导致Windows损坏}。
+        \item 若Windows启用了BitLocker，\alert{请务必先关闭，否则可能导致Windows损坏}。
         \item 在Windows的磁盘管理中压缩卷，留出未分配空间用于安装Ubuntu。
         \item \url{https://ubuntu.com/download/desktop?version=24.04}
         \item \url{https://ubuntu.com/download/desktop?version=26.04}
@@ -438,7 +438,7 @@
         \item 在图形界面中完成安装，注意选择中文语言和第三方驱动。
         \item 在分区配置中选择手动分区，在未分配空间上创建分区并挂载至\code{/}。
         \item 文件系统推荐Btrfs而非默认的Ext4。
-        \item \textbf{创建分区会格式化对应区域，请务必不要格式化Windows正在使用的分区！}
+        \item \alert{创建分区会格式化对应区域，请务必不要格式化Windows正在使用的分区！}
         \item 在Linux上我们更推荐使用VSCode的开源构建版本VSCodium。
         \item \url{https://vscodium.com/}
     \end{itemize}

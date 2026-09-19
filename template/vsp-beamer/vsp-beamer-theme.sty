@@ -163,6 +163,10 @@
 \setbeamerfont{block title}{family=\sffamily,series=\bfseries,size=\vspbodyfont}
 \setbeamerfont{footline}{family=\sffamily,size=\vspfooterfont}
 \setbeamerfont{page number}{family=\sffamily,size=\vsppagefont}
+% Marp emphasis parity: \alert colors in the accent color and bolds, while
+% \textbf keeps its standard meaning. Beamer's own titles and labels use font
+% templates (series=\bfseries), not \alert, so they are unaffected.
+\setbeamerfont{alerted text}{series=\bfseries}
 
 % Paragraph spacing: beamer sets \parskip to zero by default, which makes
 % consecutive paragraphs indistinguishable. Restore a 6pt gap between them.
@@ -175,12 +179,6 @@
   \tikz[baseline=(n.base)]\node[fill=VSPPrimary,text=white,font=\sffamily\scriptsize\bfseries,
   minimum size=1.65em,inner sep=0pt,rounded corners=0.8pt] (n) {\insertenumlabel};}
 \setbeamertemplate{blocks}[rounded][shadow=false]
-
-% Marp emphasis parity: \alert colors only (alerted text is VSPAccent),
-% \textbf colors and bolds. Beamer's own titles and labels use font
-% templates (series=\bfseries), not \textbf, so they are unaffected.
-\let\vsp@textbf\textbf
-\renewcommand{\textbf}[1]{{\color{VSPAccent}\vsp@textbf{#1}}}
 
 \setbeamertemplate{frametitle}{%
   \nointerlineskip
