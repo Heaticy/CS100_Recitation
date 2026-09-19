@@ -72,7 +72,8 @@
 \begin{frame}[fragile]{clang-format}
     clang-format是LLVM项目出品的C/C++自动格式化工具。
     \begin{itemize}
-        \item \textbf{无需安装}：\code{C/C++}插件内置了它，也不需要其它格式化插件；
+        \item \textbf{VSCode内无需安装}：\code{C/C++}插件内置了它，也不需要其它格式化插件；
+        \item \textbf{Linux终端使用需安装}：\code{sudo apt install clang-format}，之后可以直接在终端里跑\code{clang-format -i hello.c}；
         \item 风格由配置文件\code{.clang-format}决定，格式化时从当前文件所在目录\textbf{逐级向上查找}；
         \item 因此把它放在\code{\textasciitilde/courses/CS100/}下（与\code{.vscode}同级），课程内所有代码统一生效；
         \item 我们在4.4已开启\code{Format On Save}：\textbf{\code{Ctrl+s}保存的瞬间，代码自动变整齐}。
