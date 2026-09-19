@@ -101,7 +101,7 @@ default: ${BUILD_DIR} ${OUTPUT}
 
 # Open LaTeX output
 run: default
-	start ${OUTPUT}
+	xdg-open ${OUTPUT} 2>/dev/null || open ${OUTPUT} 2>/dev/null || start ${OUTPUT}
 	${NOTIFY_DONE}
 
 # Convert all figures to svg
