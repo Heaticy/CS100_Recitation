@@ -11,11 +11,10 @@
 \end{frame}
 
 \begin{frame}[fragile]{Linux（以Ubuntu为例）}
-    一行命令即可安装默认版本的\code{gcc}和\code{g++}：
+    一行命令即可安装编译所需的一整套工具（\code{gcc}、\code{g++}、\code{make}等）：
     \begin{Code}*
-        \lstinputlisting{code/setup/install-gcc.sh}
+        \lstinputlisting{code/setup/install-build-essential.sh}
     \end{Code}
-    或者安装\code{build-essential}（含make等常用工具）。
 
     在Ubuntu24.04默认安装的是gcc-13，26.04默认安装的是gcc-15。
 
@@ -44,8 +43,8 @@
     会自动安装WSL和默认的Ubuntu，装完\textbf{重启电脑}生效。
 
     \begin{itemize}
-        \item \textbf{首选}：网络正常（有梯子）直接执行即可。
-        \item \textbf{次选（无梯子）}：先去GitHub的\code{microsoft/WSL} releases下载最新\code{.msi}手动装上WSL本体，再执行\code{wsl --install}安装Ubuntu；若安装卡在0\%，可加参数\code{--web-download}。
+        \item \textbf{首选}：网络环境正确时直接执行即可。
+        \item \textbf{次选}：先去GitHub的\code{microsoft/WSL} releases下载最新\textbf{x86}架构的\code{.msi}手动装上WSL本体，再执行\code{wsl --install}安装Ubuntu；若安装卡在0\%，可加参数\code{--web-download}。
     \end{itemize}
 
     装完Ubuntu后首次打开，会让你创建一个用户名和密码（注意密码输入时屏幕不显示字符，是正常的）。
