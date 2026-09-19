@@ -6,7 +6,6 @@ workflow:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - if: '$CI_COMMIT_BRANCH'
-    - if: '$CI_COMMIT_TAG'
 
 # 每次推送验证课件可编译，并产出PDF供预览下载
 build:
@@ -26,13 +25,15 @@ build:
     expire_in: 14 days
     when: always
 
-# 打tag即发release，PDF作为可下载产物挂在release上
+# 仅手动触发才发release，避免误操作
 release:
   stage: release
   tags:
     - latex-runner
   rules:
-    - if: '$CI_COMMIT_TAG'
+    - if: '$CI_COMMIT_BRANCH'
+      when: manual
+      allow_failure: false
   script:
     - make -j -C r0
     - make -j -C r1
@@ -40,14 +41,14 @@ release:
     - cp r0/build/CS100EnvSetup.pdf dist/CS100-Recitation0.pdf
     - cp r1/build/CS100Linux.pdf dist/CS100-Recitation1.pdf
   artifacts:
-    name: "CS100-Recitations-$CI_COMMIT_TAG"
+    name: "CS100-Recitations-manual"
     paths:
       - dist/
     expire_in: never
   release:
-    tag_name: '$CI_COMMIT_TAG'
-    name: 'CS100 Recitations $CI_COMMIT_TAG'
-    description: 'CS100习题课课件PDF，对应tag $CI_COMMIT_TAG。'
+    tag_name: 'manual-$CI_COMMIT_SHORT_SHA'
+    name: 'CS100 Recitations manual-$CI_COMMIT_SHORT_SHA'
+    description: '手动触发的release，对应commit $CI_COMMIT_SHORT_SHA。'
     assets:
       links:
         - name: 'CS100-Recitation0.pdf'
