@@ -28,7 +28,7 @@
 \end{frame}
 
 \begin{frame}[fragile]{Windows（WSL）}
-    WSL（Windows Subsystem for Linux，Windows的Linux子系统）是微软推出的一项功能，它允许在Windows上原生运行Linux环境，无需虚拟机或双系统。
+    WSL（Windows Subsystem for Linux，Windows的Linux子系统）是微软官方提供的功能，本质上是一个在Windows上运行的\textbf{只有命令行环境的Linux虚拟机}。
 
     换句话说：在Windows里，你可以直接打开一个Linux终端，运行\code{apt}、\code{bash}、\code{gcc}、\code{python}等工具，就像真的在Linux下一样。
 
@@ -36,28 +36,36 @@
 \end{frame}
 
 \begin{frame}[fragile]{WSL安装}
-    Windows自带WSL一键安装命令，\textbf{在管理员权限的PowerShell}中执行：
+    WSL的安装需要在\textbf{正确的网络环境}下，在管理员权限的PowerShell中执行：
     \begin{Code}*
         \lstinputlisting{code/setup/wsl-install.sh}
     \end{Code}
     会自动安装WSL和默认的Ubuntu，装完\textbf{重启电脑}生效。
 
-    \begin{itemize}
-        \item \textbf{首选}：网络环境正确时直接执行即可。
-        \item \textbf{次选}：先去GitHub的\code{microsoft/WSL} releases下载最新\textbf{x86}架构的\code{.msi}手动装上WSL本体，再执行\code{wsl --install}安装Ubuntu；若安装卡在0\%，可加参数\code{--web-download}。
-    \end{itemize}
+    如果网络环境不正确，可以先去GitHub的\code{microsoft/WSL} releases下载最新\textbf{x86}架构的\code{.msi}手动装上WSL本体，再执行\code{wsl --install}安装Ubuntu；若安装卡在0\%，可加参数\code{--web-download}。
 
     装完Ubuntu后首次打开，会让你创建一个用户名和密码（注意密码输入时屏幕不显示字符，是正常的）。
 \end{frame}
 
 \begin{frame}[fragile]{WSL安装的版本选择}
-    \code{wsl --install}默认安装\textbf{最新LTS}（当前是Ubuntu26.04）。两种版本本课程都支持：
+    推荐使用Ubuntu 26.04或Ubuntu 24.04，两种版本本课程都支持：
     \begin{itemize}
-        \item \code{wsl --install}：Ubuntu26.04（默认gcc-15）；
-        \item \code{wsl --install Ubuntu-24.04}：Ubuntu24.04（默认gcc-13）。
+        \item \code{wsl --install}：Ubuntu 26.04（默认gcc-15）；
+        \item \code{wsl --install Ubuntu-24.04}：Ubuntu 24.04（默认gcc-13）。
     \end{itemize}
 
     装好后用\code{cat /etc/os-release}确认版本，后面换源时选择对应的脚本。
+\end{frame}
+
+\begin{frame}{双系统：更好的选择}
+    WSL只有命令行环境，如果你希望体验完整的Linux桌面，可以考虑\textbf{双系统}：
+    \begin{itemize}
+        \item 在磁盘上划出一块空间，在保留Windows的情况下安装完整的Linux系统；
+        \item 开机时可以选择启动哪个系统；
+        \item 推荐Ubuntu 26.04或24.04，也可以使用其他发行版。
+    \end{itemize}
+
+    我们真诚鼓励所有学生尝试双系统方案，体验在一个完整的Linux桌面系统上工作。
 \end{frame}
 
 \begin{frame}[fragile]{WSL环境配置：换源}
@@ -74,9 +82,9 @@
     \end{vspquotered}
 \end{frame}
 
-\begin{frame}[fragile]{WSL环境配置：安装gcc}
-    \begin{vspquote}{WSL与Linux配置gcc环境}
-        按顺序执行：
+\begin{frame}[fragile]{WSL环境配置：安装编译工具}
+    \begin{vspquote}{WSL与Linux配置编译环境}
+        按顺序执行，\code{build-essential}会一次装齐\code{gcc}、\code{g++}、\code{make}等工具：
         \begin{Code}*
             \lstinputlisting{code/setup/apt-setup.sh}
         \end{Code}
