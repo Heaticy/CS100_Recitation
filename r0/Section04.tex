@@ -1,24 +1,27 @@
 % 4. Visual Studio Code
 \section{Visual Studio Code}
 
-\begin{frame}{什么是VSCode}
-    VSCode是一个现代的\textbf{代码编辑器}。
+\begin{frame}
+    \frametitle{什么是VSCode}
+    VSCode是一个现代的\alert{代码编辑器}。
     \begin{itemize}
-        \item 它不能帮你\textbf{编译}程序——“为什么我的代码在VSCode上跑出来是这样……？”这类问题的答案往往不在编辑器；
+        \item 它不能帮你\alert{编译}程序——“为什么我的代码在VSCode上跑出来是这样……？”这类问题的答案往往不在编辑器；
         \item 但它有大量好用的插件，可以帮你一键调用编译器、方便地调试代码、版本管理、在远程/容器里开发，甚至上QQ、逛知乎、听网易云、炒股……
     \end{itemize}
 \end{frame}
 
-\begin{frame}{下载、安装VSCode}
+\begin{frame}
+    \frametitle{下载、安装VSCode}
     \begin{itemize}
         \item 去官网（\code{code.visualstudio.com}）下载安装包；
-        \item \textbf{Linux}：下载\code{.deb}文件，双击安装或\code{sudo apt install ./code\_*.deb}；
-        \item \textbf{Mac}：下载\code{.zip}解压后拖入Applications；
-        \item \textbf{Windows（WSL用户）}：VSCode装在Windows上，然后安装\textbf{WSL}扩展，通过左下角绿色图标连接WSL。
+        \item \alert{Linux}：下载\code{.deb}文件，双击安装或\code{sudo apt install ./code\_*.deb}；
+        \item \alert{Mac}：下载\code{.zip}解压后拖入Applications；
+        \item \alert{Windows（WSL用户）}：VSCode装在Windows上，然后安装\alert{WSL}扩展，通过左下角绿色图标连接WSL。
     \end{itemize}
 \end{frame}
 
-\begin{frame}{配置VSCode}
+\begin{frame}
+    \frametitle{配置VSCode}
     VSCode有$N+1$套配置：
     \begin{itemize}
         \item 每个工作区/文件夹可以有自己的配置，以\code{json}文件的形式存放在\code{.vscode}目录下（\code{.}开头的文件/文件夹默认隐藏，文件管理器里按\code{Ctrl}+\code{h}或\code{ls -a}可以显示）；
@@ -27,13 +30,14 @@
     \end{itemize}
 \end{frame}
 
-\begin{frame}{安装插件（扩展，extension）}
+\begin{frame}
+    \frametitle{安装插件（扩展，extension）}
     以下四个插件已经足够：
     \begin{itemize}
-        \item \textbf{C/C++}：提供C/C++代码高亮、静态分析等功能；
-        \item \textbf{Chinese (Simplified)}：中文语言包，界面汉化；
-        \item \textbf{vscode-icons}：更好的文件图标显示（安装后记得enable）；
-        \item \textbf{GlassIt-VSC}：按\code{Ctrl+Alt+z}变透明，按\code{Ctrl+Alt+c}变回来。
+        \item \alert{C/C++}：提供C/C++代码高亮、静态分析等功能；
+        \item \alert{Chinese (Simplified)}：中文语言包，界面汉化；
+        \item \alert{vscode-icons}：更好的文件图标显示（安装后记得enable）；
+        \item \alert{GlassIt-VSC}：按\code{Ctrl+Alt+z}变透明，按\code{Ctrl+Alt+c}变回来。
     \end{itemize}
 
     \begin{vspquotered}{不要装太多}
@@ -41,7 +45,8 @@
     \end{vspquotered}
 \end{frame}
 
-\begin{frame}{全局配置}
+\begin{frame}
+    \frametitle{全局配置}
     按\code{Ctrl+,}，或者左下角的齿轮$\to$Settings：
     \begin{itemize}
         \item Editor: Format On Save设为true；
@@ -50,7 +55,8 @@
     \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{工作区配置}
+\begin{frame}
+    \frametitle{工作区配置}
     \begin{enumerate}
         \item 为这门课程创建文件夹，例如\code{\textasciitilde/courses/CS100}；
         \item \code{File}$\to$\code{Open Folder...}（快捷键\code{Ctrl+k, Ctrl+o}）打开\code{CS100}文件夹。以后每一次都要先打开VSCode，再打开文件夹，再编辑文件；而不是直接双击文件用VSCode打开，否则工作区的配置无法起效；
@@ -58,29 +64,32 @@
     \end{enumerate}
 \end{frame}
 
-\begin{frame}[fragile]{代码格式化：先看一段反面教材}
-    先看一段\textbf{能编译}但没人想读的代码：
+\begin{frame}
+    \frametitle{代码格式化：先看一段反面教材}
+    先看一段\alert{能编译}但没人想读的代码：
     \begin{Code}*{c}
         \lstinputlisting{code/vscode/bad-style.c}
     \end{Code}
 
-    缩进、空格、换行、大括号位置，统称\textbf{代码风格}（code style）。风格不影响程序对错，但严重影响可读性——包括两天后的你自己、批改作业的TA，以及跟你协作的队友。
+    缩进、空格、换行、大括号位置，统称\alert{代码风格}（code style）。风格不影响程序对错，但严重影响可读性——包括两天后的你自己、批改作业的TA，以及跟你协作的队友。
 
-    手动保持风格：写时费心、改时易漏、协作时易吵。所以：\textbf{交给工具自动做}。
+    手动保持风格：写时费心、改时易漏、协作时易吵。所以：\alert{交给工具自动做}。
 \end{frame}
 
-\begin{frame}[fragile]{clang-format}
+\begin{frame}
+    \frametitle{clang-format}
     clang-format是LLVM项目出品的C/C++自动格式化工具。
     \begin{itemize}
-        \item \textbf{VSCode内无需安装}：\code{C/C++}插件内置了它，也不需要其它格式化插件；
-        \item \textbf{Linux终端使用需安装}：\code{sudo apt install clang-format}，之后可以直接在终端里跑\code{clang-format -i hello.c}；
-        \item 风格由配置文件\code{.clang-format}决定，格式化时从当前文件所在目录\textbf{逐级向上查找}；
+        \item \alert{VSCode内无需安装}：\code{C/C++}插件内置了它，也不需要其它格式化插件；
+        \item \alert{Linux终端使用需安装}：\code{sudo apt install clang-format}，之后可以直接在终端里跑\code{clang-format -i hello.c}；
+        \item 风格由配置文件\code{.clang-format}决定，格式化时从当前文件所在目录\alert{逐级向上查找}；
         \item 因此把它放在\code{\textasciitilde/courses/CS100/}下（与\code{.vscode}同级），课程内所有代码统一生效；
-        \item 我们在4.4已开启\code{Format On Save}：\textbf{\code{Ctrl+s}保存的瞬间，代码自动变整齐}。
+        \item 我们在4.4已开启\code{Format On Save}：\alert{\code{Ctrl+s}保存的瞬间，代码自动变整齐}。
     \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{.clang-format}
+\begin{frame}
+    \frametitle{.clang-format}
     在\code{\textasciitilde/courses/CS100/}创建\code{.clang-format}（内容见\code{vscode-config-files.md}）：
     \begin{Code}*
         \lstinputlisting{code/vscode/.clang-format}
@@ -94,7 +103,8 @@
     \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Makefile：自动构建}
+\begin{frame}
+    \frametitle{Makefile：自动构建}
     到目前为止，编译靠手敲：\code{gcc hello.c -o hello}。很快你会发现：命令越来越长、文件越来越多，还要靠\code{$\uparrow$}翻历史命令。
 
     \code{Makefile}：把编译规则写进一个文件，以后每次只敲一个词：\code{make}。
@@ -105,17 +115,19 @@
     \end{Code}
 \end{frame}
 
-\begin{frame}[fragile]{Makefile：规则的含义}
-    一条规则$=$\textbf{目标}：\textbf{依赖}$+$\textbf{命令}。意思：想生成\code{hello}，需要\code{hello.c}，办法是执行下面那行命令。
+\begin{frame}
+    \frametitle{Makefile：规则的含义}
+    一条规则$=$\alert{目标}：\alert{依赖}$+$\alert{命令}。意思：想生成\code{hello}，需要\code{hello.c}，办法是执行下面那行命令。
 
     \begin{itemize}
-        \item \textbf{命令行首必须是一个Tab}，不是空格（否则报\code{missing separator}，最经典的坑）；
+        \item \alert{命令行首必须是一个Tab}，不是空格（否则报\code{missing separator}，最经典的坑）；
         \item \code{make}比较时间戳：\code{hello}不存在或比\code{hello.c}旧才重新编译，否则提示\code{'hello' is up to date}；
         \item 试一试：连跑两次\code{make}；\code{touch hello.c}后再\code{make}。
     \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Makefile：加上变量}
+\begin{frame}
+    \frametitle{Makefile：加上变量}
     把编译器和选项集中到一处：
     \begin{Code}*
         \lstinputlisting{code/vscode/makefile}
@@ -128,7 +140,8 @@
     \end{itemize}
 \end{frame}
 
-\begin{frame}{配置总结}
+\begin{frame}
+    \frametitle{配置总结}
     \begin{itemize}
         \item 目前为止，以上配置已经足够，不要胡乱粘贴别人的配置文件；
         \item 遇到任何问题请首选官网（\code{code.visualstudio.com}）和StackOverflow，或者在Piazza提问，或单独找TA。

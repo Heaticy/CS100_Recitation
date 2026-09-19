@@ -1,16 +1,18 @@
 % 2. 编译器的安装
 \section{编译器的安装}
 
-\begin{frame}{编译器的安装}
+\begin{frame}
+    \frametitle{编译器的安装}
     安装方式按平台分三类：
     \begin{itemize}
-        \item \textbf{Linux}：\code{gcc}/\code{g++}
-        \item \textbf{Windows}：通过WSL使用\code{gcc}/\code{g++}
-        \item \textbf{Mac}：自带\code{clang}/\code{clang++}
+        \item \alert{Linux}：\code{gcc}/\code{g++}
+        \item \alert{Windows}：通过WSL使用\code{gcc}/\code{g++}
+        \item \alert{Mac}：自带\code{clang}/\code{clang++}
     \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Linux（以Ubuntu为例）}
+\begin{frame}
+    \frametitle{Linux（以Ubuntu为例）}
     一行命令即可安装编译所需的一整套工具（\code{gcc}、\code{g++}、\code{make}等）：
     \begin{Code}*
         \lstinputlisting{code/setup/install-build-essential.sh}
@@ -27,27 +29,30 @@
     同时编译器优化更强，错误检查与诊断也更好。
 \end{frame}
 
-\begin{frame}[fragile]{Windows（WSL）}
-    WSL（Windows Subsystem for Linux，Windows的Linux子系统）是微软官方提供的功能，本质上是一个在Windows上运行的\textbf{只有命令行环境的Linux虚拟机}。
+\begin{frame}
+    \frametitle{Windows（WSL）}
+    WSL（Windows Subsystem for Linux，Windows的Linux子系统）是微软官方提供的功能，本质上是一个在Windows上运行的\alert{只有命令行环境的Linux虚拟机}。
 
     换句话说：在Windows里，你可以直接打开一个Linux终端，运行\code{apt}、\code{bash}、\code{gcc}、\code{python}等工具，就像真的在Linux下一样。
 
-    \textbf{从这学期开始，课程演示全部在Linux环境下进行}：Windows用户请全程使用WSL，Mac用户直接使用自带终端。
+    \alert{从这学期开始，课程演示全部在Linux环境下进行}：Windows用户请全程使用WSL，Mac用户直接使用自带终端。
 \end{frame}
 
-\begin{frame}[fragile]{WSL安装}
-    WSL的安装需要在\textbf{正确的网络环境}下，在管理员权限的PowerShell中执行：
+\begin{frame}
+    \frametitle{WSL安装}
+    WSL的安装需要在\alert{正确的网络环境}下，在管理员权限的PowerShell中执行：
     \begin{Code}*
         \lstinputlisting{code/setup/wsl-install.sh}
     \end{Code}
-    会自动安装WSL和默认的Ubuntu，装完\textbf{重启电脑}生效。
+    会自动安装WSL和默认的Ubuntu，装完\alert{重启电脑}生效。
 
-    如果网络环境不正确，可以先去GitHub的\code{microsoft/WSL} releases下载最新\textbf{x86}架构的\code{.msi}手动装上WSL本体\footnote{次选方案：如果实在没有正确的网络环境，可以试试这个办法。}，再执行\code{wsl --install}安装Ubuntu；若安装卡在0\%，可加参数\code{--web-download}。
+    如果网络环境不正确，可以先去GitHub的\code{microsoft/WSL} releases下载最新\alert{x86}架构的\code{.msi}手动装上WSL本体\footnote{次选方案：如果实在没有正确的网络环境，可以试试这个办法。}，再执行\code{wsl --install}安装Ubuntu；若安装卡在0\%，可加参数\code{--web-download}。
 
     装完Ubuntu后首次打开，会让你创建一个用户名和密码（注意密码输入时屏幕不显示字符，是正常的）。
 \end{frame}
 
-\begin{frame}[fragile]{WSL安装的版本选择}
+\begin{frame}
+    \frametitle{WSL安装的版本选择}
     推荐使用Ubuntu 26.04或Ubuntu 24.04，两种版本本课程都支持：
     \begin{itemize}
         \item \code{wsl --install}：Ubuntu 26.04（默认gcc-15）；
@@ -57,8 +62,9 @@
     装好后用\code{cat /etc/os-release}确认版本，后面换源时选择对应的脚本。
 \end{frame}
 
-\begin{frame}{双系统：更好的选择}
-    WSL只有命令行环境，如果你希望体验完整的Linux桌面，可以考虑\textbf{双系统}：
+\begin{frame}
+    \frametitle{双系统：更好的选择}
+    WSL只有命令行环境，如果你希望体验完整的Linux桌面，可以考虑\alert{双系统}：
     \begin{itemize}
         \item 在磁盘上划出一块空间，在保留Windows的情况下安装完整的Linux系统；
         \item 开机时可以选择启动哪个系统；
@@ -68,7 +74,8 @@
     我们真诚鼓励所有学生尝试双系统方案，体验在一个完整的Linux桌面系统上工作。
 \end{frame}
 
-\begin{frame}[fragile]{WSL环境配置：换源}
+\begin{frame}
+    \frametitle{WSL环境配置：换源}
     首次进入WSL后，先把软件源换到国内镜像，否则\code{apt}下载很慢。
 
     先执行\code{cat /etc/os-release}确认Ubuntu版本（看\code{VERSION\_CODENAME}），然后按版本选择换源脚本：
@@ -82,7 +89,8 @@
     \end{vspquotered}
 \end{frame}
 
-\begin{frame}[fragile]{WSL环境配置：安装编译工具}
+\begin{frame}
+    \frametitle{WSL环境配置：安装编译工具}
     \begin{vspquote}{WSL与Linux配置编译环境}
         按顺序执行，\code{build-essential}会一次装齐\code{gcc}、\code{g++}、\code{make}等工具：
         \begin{Code}*
@@ -91,7 +99,8 @@
     \end{vspquote}
 \end{frame}
 
-\begin{frame}[fragile]{Mac环境配置}
+\begin{frame}
+    \frametitle{Mac环境配置}
     Mac不用额外配置，系统自带\code{clang}编译器。用下面的命令检查版本即可：
     \begin{Code}*
         \lstinputlisting{code/setup/clang-version.sh}

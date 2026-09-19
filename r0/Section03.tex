@@ -1,7 +1,8 @@
 % 3. 终端（命令行，命令提示符）
 \section{终端（命令行，命令提示符）}
 
-\begin{frame}{终端是什么}
+\begin{frame}
+    \frametitle{终端是什么}
     终端有很多种，叫法也很多：
     \begin{itemize}
         \item Terminal
@@ -13,15 +14,17 @@
     本质上都是同一件东西：一个用文字命令和计算机对话的窗口。
 \end{frame}
 
-\begin{frame}{打开终端}
+\begin{frame}
+    \frametitle{打开终端}
     \begin{itemize}
-        \item \textbf{Linux（Ubuntu）}：按\code{Ctrl+Alt+T}，或在应用列表中搜索Terminal；
-        \item \textbf{Mac}：\code{Cmd+空格}搜索“终端”（Terminal）；
-        \item \textbf{Windows（WSL）}：开始菜单搜索Ubuntu，或打开PowerShell后输入\code{wsl}进入。
+        \item \alert{Linux（Ubuntu）}：按\code{Ctrl+Alt+T}，或在应用列表中搜索Terminal；
+        \item \alert{Mac}：\code{Cmd+空格}搜索“终端”（Terminal）；
+        \item \alert{Windows（WSL）}：开始菜单搜索Ubuntu，或打开PowerShell后输入\code{wsl}进入。
     \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{在终端使用指令}
+\begin{frame}
+    \frametitle{在终端使用指令}
     bash常见命令（不一定全都掌握，但\code{cd}必须会）：
     \begin{itemize}
         \item \code{ls}：列出当前工作目录（Current Working Directory，CWD）下的文件；
@@ -40,7 +43,8 @@
     \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{验证编译器安装：PATH}
+\begin{frame}
+    \frametitle{验证编译器安装：PATH}
     输入\code{gcc}，shell会在\code{PATH}环境变量所包含的路径中寻找名为\code{gcc}的可执行文件，它通常位于\code{/usr/bin}。
 
     如果编译器的安装正确，应当看到如下输出：
@@ -50,7 +54,8 @@
     这不是报错，而是编译器在告诉你“给我点活干”。
 \end{frame}
 
-\begin{frame}[fragile]{查看编译器版本}
+\begin{frame}
+    \frametitle{查看编译器版本}
     给\code{gcc}加上\code{--version}参数即可查看版本：
     \begin{Code}*
         \lstinputlisting{code/terminal/gcc-version.sh}
@@ -63,7 +68,8 @@
     顺带一提：\code{gcc}和\code{clang}是C编译器，\code{g++}和\code{clang++}是C++编译器。
 \end{frame}
 
-\begin{frame}[fragile]{编译运行一个Hello World程序}
+\begin{frame}
+    \frametitle{编译运行一个Hello World程序}
     假设你的CS100课程的文件夹位于\code{\textasciitilde/courses/CS100}。
 
     在\code{\textasciitilde/courses/CS100/tmp}创建\code{hello.c}，用VSCode打开，输入如下代码：
@@ -72,7 +78,8 @@
     \end{Code}
 \end{frame}
 
-\begin{frame}[fragile]{编译}
+\begin{frame}
+    \frametitle{编译}
     打开终端并切换到\code{\textasciitilde/courses/CS100/tmp}，输入如下命令：
     \begin{Code}*
         \lstinputlisting{code/terminal/gcc-compile.sh}
@@ -80,7 +87,8 @@
     将会得到可执行文件\code{hello}。该文件名由紧跟在\code{-o}之后的字符串指定。
 \end{frame}
 
-\begin{frame}[fragile]{运行}
+\begin{frame}
+    \frametitle{运行}
     在终端里输入\code{./hello}即可运行\code{hello}。
 
     \code{./}表示当前工作目录，因为Linux/Mac默认不会在当前目录下搜索可执行文件。
@@ -91,11 +99,12 @@
     \end{Code}
 \end{frame}
 
-\begin{frame}[fragile]{向编译器传递参数}
+\begin{frame}
+    \frametitle{向编译器传递参数}
     \begin{Code}*
         \lstinputlisting{code/terminal/gcc-compile.sh}
     \end{Code}
-    跟在\code{gcc}之后的各项是传递给\code{gcc}的\textbf{参数}。
+    跟在\code{gcc}之后的各项是传递给\code{gcc}的\alert{参数}。
 
     \begin{itemize}
         \item \code{hello.c}是它需要编译的文件名，如果不在当前工作目录下，需要指明路径，例如\code{../../CS101/pa1/a.c}；
