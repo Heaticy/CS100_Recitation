@@ -70,7 +70,7 @@
     \frametitle{目录\code{/bin /lib /sbin}}
     通常，动态链接是较为常用的。
     
-    当你在C程序中写下\code{\#include <stdio.h>}以及\code{printf}并编译时，函数\code{printf}的二进制并不会被链接到你的程序中，真正发生的事情是，当你的程序运行到\code{printf}函数时，系统会找到\code{libc.so}并运行对应的二进制，这就是所谓“运行时链接”的含义。动态链接机制使系统中海量的二进制程序不必重复包含C库的片段，而是可以共享一个C库，从而节约大量空间！
+    当你在C程序中写下\texttt{\#include <stdio.h>}以及\code{printf}并编译时，函数\code{printf}的二进制并不会被链接到你的程序中，真正发生的事情是，当你的程序运行到\code{printf}函数时，系统会找到\code{libc.so}并运行对应的二进制，这就是所谓“运行时链接”的含义。动态链接机制使系统中海量的二进制程序不必重复包含C库的片段，而是可以共享一个C库，从而节约大量空间！
 
 \end{frame}
 
@@ -97,7 +97,7 @@
     \begin{itemize}
         \item \code{/home}是普通用户的家目录，每个用户在\code{/home}下有同名的家目录。
         \item 用户\code{liyuxuan}的家目录位于\code{/home/liyuxuan}。
-        \item 用户的家目录始终可以用\code{\~}表示（取决于当前登录的用户）。
+        \item 用户的家目录始终可以用\texttt{\textasciitilde{}}表示（取决于当前登录的用户）。
         \item \code{/root}是超级用户的家目录，这是\code{root}作为超级用户在架构上享有的额外特权：其家目录并非位于通常的\code{/home/root}，而是相应地高挂了一级，直接位于根目录\code{/root}下。
     \end{itemize}
 \end{frame}

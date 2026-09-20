@@ -14,7 +14,7 @@
     \frametitle{下载、安装VSCode}
     \begin{itemize}
         \item 去官网（\code{code.visualstudio.com}）下载安装包；
-        \item \alert{Linux}：下载\code{.deb}文件，双击安装或\code{sudo apt install ./code\_*.deb}；
+        \item \alert{Linux}：下载\code{.deb}文件，双击安装或\texttt{sudo apt install ./code\_*.deb}；
         \item \alert{Mac}：下载\code{.zip}解压后拖入Applications；
         \item \alert{Windows（WSL用户）}：VSCode装在Windows上，然后安装\alert{WSL}扩展，通过左下角绿色图标连接WSL。
     \end{itemize}
@@ -60,7 +60,7 @@
     \begin{enumerate}
         \item 为这门课程创建文件夹，例如\texttt{\textasciitilde{}/courses/CS100}；
         \item \code{File}$\to$\code{Open Folder...}（快捷键\code{Ctrl+k, Ctrl+o}）打开\code{CS100}文件夹。以后每一次都要先打开VSCode，再打开文件夹，再编辑文件；而不是直接双击文件用VSCode打开，否则工作区的配置无法起效；
-        \item 创建\texttt{\textasciitilde{}/courses/CS100/.vscode}文件夹，创建文件\code{.vscode/c\_cpp\_properties.json}，内容见课堂上传的\code{vscode-config-files.md}——注意阅读“注意事项”。
+        \item 创建\texttt{\textasciitilde{}/courses/CS100/.vscode}文件夹，创建文件\texttt{.vscode/c\_cpp\_properties.json}，内容见课堂上传的\code{vscode-config-files.md}——注意阅读“注意事项”。
     \end{enumerate}
 \end{frame}
 
@@ -105,7 +105,7 @@
 
 \begin{frame}
     \frametitle{Makefile：自动构建}
-    到目前为止，编译靠手敲：\code{gcc hello.c -o hello}。很快你会发现：命令越来越长、文件越来越多，还要靠\code{$\uparrow$}翻历史命令。
+    到目前为止，编译靠手敲：\code{gcc hello.c -o hello}。很快你会发现：命令越来越长、文件越来越多，还要靠向上键（$\uparrow$）翻历史命令。
 
     \code{Makefile}：把编译规则写进一个文件，以后每次只敲一个词：\code{make}。
 
@@ -134,7 +134,7 @@
     \end{Code}
 
     \begin{itemize}
-        \item \code{\$(CC)}、\code{\$(CFLAGS)}取变量的值；换编译器、改选项只动一处；
+        \item \texttt{\$(CC)}、\texttt{\$(CFLAGS)}取变量的值；换编译器、改选项只动一处；
         \item \code{make}构建，\code{make clean}清理产物；
         \item 多文件、增量编译、模式规则等内容，课程后面用到时再讲。
     \end{itemize}

@@ -49,8 +49,8 @@
     \begin{itemize}
         \item 打开浏览器和搜索引擎，在众多结果中辨认官网，避开各类欺诈网站。
         \item 安装程序在下载后需要手动运行，需要一路点击“下一步”。
-        \item 安装路径很随意，有的默认装进\code{C:\\Program Files}，有的需装进\code{C:\\}下的独立目录。
-        \item 许多“科普”还会告诉你软件不要装\code{C:\\}要装\code{D:\\}，最终散布在各个盘符，难以管理。
+        \item 安装路径很随意，有的默认装进\texttt{C:\textbackslash{}Program Files}，有的需装进\texttt{C:\textbackslash{}}下的独立目录。
+        \item 许多“科普”还会告诉你软件不要装\texttt{C:\textbackslash{}}要装\texttt{D:\textbackslash{}}，最终散布在各个盘符，难以管理。
     \end{itemize}
 \end{frame}
 
@@ -127,9 +127,9 @@
     \frametitle{路径与命令}
     Windows在路径与命令的设计上自成一派，与几乎所有其他操作系统都不同
     \begin{itemize}
-        \item 路径用反斜杠\code{\\}而非正斜杠\code{/}分隔，且从盘符\code{C:}或\code{D:}开始，没有统一的根目录。
-        \item 路径的反斜杠\code{\\}是大多数编程语言中的转义符，表示\code{\\}本身要用\code{\\\\}转义。于是经常需要将\code{C:\\Users\\liyuxuan}这样的路径写成\code{C:\\\\Users\\\\liyuxuan}，既别扭又容易出错。
-        \item 系统目录组织混乱，且存在\code{C:\\Program Files}和\code{C:\\Program Files (x86)}这种极为糟糕的关键系统目录名称选择：路径中的空格和括号是灾难！命令行中对此需要特殊处理。
+        \item 路径用反斜杠\texttt{\textbackslash{}}而非正斜杠\code{/}分隔，且从盘符\code{C:}或\code{D:}开始，没有统一的根目录。
+        \item 路径的反斜杠\texttt{\textbackslash{}}是大多数编程语言中的转义符，表示\texttt{\textbackslash{}}本身要用\texttt{\textbackslash{}\textbackslash{}}转义。于是经常需要将\texttt{C:\textbackslash{}Users\textbackslash{}liyuxuan}这样的路径写成\texttt{C:\textbackslash{}\textbackslash{}Users\textbackslash{}\textbackslash{}liyuxuan}，既别扭又容易出错。
+        \item 系统目录组织混乱，且存在\texttt{C:\textbackslash{}Program Files}和\texttt{C:\textbackslash{}Program Files (x86)}这种极为糟糕的关键系统目录名称选择：路径中的空格和括号是灾难！命令行中对此需要特殊处理。
         \item Windows的命令行\code{cmd}非常难用，命令名称和选项格式与主流操作系统格格不入：无法使用\code{cd}、\code{ls}、\code{mkdir}、\code{cp}、\code{rm}等常用命令，使用\code{/}而非\code{-}或\code{--}表示选项（例如\code{dir /a}）。
     \end{itemize}
 \end{frame}
