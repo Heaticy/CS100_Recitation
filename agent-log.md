@@ -71,3 +71,11 @@
 - 修复`\code{...}+\code{...}`在xeCJK+listings下的peek冲突：改为单个`\code{Ctrl+Alt+T}`的写法，避免`+`被xeCJK的`__xeCJK_listings_peek_active_loop`误解析。
 - 编译验证：39页，无Overfull警告与错误；抽查封面、内容页、代码页、尾页渲染正常。
 - CI更新：`build`与`release`作业同时编译r0和r1，产出`CS100-Recitation0.pdf`与`CS100-Recitation1.pdf`；顶层README补充r0目录说明。
+
+## 2026.09.20 16:34
+
+- 新增独立`intro/`课件，复用红色上科大Beamer模板，按致敬GKxx、TA自我介绍、课程理念组织内容。
+- 原样收录用户提供的图片，GKxx经历与贡献按用户提供的信息编写。
+- 按用户确认，TA自我介绍页留空；课程语言标准为C17和C++17，编译器具体版本不擅自指定。
+- 课程理念覆盖问题建模、C与Python差异、AI时代的理解与验证、编译环境、代码习惯和Git版本管理。
+- 编译生成23页PDF，无Overfull、Underfull或缺字警告，已检查全部页面缩略图。

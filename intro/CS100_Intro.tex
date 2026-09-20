@@ -1,0 +1,25 @@
+\makeatletter\def\input@path{{../template/vsp-beamer}{../template/minimus}}\makeatother
+
+\documentclass[red,tutorial,sectionpages,shtu]{vsp-beamer}
+\graphicspath{{image/}{../template/vsp-beamer/assets/}}
+
+\usepackage{minimus-section}
+\usepackage{minimus-text}
+\usepackage{minimus-math}
+\usepackage{minimus-float}
+\usepackage{minimus-code}
+\usepackage{minimus-colorbox}
+\usepackage{minimus-reference}
+
+\title{CS100 Introduction}
+\subtitle{从写代码到解决问题}
+\VSPsetspeaker{CS100 Teaching Assistants}{ShanghaiTech University}
+\VSPsetupfootline{CS100 Introduction}{Fall 2026}{CS100 TAs}
+
+\begin{document}
+\VSPtitleframe
+\input{Section01.tex}
+\input{Section02.tex}
+\input{Section03.tex}
+\VSPendframe{}
+\end{document}
