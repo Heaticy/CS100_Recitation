@@ -33,20 +33,10 @@
     学C帮助我们建立程序如何运行的基本模型，为后续系统课程打基础。
 \end{frame}
 
-\begin{frame}{C和Python：不同的抽象层次}
-    \small
-    \renewcommand{\arraystretch}{1.4}
-    \begin{tabular}{p{0.15\linewidth}p{0.36\linewidth}p{0.36\linewidth}}
-        \alert{维度} & \alert{C} & \alert{Python} \\
-        类型 & 变量有声明的类型 & 对象有类型，名字可绑定不同对象 \\
-        整数 & 常用整数类型有固定取值范围 & 内置整数支持任意精度，受可用内存限制 \\
-        内存 & 直接使用地址；动态内存需显式管理 & 通常由运行时管理对象内存 \\
-        容器 & 数组长度与索引范围需自行留意 & 内置列表、字典等高级容器 \\
-        执行 & 通常先编译、链接，再运行 & 通常由解释器运行；也可能涉及字节码 \\
-    \end{tabular}
-    \medskip
-
-    两种语言都可以表达算法；它们让你直接控制的细节、承担的责任不同。
+\begin{frame}{C和Python：程序怎样跑起来？}
+    \begin{center}
+        \includegraphics[width=\linewidth]{c-python-execution.pdf}
+    \end{center}
 \end{frame}
 
 \begin{frame}{一个比喻：全能翻译官与译好的书}
