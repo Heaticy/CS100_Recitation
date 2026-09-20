@@ -49,6 +49,29 @@
     两种语言都可以表达算法；它们让你直接控制的细节、承担的责任不同。
 \end{frame}
 
+\begin{frame}{一个比喻：全能翻译官与译好的书}
+    \begin{columns}[T]
+        \begin{column}{0.47\textwidth}
+            \textbf{Python：带着一位全能翻译官}
+            \begin{itemize}
+                \item 这位“翻译官”就是\alert{解释器}，在程序运行时帮助执行代码。
+                \item 去中国讲中文，去法国讲法语：各个平台有适配自己的解释器。
+                \item 同一份代码通常可以跨平台运行，前提是解释器和依赖兼容。
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.47\textwidth}
+            \textbf{C：一本已经译成中文的书}
+            \begin{itemize}
+                \item \alert{编译器}提前完成翻译，得到目标平台的可执行程序。
+                \item 中国读者直接读，不必现场翻译，通常执行效率较高。
+                \item 拿给不懂中文的法国读者就看不懂：换平台往往需要重新编译。
+            \end{itemize}
+        \end{column}
+    \end{columns}
+    \medskip
+    这里的“中文书”指\alert{编译后的程序}。C源代码仍可移植；能否直接运行，取决于操作系统、处理器架构等条件。
+\end{frame}
+
 \begin{frame}{同一道算术题，为什么答案不同？}
     \begin{columns}[T]
         \begin{column}{0.47\textwidth}
