@@ -154,13 +154,35 @@
 
 \begin{frame}{代码习惯：写给人读，也交给机器执行}
     \begin{itemize}
-        \item \alert{命名表达含义}：用\code{student_count}表达人数，避免一串无意义缩写。
+        \item \alert{命名表达含义}：用\code{studentCount}表达人数，避免一串无意义缩写。
         \item \alert{格式保持一致}：统一缩进、括号和空格，让结构一眼可见。
         \item \alert{拆分职责}：一个函数完成一件清楚的事，减少重复与隐含依赖。
         \item \alert{注释解释原因}：说明约束、假设和设计选择，不逐句翻译代码。
         \item \alert{尊重题目接口}：严格遵守输入输出格式，不夹带调试信息。
     \end{itemize}
     代码越容易读懂，就越容易发现错误、验证行为和继续修改。
+\end{frame}
+
+\begin{frame}{命名有约定：小驼峰、大驼峰与成员变量}
+    \begin{columns}[c]
+        \begin{column}{0.45\textwidth}
+            \begin{itemize}
+                \item \alert{小驼峰}：变量、参数与函数。\par
+                    \code{studentCount}、\code{studentId}、\code{getId}
+                \item \alert{大驼峰}：class类名。\par
+                    \code{StudentRecord}
+                \item \alert{成员变量}：加\code{m_}前缀。\par
+                    \code{m_id}、\code{m_studentCount}
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.51\textwidth}
+            \begin{Code}*{cpp}
+                \lstinputlisting{code/naming.cpp}
+            \end{Code}
+        \end{column}
+    \end{columns}
+    \medskip
+    右侧为C++17示例。命名是\alert{团队约定}，遵循课程或项目规范，并保持一致。
 \end{frame}
 
 \begin{frame}{版本管理：不要再用“最终版2”}
