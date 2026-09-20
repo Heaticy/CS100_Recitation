@@ -1,6 +1,6 @@
-class StudentRecord {
+class Student {
 public:
-    explicit StudentRecord(int studentId)
+    explicit Student(int studentId)
         : m_id(studentId) {}
 
     int getId() const { return m_id; }
