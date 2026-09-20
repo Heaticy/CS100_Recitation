@@ -84,16 +84,26 @@
 \end{frame}
 
 \begin{frame}{我们不做“语言律师”}
-    我们不把背诵冷僻规则、猜测刁钻表达式的输出当作学习目标。
+    \begin{columns}[c]
+        \begin{column}{0.46\textwidth}
+            不以背诵冷僻规则、猜刁钻表达式为目标。
+            \medskip
 
-    但你需要理解与正确性直接相关的规则：
-    \begin{itemize}
-        \item 类型转换和整数除法，是否改变了你想计算的东西？
-        \item 数组索引是否越界？变量是否已经初始化？
-        \item 一个地址指向的对象，是否仍然存在？
-        \item 程序是否依赖未定义行为，导致结果无法保证？
-    \end{itemize}
-    \alert{写清晰、可解释的代码；遇到不确定的规则，查文档、做验证。}
+            \alert{把正确性相关的规则弄清楚：}
+            \begin{itemize}
+                \item 类型转换与整数除法
+                \item 数组越界与变量初始化
+                \item 对象生命周期与未定义行为
+            \end{itemize}
+            \medskip
+            写清晰、可解释的代码；\par
+            不确定时，\alert{查文档、做验证}。
+        \end{column}
+        \begin{column}{0.50\textwidth}
+            \centering
+            \includegraphics[width=\linewidth,height=0.78\textheight,keepaspectratio]{language_lawer.jpg}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}{AI时代，哪些能力更重要？}
