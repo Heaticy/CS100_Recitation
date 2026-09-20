@@ -175,15 +175,24 @@
 \end{frame}
 
 \begin{frame}{版本管理：不要再用“最终版2”}
-    Git把每次有意义的修改保存成一个可以回看的版本。
-    \begin{Code}*{bash}
-        \lstinputlisting{code/version-control.sh}
-    \end{Code}
-    \begin{itemize}
-        \item 一次提交围绕一件事，提交信息说明这次改变的含义。
-        \item 提交源码与必要配置，用\code{.gitignore}排除生成文件。
-        \item Git可以完全在本地使用；如需远端备份，课程作业应遵守公开范围要求。
-    \end{itemize}
+    \begin{columns}[c]
+        \begin{column}{0.55\textwidth}
+            \small
+            Git保存每次有意义的修改，方便回看。
+            \begin{Code}*{bash}
+                \lstinputlisting{code/version-control.sh}
+            \end{Code}
+            \begin{itemize}
+                \item 一次提交一件事，写清修改含义。
+                \item 提交源码与配置，用\code{.gitignore}排除生成文件。
+                \item 可完全本地使用；远端备份须遵守作业公开范围要求。
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.41\textwidth}
+            \centering
+            \includegraphics[trim=394bp 0bp 0bp 0bp,clip,width=\linewidth,height=0.78\textheight,keepaspectratio]{git-commit.png}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}{一次小修改，也值得走完这个循环}
