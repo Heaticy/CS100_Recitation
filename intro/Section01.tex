@@ -1,27 +1,31 @@
 \section{吃水不忘挖井人}
 
-\begin{frame}{革命尚未成功，同志仍须努力}
-    \begin{center}
-        \includegraphics[width=\linewidth,height=0.72\textheight,keepaspectratio]{gkxx.png}
-    \end{center}
+% 原图作为整页背景，介绍放在左下留白，避开书法与右侧人物。
+{
+\begin{frame}[plain]
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[inner sep=0pt] at (current page.center) {\includegraphics[width=\paperwidth,height=\paperheight]{gkxx.png}};
+        \node[anchor=south west,inner sep=0pt,text width=0.72\paperwidth]
+            at ([xshift=0.06\paperwidth,yshift=0.055\paperheight]current page.south west) {%
+            \begin{minipage}{\linewidth}
+                {\fontsize{12}{15}\selectfont\textbf{GKxx：现代CS100的重要建设者}}\par
+                \vspace{3pt}
+                \fontsize{8.5}{12}\selectfont
+                \setlength{\parskip}{4pt}
+                上海科技大学2020级计算机科学与技术专业学生，曾多次担任CS100的TA。
+
+                改良课件与教学方式，改进课程考核，为今天的CS100打下重要基础。\par
+                如今已经“飞升”国科大／中国科学院软件研究所。
+
+                \textbf{致敬，也接力。}把课讲清楚，把工具做好，把这份认真传下去。
+
+                Bilibili：\textbf{GKxxISCAS}\qquad
+                GitHub：\href{https://github.com/GKxxUCAS}{\textbf{GKxxUCAS}}
+            \end{minipage}
+        };
+    \end{tikzpicture}
 \end{frame}
-
-\begin{frame}{GKxx：现代CS100的重要建设者}
-    GKxx是上海科技大学2020级计算机科学与技术专业学生，曾多次担任CS100的TA。
-
-    \begin{itemize}
-        \item 深度参与课程建设，推动课件内容与教学方式的改良。
-        \item 改进课程考核，为我们今天的CS100打下了重要基础。
-        \item 如今已经“飞升”国科大／中国科学院软件研究所。
-    \end{itemize}
-
-    \begin{vspquote}{致敬，也接力}
-        今天的课程建立在前人的投入之上。把课讲清楚，把工具做好，把这份认真传下去。
-    \end{vspquote}
-
-    Bilibili：\textbf{GKxxISCAS}\qquad
-    GitHub：\href{https://github.com/GKxxUCAS}{\textbf{GKxxUCAS}}
-\end{frame}
+}
 
 \begin{frame}{想成为“语言律师”？去看GKxx的课}
     \begin{center}
