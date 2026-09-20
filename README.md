@@ -42,7 +42,7 @@ make -j
 
 输出PDF位于`build/`，清理使用`make clean`。
 
-导论课件可使用`make -j -C intro`编译，输出为`intro/build/CS100_Intro.pdf`。TA自我介绍页位于`intro/Section02.tex`，依次为李超凡、李宇轩、JY与WSH，后两位介绍暂留空。课程语言标准为C17与C++17。
+导论课件可使用`make -j -C intro`编译，输出为`intro/build/CS100_Intro.pdf`。TA自我介绍页位于`intro/Section02.tex`，依次为李超凡、李宇轩、蒋烨与王诗涵。课程语言标准为C17与C++17。
 
 CI在普通推送时编译验证intro、r0和r1；仅打tag时发布三份PDF。
 
