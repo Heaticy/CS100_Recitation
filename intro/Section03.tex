@@ -62,27 +62,6 @@
     这里的“中文书”指\alert{编译后的程序}。C源代码仍可移植；能否直接运行，取决于操作系统、处理器架构等条件。
 \end{frame}
 
-\begin{frame}{同一道算术题，为什么答案不同？}
-    \begin{columns}[T]
-        \begin{column}{0.47\textwidth}
-            \alert{C：先看操作数的类型}
-            \begin{Code}*{c}
-                \lstinputlisting{code/division.c.txt}
-            \end{Code}
-            两个整数相除，结果仍是整数；再赋给\code{double}也不会恢复小数部分。
-        \end{column}
-        \begin{column}{0.47\textwidth}
-            \alert{Python 3：区分两种除法}
-            \begin{Code}*{python}
-                \lstinputlisting{code/division.py}
-            \end{Code}
-            \code{/}表示真除法，\code{//}表示向下取整的除法。
-        \end{column}
-    \end{columns}
-    \medskip
-    学习差异，是为了理解代码的含义。比如负数参与时，C的整数除法向零截断，Python的\code{//}向下取整。
-\end{frame}
-
 \begin{frame}{我们不做“语言律师”}
     \begin{columns}[c]
         \begin{column}{0.46\textwidth}
