@@ -7,19 +7,25 @@ CS100习题课课件仓库。共享模板位于`template/`，各习题课在独�
 ```
 CS100_Recitation
 |- template/          # 共享模板：vsp-beamer文档类、minimus宏包、makefile-latex构建系统
+|- intro/            # 课程导论：致敬GKxx、TA自我介绍与课程理念
+|  |- CS100_Intro.tex
+|  |- Section01.tex…
+|  |- code/
+|  |- image/
+|  |- Makefile
 |- r1/                # 习题课一（Linux基础），在该目录下运行make编译
 |  |- build/
 |  |- code/           # 课堂演示代码
 |  |- image/          # 课件图片（origin/为原图归档）
 |  |- Makefile
-|  |- CS100Linux.tex
+|  |- CS100_Recitation1.tex
 |  |- Section01.tex…
 |- r0/                # 习题课零（环境配置），在该目录下运行make编译
 |  |- build/
 |  |- code/           # 课堂演示代码
 |  |- img/            # 课件图片
 |  |- Makefile
-|  |- CS100EnvSetup.tex
+|  |- CS100_Recitation0.tex
 |  |- Section01.tex…
 |- AGENTS.md          # agent工作流约定
 |- agent-request.md
@@ -35,6 +41,10 @@ make -j
 ```
 
 输出PDF位于`build/`，清理使用`make clean`。
+
+导论课件可使用`make -j -C intro`编译，输出为`intro/build/CS100_Intro.pdf`。TA自我介绍页位于`intro/Section02.tex`，目前按要求留空。课程语言标准为C17与C++17。
+
+CI在普通推送时编译验证intro、r0和r1；仅打tag时发布三份PDF。
 
 ## 模板
 

@@ -14,6 +14,7 @@ build:
   tags:
     - latex-runner
   script:
+    - make -j -C intro
     - make -j -C r0
     - make -j -C r1
 
@@ -25,9 +26,11 @@ release:
   rules:
     - if: '$CI_COMMIT_TAG'
   script:
+    - make -j -C intro
     - make -j -C r0
     - make -j -C r1
     - mkdir -p dist
+    - cp intro/build/CS100_Intro.pdf dist/CS100_Intro.pdf
     - cp r0/build/CS100_Recitation0.pdf dist/CS100_Recitation0.pdf
     - cp r1/build/CS100_Recitation1.pdf dist/CS100_Recitation1.pdf
   artifacts:
@@ -41,6 +44,8 @@ release:
     description: 'CS100习题课课件PDF，对应tag $CI_COMMIT_TAG。'
     assets:
       links:
+        - name: 'CS100_Intro.pdf'
+          url: '${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/raw/dist/CS100_Intro.pdf?inline=false'
         - name: 'CS100_Recitation0.pdf'
           url: '${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/raw/dist/CS100_Recitation0.pdf?inline=false'
         - name: 'CS100_Recitation1.pdf'
