@@ -1,3 +1,3 @@
 sudo apt update
 sudo apt upgrade
-sudo apt install gcc g++
+sudo apt install build-essential

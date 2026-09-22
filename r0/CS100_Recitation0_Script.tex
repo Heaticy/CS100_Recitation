@@ -1,0 +1,262 @@
+% CS100 Recitation 0 讲稿（环境配置）
+% 配套幻灯片：CS100_Recitation0.pdf（共40页），页码与PDF页码一致。
+\documentclass[UTF8,fontset=none,11pt]{ctexart}
+\usepackage[margin=2.3cm,top=2.7cm,bottom=2.7cm]{geometry}
+\usepackage{xeCJK}
+\usepackage{xcolor}
+\usepackage{needspace}
+\usepackage{parskip}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+
+% 中文段落里\verb长命令不可断行，留一点紧急伸展避免溢出
+\emergencystretch=3em
+
+\IfFontExistsTF{Noto Serif CJK SC}{}{%
+  \PackageError{CS100-Script}{Noto CJK system fonts were not found}%
+    {Install the Noto CJK font package (for example, fonts-noto-cjk on Debian/Ubuntu).}%
+}
+\setCJKmainfont[AutoFakeSlant=0.18]{Noto Serif CJK SC}
+\setCJKsansfont[AutoFakeSlant=0.18]{Noto Sans CJK SC}
+\setCJKmonofont[AutoFakeSlant=0.18]{Noto Sans Mono CJK SC}
+
+\definecolor{VSPRed}{HTML}{AE3A44}
+\definecolor{VSPRedSoft}{HTML}{EDDDDE}
+\definecolor{VSPInk}{HTML}{211112}
+\definecolor{VSPMuted}{HTML}{8C8C8C}
+\definecolor{VSPGreen}{HTML}{6F8F42}
+\definecolor{VSPTeal}{HTML}{53A7A0}
+
+\hypersetup{colorlinks=true, linkcolor=VSPRed, urlcolor=VSPRed,
+  pdftitle={CS100 Recitation 0讲稿（环境配置）}}
+
+\pagestyle{fancy}
+\setlength{\headheight}{14.5pt}
+\fancyhf{}
+\fancyhead[L]{\small\color{VSPMuted}CS100 Recitation 0讲稿（环境配置）}
+\fancyhead[R]{\small\color{VSPMuted}Fall 2026}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrule}{{\color{VSPRedSoft}\hrule width\headwidth height 0.8pt}}
+
+\newcommand{\code}[1]{\texttt{#1}}
+% 现场标记：演示 / 坑 / 互动
+\newcommand{\scripttag}[2]{\mbox{\colorbox{#1}{\color{white}\footnotesize\bfseries\,#2\,}}\enspace}
+\newcommand{\tagdemo}{\scripttag{VSPGreen}{演示}}
+\newcommand{\tagpit}{\scripttag{VSPRed}{坑}}
+\newcommand{\tagask}{\scripttag{VSPTeal}{互动}}
+% 每页条目：页码 + 页标题
+\newcommand{\slidepage}[2]{%
+  \needspace{6\baselineskip}%
+  \vspace{14pt}%
+  \noindent{\large\bfseries\color{VSPRed}第#1页}\hspace{0.8em}{\large\bfseries\color{VSPInk}#2}\par
+  \nopagebreak\vspace{-2pt}%
+  \noindent{\color{VSPRedSoft}\rule{\linewidth}{1.4pt}}\par
+  \nopagebreak\vspace{6pt}%
+}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries\color{VSPRed}CS100 Recitation 0讲稿}\\[4pt]
+  {\large\color{VSPInk}环境配置（Environment Setup）}\\[8pt]
+  {\small\color{VSPMuted}配套幻灯片：\code{CS100\_Recitation0.pdf}（共40页），页码与PDF页码一致，封面为第1页。}
+\end{center}
+
+\noindent\textbf{标记说明}：\tagdemo 需要现场操作终端/VSCode；\tagpit 学生高频翻车点，务必强调；\tagask 可现场提问。
+
+\noindent\textbf{时间分配建议}（按50分钟课）：\\
+开场1'~·~第1节4'~·~第2节16'~·~第3节12'~·~第4节14'~·~收尾3'。
+
+\slidepage{1}{封面}
+大家好，欢迎来到CS100本学期第一次习题课。我是XXX（自我介绍）。今天这节课只做一件事：\textbf{把写C程序需要的整套环境搭好}。目标是走出教室时，你的电脑能编译并运行第一个Hello World——后面所有的作业都建立在这套环境上，今天没跟上的同学务必课后照着slides补完。
+
+\slidepage{2}{目录}
+先花十秒看一下今天的路线图。今天四个部分：第一部分扫盲几个概念——编辑器、编译器、IDE是什么，很多人从高中信息课到现在一直混着叫；第二部分装编译器，这是今天的重头，Windows用户会经历WSL的完整安装；第三部分学一点终端和命令行，因为这门课从今天起你和你代码的每一次交互都从终端开始；第四部分配置VSCode，把它变成一台顺手的生产工具。
+
+\slidepage{3}{第1节过渡页}
+进入第一部分，先把几个概念分清楚。
+
+\slidepage{4}{编辑器、编译器、IDE}
+这一页信息量大，三个概念一次讲清。
+
+第一个概念，编辑器。什么是编辑器？答案宽得惊人——只要能编辑文本的软件都算：记事本、Word、WPS、甚至手机备忘录。你完全可以在备忘录里写C代码。但是“能写”和“写得舒服”是两回事，我们需要的是\textbf{代码编辑器}，尤其是现代代码编辑器：懂语法高亮、自动缩进、括号配对、多光标编辑。常见的有\code{Notepad++}、\code{VS Code}、\code{Vim}、\code{Sublime Text}。
+
+第二个概念，编译器。CPU只认识机器指令，而我们写的C是给人看的，中间必须有“翻译”——把高级语言翻译成机器真正能执行的代码，这个翻译官就是编译器。C/C++世界主流的几位：GNU的\code{GCC}、LLVM的\code{Clang}、微软的\code{MSVC}、Intel的\code{ICC}。本课程只涉及前两个：\textbf{Linux/WSL上用gcc，Mac上用clang}。
+
+第三个概念，IDE，集成开发环境。把编辑器、编译器、调试器、项目管理工具打包到一个软件里，就是IDE。相当于“全家桶”和“自己组装”的区别。
+
+\slidepage{5}{我们到底需要什么？}
+好的IDE除了打包全家桶，还带linter、profiler、版本管理等。江湖人称“宇宙最强IDE”的是Microsoft Visual Studio——注意是Visual Studio，不是VS Code，这俩是完全不同的产品。常见的还有CLion、PyCharm（写Python的同学可能用过）。
+
+那我们这门课用什么？我们实际需要的是一个IDE的“功能”，但不必是它的打包形态。两条路线都行：直接上CLion或VS这样的狠货；或者用“编辑器$+$编译器$+$插件”自己搭一套。\textbf{本课程选后者：VS Code$+$gcc}。原因有三：轻量免费；每一步编译都发生在你眼前、由你亲手触发——你能真正理解“编译”这件事，而不是被一个绿色按钮包养；命令行能力本身是信院同学的必修课。搭好这套，将来转任何IDE都是降维使用。
+
+\slidepage{6}{第2节过渡页}
+概念清完了，开始动手装编译器。
+
+\slidepage{7}{编译器的安装}
+先看平台总览：\textbf{Linux用户用\code{gcc}/\code{g++}；Windows用户通过WSL用\code{gcc}/\code{g++}；Mac用户用自带的\code{clang}/\code{clang++}}。特别说明Windows同学：从这学期起课程演示全部在Linux环境下进行，Windows用户请全程使用WSL——防止环境不统一导致TA没法复现你的问题，评分环境也可能和你本地行为不一致。Mac用户直接用自带终端即可。
+
+\slidepage{8}{Linux（以Ubuntu为例）}
+Ubuntu下装编译器就一行：\code{sudo apt install build-essential}。注意这是个\textbf{套装}，除了\code{gcc}、\code{g++}还带\code{make}等构建工具，等会儿讲Makefile就用得上，推荐直接装套装。版本说明：Ubuntu24.04默认装的是gcc-13，26.04默认gcc-15，都远超课程需要。
+
+为什么关心版本？每个新版GCC都会增加对更新语言标准的支持：gcc-9对C++17支持比较完善，gcc-11改进了C++20，gcc-13/14开始逐步实现C++23的特性。同时编译器优化更强，错误检查与诊断也更好。一句话：编译器越新越好。
+
+\slidepage{9}{Windows（WSL）}
+Windows同学重点来了。WSL，Windows Subsystem for Linux，微软官方提供的功能，本质上是一台\textbf{在Windows里运行的、只有命令行环境的Linux虚拟机}。换句话说：你在Windows里可以直接打开一个Linux终端，\code{apt}、\code{bash}、\code{gcc}、\code{python}全部可用，就像真的在Linux下一样，文件还能互通。你可以把它理解成“Windows身体里住了个Linux灵魂”。再次强调：本学期Windows用户全程在WSL里写代码。
+
+\slidepage{10}{WSL安装}
+安装要在\textbf{正确的网络环境}下进行：管理员权限的PowerShell里一句\verb|wsl --install|，自动装好WSL本体和默认的Ubuntu，然后\textbf{重启电脑}生效。
+
+\tagpit 网络不正确的同学走次选方案：先去GitHub的\code{microsoft/WSL} releases下载最新\textbf{x86}架构的\code{.msi}手动装上WSL本体，再执行\verb|wsl --install|安装Ubuntu；如果安装卡在0\%，可以加参数\verb|--web-download|。
+
+装完Ubuntu后首次打开，会让你创建一个用户名和密码——注意密码输入时屏幕不显示字符，是正常的，不要以为键盘坏了。
+
+\slidepage{11}{WSL安装的版本选择}
+\tagpit \textbf{今年和往年不一样的地方}：\code{wsl --install}默认装的是\textbf{最新LTS}，现在就是Ubuntu26.04，不再是24.04了。两个版本课程都支持：默认命令装26.04（gcc-15）；想装24.04就写全\code{wsl --install Ubuntu-24.04}（gcc-13）。
+
+装好之后\textbf{第一件事}：\code{cat /etc/os-release}看清楚自己是什么版本——记住\code{VERSION\_CODENAME}那一行，下一页换源全靠它。
+
+\slidepage{12}{双系统：更好的选择}
+这页说个进阶选项。WSL只有命令行环境，如果你希望体验\textbf{完整的Linux桌面}——真正的Ubuntu，带图形界面的那种——可以考虑双系统：在磁盘上划出一块空间，在保留Windows的情况下安装完整的Linux系统，开机时选择启动哪个系统。版本同样推荐Ubuntu26.04或24.04，其他发行版也行。
+
+我们真诚鼓励所有同学尝试双系统：在一个完整的Linux桌面系统上工作过，你对“Linux不是黑乎乎的终端”会有全新的认识。当然这纯属自愿，WSL完全够本课程使用；而且就算装了双系统，接下来几页的换源、装编译器流程也一模一样，不用分开讲。
+
+\slidepage{13}{WSL环境配置：换源}
+WSL默认的软件源在国外，\code{apt}下载龟速，所以先换成国内镜像（这里用清华TUNA）。流程：先\code{cat /etc/os-release}确认版本，看\code{VERSION\_CODENAME}那一行——\textbf{24.04（noble）用\code{magic\_code\_2404.md}，26.04（resolute）用\code{magic\_code\_2604.md}}，脚本都在课程主页，照抄即可。
+
+\tagpit 为什么大字强调版本必须匹配？如果脚本和版本不匹配：24.04的机器用26.04的源（或反过来）会导致仓库里所有包都比系统旧，\code{apt install}会报依赖错误。Mac用户这页可以划水。
+
+\slidepage{14}{WSL环境配置：安装编译工具}
+换完源，WSL和Linux用户按顺序执行这三连：
+\begin{quote}
+\verb|sudo apt update|（刷新软件清单）\\
+\verb|sudo apt upgrade|（升级已有软件）\\
+\verb|sudo apt install gcc g++|（安装编译器）
+\end{quote}
+第8页已经装过\code{build-essential}的同学，前两行照跑，第三行无害，再执行一遍也没关系。
+
+\slidepage{15}{Mac环境配置}
+Mac同学最幸福：什么都不用装，系统自带\code{clang}编译器。跑一下\code{clang --version}确认——第一次执行系统可能会自动帮你装command line tools，同意、等它装完就好。
+
+\slidepage{16}{第3节过渡页}
+编译器就位了。接下来学怎么“跟计算机说话”——终端。
+
+\slidepage{17}{终端是什么}
+你可能听过Terminal、Shell、命令行（Command Line）、命令提示符（Command Prompt）……一堆名词。不用纠结严谨区别，它们指的都是同一个东西：\textbf{一个用文字命令和计算机对话的窗口}。严格说终端是那个窗口、shell是窗口里跑的解释你命令的程序（我们用的是bash），日常混用没人计较。
+
+\slidepage{18}{打开终端}
+各平台打开方式：Ubuntu按\code{Ctrl+Alt+T}，或在应用列表里搜Terminal；Mac用\code{Cmd+空格}搜“终端”；Windows从开始菜单搜Ubuntu，或在PowerShell里敲\code{wsl}进入。
+
+\tagpit WSL用户一个高频事故：刚装完进去，提示符长这样\code{/mnt/c/Users/你/...}——这说明你当前站在\textbf{Windows的C盘}上，不是Linux的地盘（\code{/mnt/c}就是挂载进来的C盘）。进去先\code{pwd}看一眼自己在哪，不对就\code{cd \textasciitilde}回家。养成这个习惯，能避开一堆“编译慢、权限怪”的灵异问题。
+
+\slidepage{19}{在终端使用指令}
+这页是今天唯一需要记忆的内容。这些命令不一定全都要掌握，但\code{cd}必须会。
+
+\code{ls}列出当前工作目录下的文件——默认打开终端，工作目录是家目录\code{\textasciitilde}，Linux为\code{/home/用户名}，Mac为\code{/Users/用户名}。\code{cd somePath}切换工作目录，相对路径绝对路径都行——\textbf{这个必须会}：\code{cd ..}回上一级，路径带空格要加引号。\code{mkdir}建文件夹；\code{rmdir}删空文件夹；\code{rm}删文件、\code{rm -r}连文件夹带内容一起删。
+
+两个要点：波浪号\code{\textasciitilde}代表家目录；以及\textbf{Linux的rm没有回收站}，删了就是没了，\code{rm -r}敬畏着用。
+
+\slidepage{20}{验证编译器安装：PATH}
+\tagdemo 终端里裸敲一个\code{gcc}回车。shell拿着\code{gcc}这个名词，去\code{PATH}环境变量列出的目录里挨个找同名的可执行文件，通常在\code{/usr/bin}找到。
+
+看到\code{fatal error: no input files}——\textbf{恭喜，这是好消息}：说明gcc装好了、能被找到，它只是在抱怨“给我点活干”、你没给它源文件。如果显示\code{command not found}，才是坏消息：编译器没装上，回上一节。
+
+\slidepage{21}{查看编译器版本}
+\code{gcc --version}看版本。课件上这个例子是24.04的gcc13.3.0；装26.04的同学会看到15.x，都正常。顺便把对应关系记牢：\textbf{gcc和clang编C，g++和clang++编C++}，前缀一样、加号区分语言，后面作业里编译器选错是常见扣分点。
+
+\slidepage{22}{编译运行一个Hello World程序}
+来写第一个程序。课程文件夹统一放\code{\textasciitilde/courses/CS100}，今天在它下面的\code{tmp}里建\code{hello.c}。五行代码，\code{puts}打一行字，\code{return 0}正常退出。
+
+\tagdemo 现场创建文件、敲代码、保存。
+
+\slidepage{23}{编译}
+终端切到\code{tmp}目录，\code{gcc hello.c -o hello}。这条命令把人话翻译成机器话：输入\code{hello.c}，\code{-o hello}指定输出文件叫\code{hello}——紧跟在\code{-o}后面的字符串就是可执行文件的名字，你也可以叫它别的。回车后没有输出，\code{ls}一下，多了个\code{hello}，这就是编译产物。
+
+\slidepage{24}{运行}
+运行要敲\code{./hello}，注意\textbf{必须带\code{./}前缀}。为什么不能直接敲\code{hello}？因为Linux/Mac出于安全设计，默认\textbf{不在当前目录}找可执行文件，只搜PATH里的目录；\code{./}表示当前工作目录，明确告诉shell“就运行当前目录下这个”。这和Windows的习惯相反，Windows同学特别留意。
+
+\tagdemo 跑起来，屏幕打出Hello world——这一刻，你的工具链全通了。
+
+\slidepage{25}{向编译器传递参数}
+回看这条命令，\code{gcc}后面跟的每一项都是\textbf{参数}：\code{hello.c}是它要编译的文件名，不在当前目录就要写明路径，例如\code{../../CS101/pa1/a.c}；\code{-o hello}指明可执行文件的名字，也可以带路径，注意Linux/Mac下可执行文件通常\textbf{无后缀名}；此外还能加各种开关——\code{-std=c17}指定用2017年发布的C语言标准C17，\code{-lm}链接数学库，\verb|--save-temps|保留编译中间产物。这些参数顺序无所谓。往后课程里你会见到越来越长的编译命令，别慌，都是这样一个一个开关拼出来的。
+
+\slidepage{26}{第4节过渡页}
+命令行入门完毕。最后一部分：把VS Code配成你的主力开发环境。
+
+\slidepage{27}{什么是VSCode}
+先破除一个误区：VS Code是一个现代\textbf{代码编辑器}，不是IDE，它自己\textbf{不会编译你的代码}。每年都有同学问“为什么我的代码在VS Code上跑出来是这样”——不是VS Code在跑，是你（或插件替你调）的编译器在跑，这类问题的答案往往不在编辑器。但它插件生态极其强大：一键调编译器、方便地调试代码、版本管理、远程/容器开发，甚至上QQ、逛知乎、听网易云、炒股。我们的玩法就是：VS Code负责写，gcc负责编译，各司其职。
+
+\slidepage{28}{下载、安装VSCode}
+去官网（\code{code.visualstudio.com}）下载。Linux下\code{.deb}双击安装或\code{sudo apt install ./code\_*.deb}；Mac下\code{.zip}解压后拖进Applications。
+
+\tagdemo \textbf{WSL用户注意特殊姿势}：VS Code本体装在\textbf{Windows}里（不是装进WSL！），然后安装\textbf{WSL扩展}，点左下角绿色图标连接到WSL。现场演示连接：连上后左下角显示WSL: Ubuntu，标题栏也变了，这时你的编辑器操作的就是Linux里的文件。
+
+\slidepage{29}{配置VSCode}
+VS Code有N$+$1套配置：每个打开的文件夹（工作区）可以有自己的配置，以json文件的形式放在\code{.vscode}目录下；另外还有一套全局配置。工作区设置优先于全局设置——某一项如果在工作区配置里出现了，就用工作区的值，否则用全局的。这个设计意味着：\textbf{换一台电脑、换一个项目，配置跟着文件夹走}。
+
+另外\code{.}开头的文件默认隐藏，文件管理器按\code{Ctrl+H}、终端\code{ls -a}可以显示——这个技巧这节课要用两次。
+
+\slidepage{30}{安装插件（扩展，extension）}
+装这四个就够了：C/C++（微软官方，代码高亮、补全、静态分析）；Chinese简中语言包（英文不适应的同学自取）；vscode-icons（好看的文件图标，装完记得enable）；GlassIt-VSC（\code{Ctrl+Alt+z}窗口变透明，\code{Ctrl+Alt+c}变回来，纯属好玩）。
+
+\tagpit 特别劝退：\textbf{不要}贪多装一堆C/C++相关插件（C/C++ Runner、Clang Command Adapter之类），也\textbf{不建议}官方推荐的C/C++ Extension Pack——插件之间配置打架产生的问题，TA也救不了。less is more。
+
+\slidepage{31}{全局配置}
+\code{Ctrl+,}打开设置（或左下角齿轮$\to$Settings），改三项：\code{Format On Save}设true——保存时自动格式化，第34页马上用到；\code{Format On Type}也设true；\code{Accept Suggestion On Enter}个人建议设off——否则按回车想换行时会被“贴心地”吃掉变成接受补全，改掉之后\code{Tab}仍然是接受补全，两不耽误。
+
+\slidepage{32}{工作区配置}
+三步：一，建课程文件夹\code{\textasciitilde/courses/CS100}；二，VS Code里\code{File$\to$Open Folder}打开它（快捷键\code{Ctrl+k, Ctrl+o}）。\textbf{养成习惯：永远是先打开文件夹、再编辑文件}，直接双击单个文件打开的话，工作区配置不生效——这是新手第一大坑。三，创建\code{.vscode/c\_cpp\_properties.json}，内容从课堂上传的\code{vscode-config-files.md}复制，\textbf{注意阅读“注意事项”}：\code{compilerPath}要指向你机器上编译器的位置，Linux/WSL和Mac用不同的段落。
+
+\slidepage{33}{代码格式化：先看一段反面教材}
+\tagask 先给大家看一段代码——能编译，但没人想读。可以现场问问同学：这代码有什么问题？
+
+缩进、空格、换行、大括号位置，统称\textbf{代码风格}（code style）。风格不影响程序对错，但严重影响可读性——包括两天后的你自己、批改作业的TA，以及跟你协作的队友（笑）。手动保持风格：写时费心、改时易漏、协作时易吵（“大括号到底换不换行”能吵一下午）。结论：这种机械的活，\textbf{交给工具自动做}。
+
+\slidepage{34}{clang-format}
+工具叫clang-format，LLVM项目出品的C/C++自动格式化工具。好消息：\textbf{VS Code里什么都不用装}——刚装的C/C++插件内置了它，也不需要其它格式化插件。如果你想在Linux终端里直接用，才需要\code{sudo apt install clang-format}，之后可以\code{clang-format -i hello.c}直接在终端格式化。
+
+它的风格由配置文件\code{.clang-format}决定，格式化时从当前文件所在目录\textbf{逐级向上查找}这个文件。利用这个机制，我们把\code{.clang-format}放在\code{\textasciitilde/courses/CS100/}根目录（和\code{.vscode}同级），课程内所有子文件夹的代码就统一生效了。配合31页开过的Format On Save：\textbf{\code{Ctrl+s}按下去的瞬间，代码自动变整齐}。
+
+\slidepage{35}{.clang-format}
+\tagdemo 在课程根目录创建\code{.clang-format}，内容照\code{vscode-config-files.md}：\code{Language: Cpp}——注意它\textbf{没有\code{C}这个选项}，\code{Cpp}就是“C和C++通吃”，写C的同学照抄别改；\code{IndentWidth: 4}缩进四格；\code{ColumnLimit: 100}超过100列自动折行。手动格式化：右键$\to$Format Document（\code{Alt+Shift+f}）。
+
+最后现场玩一下：故意把\code{hello.c}排版弄乱，\code{Ctrl+s}——瞬间复原。以后交上来的作业，画风整齐。
+
+\slidepage{36}{Makefile：自动构建}
+到目前为止编译靠手敲\code{gcc hello.c -o hello}。但命令会越来越长、文件越来越多，靠$\uparrow$翻历史命令凑合，迟早出错。解法：把编译规则写进一个叫\code{Makefile}的文件，以后每次只敲一个词：\textbf{\code{make}}。
+
+最小的Makefile只有两行，在源码同目录创建文件\code{Makefile}（就这个名字，注意大小写）：
+\begin{quote}
+\verb|hello: hello.c|\\
+\verb|        gcc hello.c -o hello|
+\end{quote}
+（第二行行首是一个Tab，下一页细说。）
+
+\slidepage{37}{Makefile：规则的含义}
+语法念作：一条规则$=$\textbf{目标}：\textbf{依赖}$+$\textbf{命令}——想生成\code{hello}，需要\code{hello.c}，办法是执行下面那行命令。
+
+\tagpit 那行命令\textbf{行首必须是一个Tab，不能是空格}——写错了报\code{missing separator}，报错信息完全不说人话，这是Makefile世界第一经典坑，报这个错就检查缩进。
+
+make会比较文件时间戳：\code{hello}不存在、或比\code{hello.c}旧才重新编译，否则提示\code{'hello' is up to date}。这就是make的核心价值：\textbf{只重编真正变了的部分}。
+
+\tagdemo 试一试：连跑两次\code{make}，第二次提示up to date；\code{touch hello.c}后再\code{make}，又重新编译了。
+
+\slidepage{38}{Makefile：加上变量}
+进阶一步，把编译器和选项集中到一处、提成变量：
+\begin{quote}
+\verb|CC     = gcc|\\
+\verb|CFLAGS = -Wall -Wextra -Wpedantic -std=c17|\\
+\verb|hello: hello.c|\\
+\verb|        $(CC) $(CFLAGS) hello.c -o hello|\\
+\verb|clean:|\\
+\verb|        rm -f hello|
+\end{quote}
+命令里用\code{\$(CC)}、\code{\$(CFLAGS)}取变量的值。好处：想换编译器、改选项，\textbf{只动一处}。这里三个W开头的开关把常见可疑写法全标成警告，作业请保持开启——警告不是错误，但每一条都值得看一眼。再加一个\code{clean}目标：\code{make clean}一键删除编译产物，重头再来。多文件项目、增量编译、模式规则这些，等课程用到时再讲，今天两行版够用。
+
+\slidepage{39}{配置总结}
+环境配置到此为止，收尾三句话：第一，这套配置已经足够本课程，\textbf{不要}胡乱粘贴网上或学长给的配置文件，出了问题极难排查；第二，遇事首选官方文档和StackOverflow，搜出来的答案比问人快；第三，解决不了的去Piazza提问或直接找TA，别自己耗一晚上。
+
+\slidepage{40}{Thank You}
+今天就到这里，谢谢大家。祝大家学期顺利，下次习题课见。
+
+\end{document}
