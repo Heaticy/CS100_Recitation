@@ -11,7 +11,7 @@
 
 \begin{frame}
     \frametitle{超级用户}
-    Linux系统中，使用\code{su}命令（Superuser）可以切换至\code{root}用户，此时你会被要求输入\code{root}用户的密码。然而，大部分发行版出于安全原因都禁止直接以\code{root}用户登录，未设置\code{root}密码，这种情况下，输入任何密码都会被认为是错误的！但有趣的是，你可以使用下面的命令
+    Linux系统中，使用\code{su}命令（Superuser）可以切换至\code{root}用户，此时你会被要求输入\code{root}用户的密码。然而，大部分发行版出于安全原因都禁止直接以\code{root}用户登录，并且未设置\code{root}密码，这种情况下，输入任何密码都会被认为是错误的！但有趣的是，你可以使用下面的命令
     \begin{Code}*
         \lstinputlisting[firstline=3,lastline=3]{code/shell/sudo.sh}
     \end{Code}
@@ -76,11 +76,11 @@
     \frametitle{文件权限}
     Linux中每个文件对于三种用户角色（所有者、所属组、其他人）都会定义\code{rwx}权限
     \begin{itemize}
-        \item \code{rw-rw-r--}，所有者\code{rw-}，所属组\code{rw-}，其他人\code{r--}，记为\code{644}。
-        \item \code{rwxrwxr-x}，所有者\code{rwx}，所属组\code{rwx}，其他人\code{r-x}，记为\code{755}。
+        \item \code{rw-rw-r--}，所有者\code{rw-}，所属组\code{rw-}，其他人\code{r--}，记为\code{664}。
+        \item \code{rwxrwxr-x}，所有者\code{rwx}，所属组\code{rwx}，其他人\code{r-x}，记为\code{775}。
         \item \code{rwxrwxrwx}，所有者\code{rwx}，所属组\code{rwx}，其他人\code{rwx}，记为\code{777}。
     \end{itemize}
-    实际上\code{644}、\code{755}、\code{777}分别是文件、目录、软链接的默认权限。
+    实际上\code{664}、\code{775}、\code{777}分别是文件、目录、软链接的默认权限。
     
     默认情况下创建的文件，对所有者和所属组是可读可写，对其他人可读。目录一般应当是可以进入的，所以均增加了可执行。软链接的权限没有意义，实际取决于被链接文件的权限。
 \end{frame}
@@ -91,12 +91,12 @@
     \begin{Code}*
         \lstinputlisting{code/ls-home.sh}
     \end{Code}
-    注意到家目录\code{liyuxuan}的权限是\code{750}而非默认的\code{755}，这保护了下面的文件！
+    注意到家目录\code{liyuxuan}的权限是\code{750}而非默认的\code{775}，这保护了下面的文件！
 \end{frame}
 
 \begin{frame}
     \frametitle{工作目录的创建尝试}
-    尽管用户应当在自己的家目录\texttt{\textasciitilde{}}即\code{/home/liyuxuan}下工作，但实践中\texttt{\textasciitilde{}}下往往会产生许多杂乱的用户配置文件和用户安装软件。如果有\code{root}权限，也可以选择在额外创建一个和家目录平级的\code{/home/workspace}作为自己专用的工作目录（\code{/home}下创建目录需要\code{root}权限）
+    尽管用户应当在自己的家目录\texttt{\textasciitilde{}}即\code{/home/liyuxuan}下工作，但实践中\texttt{\textasciitilde{}}下往往会产生许多杂乱的用户配置文件和用户安装软件。如果有\code{root}权限，也可以选择额外创建一个和家目录平级的\code{/home/workspace}作为自己专用的工作目录（\code{/home}下创建目录需要\code{root}权限）
     \begin{Code}*
         \lstinputlisting{code/workspace.sh}
     \end{Code}
