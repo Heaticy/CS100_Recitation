@@ -42,6 +42,13 @@ CS100_Recitation
 
 ## 构建
 
+仅支持Linux或WSL环境。在Ubuntu/Debian（含WSL中的对应发行版）中使用`sudo apt`安装编译工具、TeX Live与中文字体：
+
+```bash
+sudo apt update
+sudo apt install make latexmk texlive-full fonts-noto-cjk
+```
+
 在习题课目录下运行
 
 ```bash
