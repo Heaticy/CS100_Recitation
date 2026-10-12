@@ -13,7 +13,7 @@ CS100_Recitation
 |  |- code/
 |  |- image/
 |  |- Makefile
-|- r1/                # 习题课一（Linux基础），在该目录下运行make编译
+|- r1/                # 习题课一（第一、二周，Linux基础），在该目录下运行make编译
 |  |- build/
 |  |- code/           # 课堂演示代码
 |  |- image/          # 课件图片（origin/为原图归档）
@@ -27,12 +27,12 @@ CS100_Recitation
 |  |- Makefile
 |  |- CS100_Recitation0.tex
 |  |- Section01.tex…
-|- r2/                # 习题课二（Git基础），在该目录下运行make编译
+|- r3/                # 习题课三（Git基础），在该目录下运行make编译
 |  |- build/          # 含Git*.fig.pdf绘图编译产物
 |  |- code/           # 课堂演示代码
 |  |- image/          # 课件图片
 |  |- Makefile
-|  |- CS100_Recitation2.tex
+|  |- CS100_Recitation3.tex
 |  |- Section01.tex…
 |  |- Git*.fig.tex    # 独立TikZ绘图源，由standalone-silicon编译为build/Git*.fig.pdf
 |- AGENTS.md          # agent工作流约定
@@ -52,7 +52,7 @@ make -j
 
 导论课件可使用`make -j -C intro`编译，输出为`intro/build/CS100_Intro.pdf`。TA自我介绍页位于`intro/Section02.tex`，依次为李超凡、李宇轩、蒋烨、王诗涵、刘文杰与孟祥琨。课程语言标准为C17与C++17。
 
-CI在普通推送时编译验证intro、r0、r1和r2；仅打tag时发布四份PDF。
+CI在普通推送时编译验证intro、r0、r1和r3；仅打tag时发布四份PDF。
 
 ## 模板
 

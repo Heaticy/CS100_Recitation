@@ -189,3 +189,9 @@
 - CI接入：`.gitlab-ci.yml`的`build`与`release`脚本均加入`make -j -C r2`，release产物新增`CS100_Recitation2.pdf`并挂到release资源链接。
 - README补充r2与StandaloneSilicon说明。
 - 编译验证：r2共50页，8张绘图全部生成，无错误与Overfull警告。
+
+## 2026.10.12 13:54
+
+- R1涵盖第一周和第二周，将Git基础课件由R2调整为R3。
+- 将`r2/`重命名为`r3/`，主文件、标题、页脚与构建输出统一为`CS100_Recitation3`或`CS100 Recitation 3`，同步README和CI编译、发布产物引用。
+- 执行`make -j -C r3`编译通过，PDF共50页，标题与首页编号验证为3，无编译错误与Overfull警告。
