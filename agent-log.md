@@ -201,3 +201,8 @@
 - 创建公开GitHub仓库`Heaticy/CS100_Recitation`，新增`github`远端，保留`origin`指向GitLab。
 - 在GitHub仓库设置中禁用Actions，不新增GitHub工作流；现有GitLab编译与tag发布配置保持不变。
 - README补充GitHub地址、本地编译方式与CI仅在GitLab运行的说明。
+
+## 2026.10.12 14:01
+
+- 按要求向GitLab推送当前修改，覆盖上次`v0.3.0`发布，沿用版本号并将Git基础课件产物改为R3。
+- intro、r0、r1和r3本地编译全部通过；覆盖前将原release元数据备份至忽略目录`build/release-backup/v0.3.0.json`，原tag对象为`b324b7d9e99f9a5cbf7153eb0d5609f4590fe853`，对应提交`e81898b`。
