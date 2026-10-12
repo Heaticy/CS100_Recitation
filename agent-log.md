@@ -195,3 +195,9 @@
 - R1涵盖第一周和第二周，将Git基础课件由R2调整为R3。
 - 将`r2/`重命名为`r3/`，主文件、标题、页脚与构建输出统一为`CS100_Recitation3`或`CS100 Recitation 3`，同步README和CI编译、发布产物引用。
 - 执行`make -j -C r3`编译通过，PDF共50页，标题与首页编号验证为3，无编译错误与Overfull警告。
+
+## 2026.10.12 13:58
+
+- 创建公开GitHub仓库`Heaticy/CS100_Recitation`，新增`github`远端，保留`origin`指向GitLab。
+- 在GitHub仓库设置中禁用Actions，不新增GitHub工作流；现有GitLab编译与tag发布配置保持不变。
+- README补充GitHub地址、本地编译方式与CI仅在GitLab运行的说明。
