@@ -178,3 +178,14 @@
 - 保留r1此前「统一修复课件行内代码与特殊符号排版」采用的`\texttt{}`写法（如`\textbackslash{}`、`\textasciitilde{}`），不回退为`\code{}`。
 - 清空`agent-request.md`中原有的Linux课件目标、信息与阶段目标（不适用于本项目），仅保留标题与三个空标题。
 - r1重新编译通过，101页，无错误与Overfull警告。
+
+## 2026.10.12 13:03
+
+- 新增r2习题课（Git基础），源为平级项目`CS100Git`内层仓库`CS100Git/CS100Git/`。
+- vendor`StandaloneSilicon`至`template/standalone-silicon/`，供r2的独立TikZ绘图编译使用。
+- 迁移内容：`Section01.tex`至`Section04.tex`、8个`Git*.fig.tex`、`code/`（22个演示文件）与`image/`（`gradescope.png`）；`*.fig.tex`的`input@path`改为指向`../template/minimus`与`../template/standalone-silicon`。
+- 主文件命名与标题仿照r1：新建`r2/CS100_Recitation2.tex`（`\title{CS100 Recitation 2}`、`\subtitle{Git Basics}`、页尾三格`CS100 Recitation 2`/`Fall 2026`/`Yuxuan Li`），并加入`build`到`\graphicspath`以引用绘图产物。
+- `r2/Makefile`仿`r1/Makefile`，`PROJECT:=CS100_Recitation2`，新增`CLSS_STANDALONE_SILICON`与`DEPS_FIGS_TEX`，并为`${FIGS_TEX_PDF}`添加`build`目录的顺序依赖以避免`make -j`竞态。
+- CI接入：`.gitlab-ci.yml`的`build`与`release`脚本均加入`make -j -C r2`，release产物新增`CS100_Recitation2.pdf`并挂到release资源链接。
+- README补充r2与StandaloneSilicon说明。
+- 编译验证：r2共50页，8张绘图全部生成，无错误与Overfull警告。
