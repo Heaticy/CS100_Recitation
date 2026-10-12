@@ -1,0 +1,5 @@
+<<<<<<< HEAD
+Hi (from master)
+=======
+Hello World! (from dev)
+>>>>>>> dev

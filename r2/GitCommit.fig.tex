@@ -1,0 +1,48 @@
+\makeatletter\def\input@path{{../template/minimus}{../template/standalone-silicon}}\makeatother
+
+\documentclass{standalone-silicon}
+
+\usepackage{minimus-text}
+\usepackage{minimus-math}
+\usepackage{minimus-tikz}
+
+\begin{document}
+\begin{tikzpicture}
+
+\tikzset{commit/.style={draw,circle,ultra thick,#1,fill=#1!20!white,font=\ttfamily,anchor=center,mw=1.6cm,mh=1.6cm},commit/.default=black}
+\tikzset{branch/.style={font=\ttfamily\bfseries\large,draw,rounded corners=0.1cm}}
+\tikzset{pointer/.style={ultra thick,-latex}}
+\tikzset{linker/.style={thick,->}}
+\tikzset{auxtrans/.style={-latex,dashed,red,->}}
+\tikzset{label/.style={font=\ttfamily\bfseries\Large,ultra thick,draw,signal,inner sep=0.2cm,red,fill=red!10!white}}
+
+\draw[ultra thin] (-1.5,-3) node[above right=0.2cm,label] (COMMAND) {git commit -m "fix bugs"}  rectangle (13.5,3) ; 
+
+\draw (0,0) node[commit] (C0) {\uline{0a3f7b}} ; 
+\draw (3,0) node[commit] (C1) {\uline{1e5d92}} ; 
+\draw (6,0) node[commit] (C2) {\uline{2b8c43}} ; 
+\draw (9,0) node[commit=red] (C3) {\uline{3f72a6}} ; 
+\draw[linker] (C0) -- (C1) ; 
+\draw[linker] (C1) -- (C2) ; 
+\draw[linker,red] (C2) -- (C3) ; 
+
+\path (C2.north west) ++ (135:1.2) node[branch,gray] (MASTER1) {master} ;   
+\path (MASTER1) ++ (135:1.6) node[branch,gray] (HEAD1) {HEAD} ;   
+\draw[pointer,gray] (HEAD1) -- (MASTER1) ;
+\draw[pointer,gray] (MASTER1) -- (C2.north west) ;
+
+\path (C3.north west) ++ (135:1.2) node[branch,red] (MASTER2) {master} ;   
+\path (MASTER2) ++ (135:1.6) node[branch,red] (HEAD2) {HEAD} ;   
+\draw[pointer,red] (HEAD2) -- (MASTER2) ;
+\draw[pointer,red] (MASTER2) -- (C3.north west) ;
+
+\draw[auxtrans] (MASTER1) -- node[above] (NOTICE) {Commit} (MASTER2) ;
+
+% 0a3f7b 
+% 1e5d92 
+% 2b8c43 
+% 3f72a6 
+% 4d91e3 
+
+\end{tikzpicture}
+\end{document}

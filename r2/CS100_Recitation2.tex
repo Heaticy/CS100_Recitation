@@ -1,0 +1,37 @@
+\makeatletter\def\input@path{{../template/vsp-beamer}{../template/minimus}}\makeatother
+
+\documentclass[red,tutorial,sectionpages,shtu]{vsp-beamer}
+
+\graphicspath{{build}{image}{../template/vsp-beamer/assets/}}
+
+\usepackage{minimus-section}
+\usepackage{minimus-text}
+\usepackage{minimus-math}
+\usepackage{minimus-float}
+\usepackage{minimus-code}
+\usepackage{minimus-colorbox}
+\usepackage{minimus-reference}
+
+\title{CS100 Recitation 2}
+\subtitle{Git Basics}
+\VSPsetspeaker{Yuxuan Li (liyx22025@shanghaitech.edu.cn)}{VSPLab@SIST}
+\VSPsetupfootline{CS100 Recitation 2}{Fall 2026}{Yuxuan Li}
+
+%\setkeys{Gin}{draft}
+
+\begin{document}
+
+\VSPtitleframe
+
+\begin{frame}{目录}
+    \tableofcontents[hideallsubsections]
+\end{frame}
+
+\input{Section01.tex}
+\input{Section02.tex}
+\input{Section03.tex}
+\input{Section04.tex}
+
+\VSPendframe{}
+
+\end{document}
