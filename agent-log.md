@@ -206,3 +206,10 @@
 
 - 按要求向GitLab推送当前修改，覆盖上次`v0.3.0`发布，沿用版本号并将Git基础课件产物改为R3。
 - intro、r0、r1和r3本地编译全部通过；覆盖前将原release元数据备份至忽略目录`build/release-backup/v0.3.0.json`，原tag对象为`b324b7d9e99f9a5cbf7153eb0d5609f4590fe853`，对应提交`e81898b`。
+
+## 2026.10.13 23:10
+
+- 排查课件PDF翻页卡顿：shtu背景`shanghaitech-master.png`为7680×4320带alpha的8K位图，作为beamer背景每页重绘，单页渲染1.41秒。
+- 用vtracer将背景二值化描摹为矢量PDF（统一填主题红#A40006），校徽按alpha蒙版描摹导出红/白两个矢量PDF；`template/vsp-beamer`接入矢量资产并删除位图校徽，8K母版PNG保留不再引用。
+- r0、r1、r3本地重建全部通过，单页渲染降至约0.1秒；同步在vsp-beamer主仓库发布v0.2.1。
+- 发布v0.3.1：打tag推送GitLab触发四份PDF自动发布，GitHub同步推送。
