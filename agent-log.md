@@ -240,3 +240,8 @@
 - vsp-beamer的make check通过，包括release-check、当前全部11份文稿编译和PDF审计（任务描述的12份与当前仓库实际数量不一致）；tutorial-red-shtu第3页96dpi渲染0.06–0.07秒，旧版0.11秒。
 - 本仓库make -C r0、make -C r1、make -C r3全部重建成功，分别40、101、50页；发布用intro也重建成功，共31页。
 - 发布v0.3.5，向GitLab和GitHub同步main与tag；主题主仓库同步发布v0.2.5。
+
+## 2026.10.14 22:11
+
+- 保留章节页标题现有粗体效果，在section title字体设置中显式写入`series=\bfseries`，避免依赖title字体的粗体继承；与vsp-beamer主仓库同步。
+- r0、r1、r3编译通过；主题主仓库make check通过，包括全部11份文稿编译与PDF审计。
