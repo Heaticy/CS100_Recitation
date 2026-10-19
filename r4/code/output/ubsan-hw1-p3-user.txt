@@ -1,0 +1,4 @@
+bash-4.4$ gcc -std=c17 -g -O0 -Wall -Wextra -Wpedantic -Werror -fsanitize=address,undefined HW1_P3.c -o HW1_P3
+bash-4.4$ ./HW1_P3
+2147483647 1 0
+HW1_P3.c:18:13: runtime error: signed integer overflow: 2147483647 + 1 cannot be represented in type 'int'

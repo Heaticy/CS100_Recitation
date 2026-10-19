@@ -1,0 +1,164 @@
+\section{C语言程序的常见错误与调试}
+
+\begin{frame}{HW1累加操作：函数里改了，外面为什么没变？}
+    将求和操作放入一个C函数，用固定的小数据观察参数传递：
+    \begin{Code}*{c}
+        \lstinputlisting[firstline=4,lastline=6,firstnumber=4]{code/c/sum.c}
+    \end{Code}
+    \begin{Code}*{c}
+        \lstinputlisting[firstline=8,lastline=13,firstnumber=8]{code/c/sum.c}
+    \end{Code}
+    \begin{itemize}
+        \item 预期总和\texttt{8}，实际仍为\texttt{3}。
+        \item 函数里的加法执行了；接下来应该观察哪一个\texttt{sum}？
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{HW1累加示例：为什么没改成功？怎样修复？}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \small 本次实测将加数改为3：预期6，实际3。
+            \lstset{basicstyle=\ttfamily\fontsize{6.6}{7.8}\selectfont,
+                numbers=none,xleftmargin=0pt,breakatwhitespace=true}
+            \begin{Code}*{plain}
+                \lstinputlisting[linerange={1-10,13-16}]{code/output/sum-value-user-session.txt}
+            \end{Code}
+            \footnotesize \alert{原因：修改的是形参副本。}
+            \par 函数内的\texttt{sum}变为6；\texttt{finish}回到\texttt{main}后，原变量仍为3。
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \small 正确修改：传入地址，修改原变量。
+            \lstset{basicstyle=\ttfamily\fontsize{7.4}{8.7}\selectfont,
+                numbers=left,numberstyle=\fontsize{4.8}{5.5}\selectfont\color{gray},
+                xleftmargin=6pt,breakatwhitespace=true}
+            \begin{Code}*{c}
+                \lstinputlisting[lastline=13]{code/fixed/sum-three.c}
+            \end{Code}
+            \footnotesize \texttt{\&sum}传入原变量的地址，\texttt{*sum}访问并修改它；输出\alert{6}。
+            \par\medskip
+            \scriptsize 完整修复版：\par\texttt{code/fixed/sum-three.c}。
+        \end{column}
+    \end{columns}
+    \note{这是根据HW1累加操作构造的值传递课堂示例，不是原始作业错误程序。用户本次将前一页的加数5改为3，因此预期为6；保留用户实测GDB记录中的step、next、finish和3到6再回到3的观察值。修复版使用int *sum、调用处&sum、函数内*sum += x；指针本身仍按值传递，但通过复制的地址可以访问原变量。也可以将函数改为返回新总和，再由调用者赋值接收。}
+\end{frame}
+
+\begin{frame}{C的参数按值传递：怎样修改原变量？}
+    \begin{center}
+        \begin{tikzpicture}[>=Stealth,node distance=1.2cm,
+            box/.style={draw=VSPPrimary,rounded corners,minimum width=3.5cm,
+            minimum height=1cm,align=center,font=\small}]
+            \node[box] (a) {调用者的\texttt{sum}\\仍为3};
+            \node[box,right=of a] (b) {函数形参\texttt{sum}\\从3变为8};
+            \draw[->,thick] (a.north east) to[bend left=15]
+                node[above] {值传递：复制} (b.north west);
+            \node[below=0.4cm of a,font=\small] {原变量没有改变};
+            \node[below=0.4cm of b,font=\small] {修改的是局部副本};
+        \end{tikzpicture}
+    \end{center}
+    \begin{itemize}
+        \item GDB中在\texttt{addValue}内观察\texttt{sum}，再\texttt{finish}回到调用者比较。
+        \item 需要修改原变量时，可传入地址\texttt{\&sum}，用形参\texttt{int *sum}接收，再通过\texttt{*sum}修改。
+        \item 另一种设计是返回新总和，由调用者接收返回值。
+    \end{itemize}
+    \alert{C的参数都是值传递；传入指针时，复制的是地址值。}
+\end{frame}
+
+\input{BehaviorExamples.tex}
+
+\begin{frame}{小练习：HW2多项式没有越界，结果仍然错了}
+    \begin{columns}[T]
+        \begin{column}{0.61\textwidth}
+            \begin{Code}*{c}
+                \lstinputlisting[firstline=5,lastline=11,firstnumber=5]{code/exercise/polynomial.c}
+            \end{Code}
+        \end{column}
+        \begin{column}{0.35\textwidth}
+            仍使用课堂固定数据：\par
+            $P(x)=1+2x+3x^2$\par
+            $x=2$\par\medskip
+            预期\texttt{17.000}，\par
+            实际\alert{\texttt{8.000}}。\par\medskip
+            这次每个已访问下标都合法，应该检查什么？
+        \end{column}
+    \end{columns}
+    \note{先给学生2至3分钟独立观察。这是根据HW2 P3构造的C语言循环边界练习，不是其原始starter中的错误。}
+\end{frame}
+
+\begin{frame}{先写下调试计划，再动手改代码}
+    \begin{enumerate}
+        \item \alert{复现}：运行\texttt{./build/demo/exercise}，对照预期\texttt{17.000}。
+        \item \alert{预测}：下标2、1、0都应被处理，中间结果应依次为3、8、17。
+        \item \alert{观察}：在\texttt{evaluate}中跟踪\texttt{i}和\texttt{value}。
+        \item \alert{追踪}：执行完下标1后，是否还有下标0这一轮？
+        \item \alert{解释}：循环退出条件漏掉了哪个系数？
+    \end{enumerate}
+    \medskip
+    \begin{vspquotered}{给自己一个检查点}
+        已经访问的地址都合法，不代表算法完成了所有必要步骤。\par
+        修复之后，再用一个能手算的多项式检查你的理解。
+    \end{vspquotered}
+\end{frame}
+
+\begin{frame}{练习解答：不能漏掉常数项}
+    \begin{Code}*{c}
+        \lstinputlisting[firstline=5,lastline=11,firstnumber=5]{code/fixed/polynomial.c}
+    \end{Code}
+    \begin{itemize}
+        \item 原来的\texttt{i > 0}跳过了\texttt{coef[0]}对应的最后一步。
+        \item 修复为\texttt{i >= 0}，递推结果由8变为$8\times2+1=17$。
+        \item 区分两类边界错误：\alert{多访问一步可能越界；少执行一步可能只产生错误结果}。
+    \end{itemize}
+    \medskip
+    修复版\texttt{./build/demo/exercise-fixed}输出\texttt{17.000}。
+    \note{C语言案例与练习约25分钟；累加器传递、除法、作业约束与边界练习。最后3页用于5分钟总结与提问。}
+\end{frame}
+
+\begin{frame}{下次出错时，照这个顺序开始}
+    \begin{enumerate}
+        \item 保存源码，记录构建命令，阅读编译警告。
+        \item 写出最小失败输入、预期输出与实际输出。
+        \item 运行Sanitizer构建；如有报告，定位并解释非法操作。
+        \item 对未解释的错误，用GDB观察关键状态，验证具体猜想。
+        \item 结合类型、边界、传递方式与生命周期解释原因。
+        \item 重新编译，重跑失败输入与边界测试，保留修复记录。
+    \end{enumerate}
+    \medskip
+    \alert{调试记录应该回答：证据是什么？原因是什么？为什么这个修复有效？}
+\end{frame}
+
+\begin{frame}{一页速查：先选你需要的观察方式}
+    \begin{center}
+        \renewcommand{\arraystretch}{1.35}
+        \begin{tabular}{ll}
+            \textbf{想做什么？} & \textbf{使用什么？} \\
+            从固定输入开始 & \texttt{run < input.txt} \\
+            在指定位置停止 & \texttt{break file.c:line} \\
+            继续／单步／进入／返回 & \texttt{continue / next / step / finish} \\
+            查看当前值／自动显示 & \texttt{print / display / info locals} \\
+            查看调用关系／选择现场 & \texttt{bt / frame} \\
+            只观察某一轮 & \texttt{break file.c:line if condition} \\
+            追踪值的变化 & \texttt{watch expression} \\
+            检查本课内存与UB案例 & \texttt{-fsanitize=address,undefined}
+        \end{tabular}
+    \end{center}
+    \small GDB内可用\texttt{help 命令名}查帮助；退出使用\texttt{quit}。
+\end{frame}
+
+\begin{frame}{课后复现与参考资料}
+    \small
+    \begin{itemize}
+        \item \alert{构建案例}：\texttt{make demos}。
+        \item \alert{验证案例}：\texttt{make check-demos}。
+        \item \alert{GDB演示脚本}：\texttt{code/commands/session.gdb}。
+        \item \alert{修复版与演示说明}：\texttt{code/fixed/}、作业来源说明与本目录\texttt{README.md}。
+    \end{itemize}
+    \medskip
+    \begin{itemize}
+        \item \href{https://x-gen-lab.github.io/knowledge-os/02-technologies/embedded/08-toolchain/02-debugging-testing/beginner/02-gdb-basics/}{工程师知识库：GDB调试器基础使用——命令行调试完全指南}。
+        \item \href{https://sourceware.org/gdb/current/onlinedocs/gdb.html/}{GDB官方手册}：断点、单步、观察点、调用栈。
+        \item \href{https://gcc.gnu.org/onlinedocs/gcc/Instrumentation-Options.html}{GCC官方手册：Instrumentation Options}。
+        \item \href{https://www.open-std.org/JTC1/SC22/WG14/www/docs/n1570.pdf}{C标准草案N1570}与\href{https://gcc.gnu.org/onlinedocs/gcc/C-Dialect-Options.html}{GCC字符符号选项说明}。
+        \item \href{https://clang.llvm.org/docs/AddressSanitizer.html}{ASan文档}与\href{https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html}{UBSan文档}。
+    \end{itemize}
+    \note{最后5分钟总结与提问。PDF内点击参考资料标题即可访问。课件中的报告节选来自配套程序实测；环境差异导致地址、路径与报告格式变化属正常情况。}
+\end{frame}

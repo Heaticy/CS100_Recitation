@@ -1,0 +1,5 @@
+ERROR: AddressSanitizer: stack-buffer-overflow
+READ of size 8
+    #0 evaluate code/sanitizer/polynomial.c:7
+    #1 main code/sanitizer/polynomial.c:14
+[32, 56) 'coef' <== Memory access at offset 56 overflows this variable

@@ -1,0 +1,183 @@
+\section{Sanitizer：这次运行哪里不合法？}
+
+\begin{frame}{Sanitizer是什么？}
+    \alert{Sanitizer是一组运行时错误检测工具。}
+    \par 编译时为程序加入额外检查；运行时检测到问题，就输出错误类别和位置等诊断信息。
+    \medskip
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \begin{block}{ASan：AddressSanitizer}
+                检查内存访问错误，例如：
+                \begin{itemize}
+                    \item 数组越界访问。
+                    \item 内存释放后继续使用。
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{UBSan：UndefinedBehaviorSanitizer}
+                检查特定未定义行为，例如：
+                \begin{itemize}
+                    \item 有符号整数溢出。
+                    \item 整数除以零。
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+    \medskip
+    \begin{vspquotered}{怎样使用？}
+        编译时启用\texttt{-fsanitize=address,undefined}\par
+        $\longrightarrow$用测试输入运行程序$\longrightarrow$根据报告定位并修复错误。
+    \end{vspquotered}
+    \small 配合\texttt{-g}生成调试信息，报告可以显示源码位置；只检查本次实际执行到的操作。
+    \note{先建立运行时检测的概念，再进入下一页作业推荐命令。Sanitizer通过编译器插入检查并配合运行库工作，本课使用ASan与UBSan；GDB则用于交互观察状态和执行路径。检测范围与选项有关，没有报告也不代表程序完全正确。}
+\end{frame}
+
+\begin{frame}{作业推荐命令里，为什么有Sanitizer？}
+    HW1／HW2的README给出了\texttt{-fsanitize=undefined}和\texttt{-fsanitize=address}。
+    \begin{itemize}
+        \item \alert{ASan}：帮助发现越界访问、释放后使用等内存错误。
+        \item \alert{UBSan}：帮助发现有符号溢出等特定未定义行为。
+        \item \alert{编译警告}检查可疑写法；运行时检查需要程序实际执行到出错操作。
+    \end{itemize}
+    \medskip
+    \begin{vspquotered}{对照作业要求选择实现}
+        HW1 P3不用数组或动态内存；HW2 P3允许系数数组，禁止堆内存和\texttt{math.h}。\par
+        本节先用固定系数数组和逐项累加，观察对应的两类报告。
+    \end{vspquotered}
+\end{frame}
+
+\begin{frame}{HW2 P3：错误演示代码与检查构建}
+    \small 课堂调试用错误版：固定$P(x)=1+2x+3x^2$，在$x=2$处求值，正确结果应为\alert{17.000}。
+    \begin{columns}[T]
+        \begin{column}{0.58\textwidth}
+            \lstset{basicstyle=\ttfamily\fontsize{7.4}{8.4}\selectfont,
+                numberstyle=\fontsize{4.8}{5.5}\selectfont\color{gray},xleftmargin=6pt}
+            \begin{Code}*{c}
+                \lstinputlisting[lastline=16]{code/sanitizer/polynomial.c}
+            \end{Code}
+            \scriptsize 完整演示副本：\texttt{demo/HW2/HW2\_P3.c}。
+        \end{column}
+        \begin{column}{0.38\textwidth}
+            \small 在\texttt{slides/r4/}中编译：
+            \lstset{basicstyle=\ttfamily\fontsize{6.5}{7.8}\selectfont,
+                numberstyle=\fontsize{4.8}{5.5}\selectfont\color{gray},xleftmargin=6pt,
+                breakatwhitespace=true}
+            \begin{Code}*{bash}
+                \lstinputlisting{code/commands/build-sanitizer.sh}
+            \end{Code}
+            \scriptsize
+            \begin{itemize}
+                \item \texttt{-g -O0}便于定位源码与逐行观察。
+                \item \texttt{-fsanitize=address,undefined}启用ASan与UBSan，链接时也需要。
+                \item UBSan报告错误后默认通常会继续执行；ASan发现此类内存错误后通常会终止程序。
+            \end{itemize}
+        \end{column}
+    \end{columns}
+    \note{完整引用现有code/sanitizer/polynomial.c，与工作区demo/HW2/HW2_P3.c内容一致。保留i=count的错误，首次访问coef[3]，由ASan报告栈数组越界；改为count-1后输出17.000。这是依据HW2 P3要求编写的固定数据课堂变体，不假定完整题面的输入格式；正式评测参数以作业说明为准。}
+\end{frame}
+
+\begin{frame}{HW2 P3：解读这份ASan实测报告}
+    \begin{columns}[T]
+        \begin{column}{0.61\textwidth}
+            \small 终端实测报告（关键原文节选）：
+            \lstset{basicstyle=\ttfamily\fontsize{6.4}{8.0}\selectfont,
+                numbers=none,xleftmargin=0pt,breakatwhitespace=true}
+            \begin{Code}*{plain}
+                \lstinputlisting[linerange={2-5,9-13}]{code/output/asan-hw2-p3-user.txt}
+            \end{Code}
+            \scriptsize 完整报告保留于课件源码；地址与进程号随运行变化。
+        \end{column}
+        \begin{column}{0.35\textwidth}
+            \footnotesize
+            \begin{enumerate}
+                \item \alert{错误类别}\par
+                    \texttt{stack-buffer-overflow}：栈上数组越界。
+                \item \alert{读取与位置}\par
+                    读取8字节，即本例一个\texttt{double}；出错于第7行\texttt{coef[i]}。
+                \item \alert{调用栈}\par
+                    \texttt{main}第14行调用\texttt{evaluate}，在其中触发错误。
+                \item \alert{数组范围}\par
+                    \texttt{[32, 56)}共24字节；偏移56恰好越过末尾，对应\texttt{coef[3]}。
+            \end{enumerate}
+            \medskip
+            \alert{循环从count - 1开始。}\par
+            重新编译并运行，预期输出\texttt{17.000}。
+        \end{column}
+    \end{columns}
+    \note{原始报告由用户提供，完整保存为code/output/asan-hw2-p3-user.txt。页面直接选取原文第2—5与9—13行，不改写地址和路径。先看错误类别、访问大小、源码位置、调用栈，再看对象范围；[32,56)是相对于main栈帧的偏移区间，三个double共24字节。Shadow bytes是补充诊断，本次先聚焦数组下标和循环初值。}
+\end{frame}
+
+\begin{frame}{HW2 P3：多项式求值为什么越界了？}
+    \begin{columns}[T]
+        \begin{column}{0.61\textwidth}
+            \begin{Code}*{c}
+                \lstinputlisting[firstline=4,lastline=10,firstnumber=4]{code/sanitizer/polynomial.c}
+            \end{Code}
+        \end{column}
+        \begin{column}{0.35\textwidth}
+            课堂固定数据：\par
+            \texttt{coef = \{1, 2, 3\}}\par
+            $P(x)=1+2x+3x^2$\par
+            \texttt{count = 3}\par
+            \texttt{x = 2}\par\medskip
+            合法结果为\alert{17.000}。
+        \end{column}
+    \end{columns}
+    \medskip
+    从高次项向低次项递推：\texttt{value = value * x + coef[i]}。\par
+    \alert{第一次循环中，i的值是否是合法下标？}
+    \note{课堂变体仅固定一个多项式，不假定正式题面的输入顺序或完整范围。本节约22分钟，含7至8分钟演示。}
+\end{frame}
+
+\begin{frame}{三个系数，合法下标只有0、1、2}
+    \begin{center}
+        \begin{tikzpicture}[>=Stealth,cell/.style={draw=VSPPrimary,
+            minimum width=1.8cm,minimum height=1.05cm,font=\large}]
+            \node[cell] (a) at (0,0) {1};
+            \node[cell] (b) at (1.8,0) {2};
+            \node[cell] (c) at (3.6,0) {3};
+            \node[cell,dashed,fill=red!12] (d) at (5.4,0) {?};
+            \node[below=0.15cm of a] {\texttt{coef[0]}};
+            \node[below=0.15cm of b] {\texttt{coef[1]}};
+            \node[below=0.15cm of c] {\texttt{coef[2]}};
+            \node[below=0.15cm of d,text=VSPPrimary] {\texttt{coef[3]}};
+            \draw[->,thick,VSPPrimary] (5.4,1.25)--(d.north)
+                node[pos=0,above,font=\small] {第一次读取就越界};
+        \end{tikzpicture}
+    \end{center}
+    \medskip
+    \begin{itemize}
+        \item 初值\texttt{i = count}使第一次访问成为\texttt{coef[3]}。
+        \item 修复初值为\texttt{count - 1}，依次访问下标2、1、0。
+        \item 本课堂变体使用栈上的固定数组；\alert{没有引入堆分配或VLA}。
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{第一次读懂ASan报告}
+    \begin{Code}*{plain}
+        \lstinputlisting{code/output/asan-bounds.txt}
+    \end{Code}
+    \begin{enumerate}
+        \item \alert{错误类别}：\texttt{stack-buffer-overflow}，栈上的越界访问。
+        \item \alert{源码位置}：在\texttt{evaluate}函数读取\texttt{coef[i]}时出错。
+        \item \alert{对象范围}：回到\texttt{main}中的固定数组，核对长度与循环初值。
+    \end{enumerate}
+    \small 此处为本课程序实测报告节选；省略地址、进程号和部分调用栈。
+\end{frame}
+
+\input{SanitizerExamples.tex}
+
+\begin{frame}{没有报告，还需要检查什么？}
+    \begin{itemize}
+        \item \alert{测试覆盖}：本次没执行到的代码，运行时检查没有替你验证。
+        \item \alert{工具覆盖}：ASan和UBSan各有检测范围，不能覆盖所有语言错误。
+        \item \alert{业务逻辑}：最大值更新用了总和、漏算常数项，都可能没有报告。
+        \item \alert{修复验证}：重新编译，重跑失败输入，再加正常与边界输入。
+    \end{itemize}
+    \medskip
+    \begin{vspquotered}{把工具放进同一个调试过程}
+        Sanitizer帮助定位非法操作，GDB帮助观察状态与执行路径。\par
+        结合语言规则与题目要求，解释为什么出错、为什么修复有效。
+    \end{vspquotered}
+\end{frame}

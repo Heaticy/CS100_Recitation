@@ -1,0 +1,109 @@
+\begin{frame}{power：乘法在哪一轮超出范围？}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \small 固定计算\texttt{power(50000, 2)}：
+            \lstset{basicstyle=\ttfamily\fontsize{7.4}{8.7}\selectfont,
+                numberstyle=\tiny\color{gray},xleftmargin=6pt}
+            \begin{Code}*{c}
+                \lstinputlisting[lastline=14]{code/sanitizer/power.c}
+            \end{Code}
+            \small 第一次乘法得到50000；第二次的数学结果为\alert{2500000000}。
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \small 在\texttt{slides/r4/}中启用UBSan：
+            \lstset{basicstyle=\ttfamily\fontsize{6.4}{7.8}\selectfont,
+                numbers=none,xleftmargin=0pt,breakatwhitespace=true}
+            \begin{Code}*{bash}
+                \lstinputlisting{code/commands/power-sanitizer.sh}
+            \end{Code}
+            \small 实测诊断（第6行）：
+            \begin{Code}*{plain}
+                \lstinputlisting{code/output/ubsan-power.txt}
+            \end{Code}
+            \footnotesize 当前32位\texttt{int}上界是2147483647，第二次乘法触发有符号溢出UB。
+        \end{column}
+    \end{columns}
+    \note{本例使用固定参数，先让学生手算两轮结果。UBSan在result *= x处报告50000 * 50000不能由int表示。原程序与修复版演示副本位于工作区demo/power/，不要依赖原程序关闭检测后出现的某个回绕值。}
+\end{frame}
+
+\begin{frame}{power：GDB定位与修复验证}
+    \begin{columns}[T]
+        \begin{column}{0.46\textwidth}
+            \small 启动\texttt{gdb -q build/demo/power-ubsan}，在乘法执行前停住：
+            \lstset{basicstyle=\ttfamily\fontsize{7.2}{8.5}\selectfont,
+                numbers=none,xleftmargin=0pt,breakatwhitespace=true}
+            \begin{Code}*{plain}
+                \lstinputlisting{code/commands/power-session.gdb}
+            \end{Code}
+            \small 实测\texttt{i=1}、\texttt{result=50000}、\texttt{x=50000}。
+            \par\medskip
+            \texttt{bt}显示当前在\texttt{power}，由\texttt{main}调用；下一次乘法超出\texttt{int}范围。
+        \end{column}
+        \begin{column}{0.50\textwidth}
+            \small 修复乘积变量、返回类型与输出格式：
+            \lstset{basicstyle=\ttfamily\fontsize{7.2}{8.5}\selectfont,
+                numbers=left,numberstyle=\tiny\color{gray},xleftmargin=6pt}
+            \begin{Code}*{c}
+                \lstinputlisting[lastline=14]{code/fixed/power.c}
+            \end{Code}
+            \footnotesize 使用相同检查选项重新编译，输出\alert{2500000000}，无UBSan诊断。
+        \end{column}
+    \end{columns}
+    \note{条件断点位于power.c第6行，i==1表示第二次循环，断点停在执行乘法之前。本例结果可以由long long表示；宽类型并不保证任意底数与指数都不溢出，仍应根据输入及中间结果范围设计实现。完整修复版为code/fixed/power.c与工作区demo/power/power_fixed.c。GDB批处理脚本与变量值已经实测验证。}
+\end{frame}
+
+\begin{frame}{数组循环：最后一次迭代访问了哪里？}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \small 目标：让6个数组元素分别加1。
+            \lstset{basicstyle=\ttfamily\fontsize{7.5}{9.0}\selectfont,
+                numberstyle=\tiny\color{gray},xleftmargin=6pt}
+            \begin{Code}*{c}
+                \lstinputlisting[lastline=10]{code/sanitizer/array_loop.c}
+            \end{Code}
+            \small 循环包含\texttt{i == 6}；此时访问\texttt{data[6]}，越过数组末尾。
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \small 在\texttt{slides/r4/}中单独启用ASan：
+            \lstset{basicstyle=\ttfamily\fontsize{6.4}{7.8}\selectfont,
+                numbers=none,xleftmargin=0pt,breakatwhitespace=true}
+            \begin{Code}*{bash}
+                \lstinputlisting{code/commands/array-sanitizer.sh}
+            \end{Code}
+            \small 实测报告节选：
+            \begin{Code}*{plain}
+                \lstinputlisting{code/output/asan-array-loop.txt}
+            \end{Code}
+            \footnotesize 自增先读后写，本次先报告读取4字节；\texttt{data}范围为\texttt{[32, 56)}，偏移56已越界。
+        \end{column}
+    \end{columns}
+    \note{这是固定长度的栈数组例子。报告来自本程序实际执行，完整输出位于build/demo/output/array-loop-asan.txt，页面省略部分地址与调用栈。本页单独使用ASan以观察内存访问报告；同时启用UBSan时，也可能先出现数组下标越界诊断。工作区demo/array/提供同内容源码副本。}
+\end{frame}
+
+\begin{frame}{数组循环：用条件断点验证修复}
+    \begin{columns}[T]
+        \begin{column}{0.46\textwidth}
+            \small 启动\texttt{gdb -q build/demo/array-loop-asan}，在越界访问之前停止：
+            \lstset{basicstyle=\ttfamily\fontsize{7.2}{8.5}\selectfont,
+                numbers=none,xleftmargin=0pt,breakatwhitespace=true}
+            \begin{Code}*{plain}
+                \lstinputlisting{code/commands/array-session.gdb}
+            \end{Code}
+            \small 实测\texttt{i=6}，数组内容为6个1，\texttt{sizeof data=24}。
+            \par\medskip
+            前6轮已完成全部元素的更新；\alert{第7次迭代多执行了一次。}
+        \end{column}
+        \begin{column}{0.50\textwidth}
+            \small 修复：将循环条件改为\texttt{i < 6}。
+            \lstset{basicstyle=\ttfamily\fontsize{7.5}{9.0}\selectfont,
+                numbers=left,numberstyle=\tiny\color{gray},xleftmargin=6pt}
+            \begin{Code}*{c}
+                \lstinputlisting[lastline=10]{code/fixed/array_loop.c}
+            \end{Code}
+            \small 重新编译运行，输出\alert{1}，无ASan诊断。
+            \par\medskip
+            \footnotesize 完整修复版：\par\texttt{code/fixed/array\_loop.c}。
+        \end{column}
+    \end{columns}
+    \note{条件断点在array_loop.c第6行、i==6时停住，尚未访问越界元素。set print repeats 0让GDB展开显示重复数组值；当前数组六个元素均为1，说明正常更新已经完成，循环边界导致多执行一步。修复后验证退出码0、输出1且无Sanitizer报告；GDB脚本已实测。}
+\end{frame}
