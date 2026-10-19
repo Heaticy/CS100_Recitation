@@ -1,0 +1,78 @@
+\makeatletter\def\input@path{{../template/vsp-beamer}{../template/minimus}}\makeatother
+
+\documentclass[red,tutorial,sectionpages,shtu]{vsp-beamer}
+
+\graphicspath{{image/}{../template/vsp-beamer/assets/}}
+
+\usepackage{minimus-section}
+\usepackage{minimus-text}
+\usepackage{minimus-math}
+\usepackage{minimus-float}
+\usepackage{minimus-code}
+\usepackage{minimus-colorbox}
+\usepackage{minimus-reference}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\lstset{basicstyle=\ttfamily\footnotesize,numberstyle=\tiny\color{gray},breaklines=true}
+
+\title{CS100 Recitation 4}
+\subtitle{GDB、Sanitizer与C语言代码调试}
+\VSPsetspeaker{Wenjie Liu}{liuwj2026@shanghaitech.edu.cn}
+\VSPsetupfootline{CS100 Recitation 4}{Fall 2026}{Wenjie Liu}
+
+\begin{document}
+
+\VSPtitleframe
+
+\begin{frame}{成绩统计：完整代码（调试用错误版）}
+    \lstset{basicstyle=\ttfamily\fontsize{7.5}{8.8}\selectfont,
+        numberstyle=\fontsize{4.8}{5.5}\selectfont\color{gray},xleftmargin=6pt}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \begin{Code}*{c}
+                \lstinputlisting[firstline=1,lastline=14,firstnumber=1]{code/gdb/grades.c}
+            \end{Code}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{Code}*{c}
+                \lstinputlisting[firstline=15,firstnumber=15,lastline=28]{code/gdb/grades.c}
+            \end{Code}
+        \end{column}
+    \end{columns}
+    \note{成绩统计示例已改写为C，读取成绩时直接累计，不使用容器或动态内存。代码读取人数n和n个成绩，计算及格成绩平均值；人数统计的score > 60与求和条件不一致，保留该错误供调试观察。}
+\end{frame}
+
+\begin{frame}{成绩统计：程序运行了，结果就正确吗？}
+    \begin{columns}[c]
+        \begin{column}{0.56\textwidth}
+            \includegraphics[width=\linewidth,height=0.73\textheight,keepaspectratio]{gradeserro.png}
+        \end{column}
+        \begin{column}{0.40\textwidth}
+            \alert{第一组：61、89、99}
+            \par 预期平均值83，输出83。
+            \medskip
+
+            \alert{第二组：55、60、71、89}
+            \par 及格成绩为60、71、89。
+            \par 预期$220/3\approx73.3333$，
+            \par 实际输出\alert{110}。
+            \medskip
+
+            同一段代码，为什么一组正确，另一组错误？
+        \end{column}
+    \end{columns}
+    \note{结合上一页完整代码，先让学生手算两组结果，再观察错误原因。截图来自用户提供的image/gradeserro.png，不对截图内容做修改。}
+\end{frame}
+
+\begin{frame}{目录}
+    \tableofcontents[hideallsubsections]
+\end{frame}
+
+\input{Section01.tex}
+\input{Section02.tex}
+\input{Section03.tex}
+\input{Section04.tex}
+
+\VSPendframe{复现、观察、解释、验证}
+
+\end{document}

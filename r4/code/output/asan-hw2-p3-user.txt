@@ -1,0 +1,48 @@
+=================================================================
+==3800638==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7ffe51589fa8 at pc 0x000000400af2 bp 0x7ffe51589f20 sp 0x7ffe51589f10
+READ of size 8 at 0x7ffe51589fa8 thread T0
+    #0 0x400af1 in evaluate /data/liuwenjie/Myfile/CS100/demo/HW2/HW2_P3.c:7
+    #1 0x400c51 in main /data/liuwenjie/Myfile/CS100/demo/HW2/HW2_P3.c:14
+    #2 0x7f9faa2c97e4 in __libc_start_main (/lib64/libc.so.6+0x3a7e4)
+    #3 0x40097d in _start (/data/liuwenjie/Myfile/CS100/demo/HW2/HW2_P3+0x40097d)
+
+Address 0x7ffe51589fa8 is located in stack of thread T0 at offset 56 in frame
+    #0 0x400b41 in main /data/liuwenjie/Myfile/CS100/demo/HW2/HW2_P3.c:12
+
+  This frame has 1 object(s):
+    [32, 56) 'coef' <== Memory access at offset 56 overflows this variable
+HINT: this may be a false positive if your program uses some custom stack unwind mechanism or swapcontext
+      (longjmp and C++ exceptions *are* supported)
+SUMMARY: AddressSanitizer: stack-buffer-overflow /data/liuwenjie/Myfile/CS100/demo/HW2/HW2_P3.c:7 in evaluate
+Shadow bytes around the buggy address:
+  0x10004a2a93a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x10004a2a93b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x10004a2a93c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x10004a2a93d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x10004a2a93e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 f1 f1
+=>0x10004a2a93f0: f1 f1 00 00 00[f2]f3 f3 f3 f3 00 00 00 00 00 00
+  0x10004a2a9400: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x10004a2a9410: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x10004a2a9420: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x10004a2a9430: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x10004a2a9440: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==3800638==ABORTING

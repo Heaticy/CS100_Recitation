@@ -1,0 +1,129 @@
+\begin{frame}{C17中的行为：UB、实现定义与有定义}
+    \small 用整数、字符与数组示例，区分语言规则和题目要求。
+    \begin{center}
+        \footnotesize
+        \renewcommand{\arraystretch}{1.2}
+        \begin{tabular}{p{0.23\linewidth}p{0.38\linewidth}p{0.27\linewidth}}
+            \textbf{类别} & \textbf{标准给了什么保证？} & \textbf{本课例子} \\
+            \alert{UB：未定义行为}\newline{\scriptsize Undefined Behavior} & 标准不规定程序应如何表现；不保证报错。 & 有符号溢出、越界访问。 \\
+            \alert{实现定义行为}\newline{\scriptsize \mbox{Implementation-defined}\newline Behavior} & 实现作出选择，并在文档中说明。 & 普通\texttt{char}的符号属性。 \\
+            \alert{有定义的行为}\newline{\scriptsize Well-defined Behavior} & 按明确的语言规则执行。 & 无符号回绕、合法整数除法。
+        \end{tabular}
+    \end{center}
+    \begin{vspquotered}{有定义，也可能不符合题意}
+        \texttt{3 / 2}得到1符合C规则；若题目需要1.5，仍然是逻辑错误。
+    \end{vspquotered}
+    \footnotesize 这不是穷尽分类：还有\alert{未指定行为}。\alert{编译错误}需先处理，例如使用未声明标识符。
+    \note{以C17为准，概念依据C标准术语，不能称为仅有的三类。术语依据N1570第3.4.1、3.4.3、3.4.4节；有定义行为在此作为教学用语，不是穷尽的标准分类。}
+\end{frame}
+
+\begin{frame}{有符号溢出与无符号回绕}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \small \alert{有符号int：UB}
+            \lstset{basicstyle=\ttfamily\fontsize{7.6}{9.0}\selectfont,
+                numberstyle=\tiny\color{gray},xleftmargin=6pt}
+            \begin{Code}*{c}
+                \lstinputlisting[lastline=9]{code/behavior/signed-overflow.c}
+            \end{Code}
+            \small 数学结果是\texttt{INT\_MAX + 1}，超出\texttt{int}范围；不能依赖回绕结果。
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \small \alert{unsigned int：有定义}
+            \lstset{basicstyle=\ttfamily\fontsize{7.6}{9.0}\selectfont,
+                numberstyle=\tiny\color{gray},xleftmargin=6pt}
+            \begin{Code}*{c}
+                \lstinputlisting[lastline=9]{code/behavior/unsigned-wrap.c}
+            \end{Code}
+            \small 按该无符号类型的取值个数取模，输出\alert{0}；这是语言规定的回绕。
+        \end{column}
+    \end{columns}
+    \medskip
+    \small UBSan可报告左侧溢出；右侧通常没有诊断。\alert{改变类型，就可能改变行为分类。}
+    \note{依据C17的表达式可表示性规则与无符号运算规则（N1570第6.5第5段、6.2.5第9段）。右侧value += 3在unsigned int域内回绕到0，不属于C标准所指的有符号溢出UB。不要用实跑左侧得到的某个数作为语言保证。}
+\end{frame}
+
+\begin{frame}{printf格式必须匹配实参类型}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \small \alert{格式与实参不匹配：UB}
+            \begin{Code}*{c}
+                \lstinputlisting[firstline=4,lastline=5,firstnumber=4]{code/behavior/format-mismatch.c}
+            \end{Code}
+            \small \texttt{value / 4}是\texttt{double}，\texttt{\%d}却要求\texttt{int}；格式串不会替你转换参数。
+            \medskip
+
+            修复格式，输出\alert{2.25}：
+            \begin{Code}*{c}
+                \lstinputlisting[firstline=5,lastline=5,firstnumber=5]{code/behavior/format-fixed.c}
+            \end{Code}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \small \alert{字符整数提升：有定义}
+            \begin{Code}*{c}
+                \lstinputlisting[firstline=4,lastline=5,firstnumber=4]{code/behavior/digit-promotion.c}
+            \end{Code}
+            \small 本课环境中\texttt{char}提升为\texttt{int}，与\texttt{\%c}需要的参数类型匹配。
+            \par\medskip
+            数字字符连续，\texttt{'3' + 4}对应\texttt{'7'}，因此输出\alert{7}。
+        \end{column}
+    \end{columns}
+    \medskip
+    \footnotesize \texttt{-Wall}可提示左侧格式错误，\texttt{-Werror}使本课构建失败；允许编译通过也不消除运行时UB。
+    \note{依据N1570第7.21.6.1第9段的格式实参类型匹配规则、6.3.1.1的整数提升及5.2.1的数字字符连续规则。数字字符连续不依赖ASCII，避免把字母连续性误当成C保证。本课演示机是8位char、32位int；常见环境中char提升为int。左侧即使加数值恰好能表示成int，也不会因\%d自动做转换。编译器选择警告或-Werror拒绝构建，与执行该错误调用时的UB规则是两个层面。}
+\end{frame}
+
+\begin{frame}{char的符号属性由实现定义}
+    \begin{columns}[T]
+        \begin{column}{0.46\textwidth}
+            \begin{Code}*{c}
+                \lstinputlisting[lastline=7]{code/behavior/char-signedness.c}
+            \end{Code}
+            \small 普通\texttt{char}与\texttt{signed char}、\texttt{unsigned char}是不同的类型。
+        \end{column}
+        \begin{column}{0.50\textwidth}
+            \small 本课8位\texttt{char}环境下，用GCC显式选择：
+            \begin{center}
+                \renewcommand{\arraystretch}{1.4}
+                \begin{tabular}{ll}
+                    \textbf{编译选项} & \textbf{输出} \\
+                    \texttt{-fsigned-char} & \texttt{-1} \\
+                    \texttt{-funsigned-char} & \texttt{255}
+                \end{tabular}
+            \end{center}
+            \begin{itemize}
+                \item 默认选择由目标平台与编译器配置决定，并有文档说明。
+                \item 这里的差异来自\alert{实现定义的选择}，不是随机结果。
+            \end{itemize}
+        \end{column}
+    \end{columns}
+    \medskip
+    \small 需要明确的符号属性时，直接使用\texttt{signed char}或\texttt{unsigned char}。
+    \note{依据N1570第6.2.5第15段与GCC的C Dialect Options／Integers implementation说明。-1到unsigned char的转换按该无符号类型的模进行，在8位char上得到255，再提升为int后以\%d输出。实际值与位宽有关，不能将255宣传为所有C实现的保证；本页已明确演示环境。选择实现定义行为需看实现文档，单次运行不能证明跨平台结果。}
+\end{frame}
+
+\begin{frame}{数组越界与编译错误要分开}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \small \alert{访问data[6]：UB}
+            \begin{Code}*{c}
+                \lstinputlisting[firstline=4,lastline=7,firstnumber=4]{code/behavior/bounds.c}
+            \end{Code}
+            \small 6个元素的合法下标为0至5；\texttt{i == 6}时越界，Sanitizer可帮助定位。
+            \par\medskip
+            修复循环条件为\texttt{i < 6}，每个元素增加一次，\texttt{data[0]}为1。
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \small \alert{show中找不到number：编译错误}
+            \lstset{basicstyle=\ttfamily\fontsize{7.6}{9.0}\selectfont,
+                numberstyle=\tiny\color{gray},xleftmargin=6pt}
+            \begin{Code}*{c}
+                \lstinputlisting[firstline=3,firstnumber=3,lastline=11]{code/behavior/scope.c}
+            \end{Code}
+            \small \texttt{main}的局部变量不在\texttt{show}的作用域内；可通过形参传入：\texttt{show(number)}。
+        \end{column}
+    \end{columns}
+    \medskip
+    \footnotesize 判断顺序：先检查声明、作用域与类型，再检查运行时边界；\alert{有定义后仍要核对题意。}
+    \note{依据N1570第6.5.6的数组访问规则及第6.2.1的作用域规则。右侧使用未声明标识符属于需诊断的翻译错误，不应把它简单归入运行时UB。左侧循环末次访问data[6]是UB，修复后输出1；右侧修复版使用show(int number)与show(number)，输出17。仅运行本次输入没有报告不能证明一般程序没有UB。}
+\end{frame}

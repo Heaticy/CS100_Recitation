@@ -1,0 +1,4 @@
+ERROR: AddressSanitizer: stack-buffer-overflow
+READ of size 4
+#0 0x400a3e in main code/sanitizer/array_loop.c:6
+[32, 56) 'data' <== Memory access at offset 56 overflows this variable
