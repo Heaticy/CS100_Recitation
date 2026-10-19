@@ -245,3 +245,10 @@
 
 - 保留章节页标题现有粗体效果，在section title字体设置中显式写入`series=\bfseries`，避免依赖title字体的粗体继承；与vsp-beamer主仓库同步。
 - r0、r1、r3编译通过；主题主仓库make check通过，包括全部11份文稿编译与PDF审计。
+
+## 2026.10.19 16:48
+
+- 合并GitHub提交5035bb9上传的r4课件与演示源码，保留本地已提交的章节页字体修正。
+- 将r4加入GitLab普通推送编译检查及tag发布流程，新增CS100_Recitation4.pdf下载链接；README更新为五份PDF。
+- 本地从源码重建r4成功，共62页；标题页、末尾速查页及章节文本检查通过，GitLabCI配置校验通过，GitHubActions仍为禁用。
+- 准备发布v0.3.6，沿用GitLabCI构建及release流程。

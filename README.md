@@ -35,6 +35,11 @@ CS100_Recitation
 |  |- CS100_Recitation3.tex
 |  |- Section01.tex…
 |  |- Git*.fig.tex    # 独立TikZ绘图源，由standalone-silicon编译为build/Git*.fig.pdf
+|- r4/                # 习题课四（GDB、Sanitizer与C语言代码调试）
+|  |- CS100_Recitation4.tex
+|  |- code/           # 调试演示、错误版与修复版示例
+|  |- image/
+|  |- Makefile
 |- AGENTS.md          # agent工作流约定
 |- agent-request.md
 |- agent-log.md
@@ -59,7 +64,7 @@ make -j
 
 导论课件可使用`make -j -C intro`编译，输出为`intro/build/CS100_Intro.pdf`。TA自我介绍页位于`intro/Section02.tex`，依次为李超凡、李宇轩、蒋烨、王诗涵、刘文杰与孟祥琨。课程语言标准为C17与C++17。
 
-GitLab的CI在普通推送时编译验证intro、r0、r1和r3；仅打tag时发布四份PDF。
+GitLab的CI在普通推送时编译验证intro、r0、r1、r3和r4；仅打tag时发布五份PDF。
 
 [GitHub仓库](https://github.com/Heaticy/CS100_Recitation)公开托管同一套源码，可按上述方式本地编译。GitHub Actions已禁用，GitHub端不运行CI或自动发布；自动编译与发布仅在GitLab运行。
 
