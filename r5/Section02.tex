@@ -153,10 +153,6 @@
 \medskip\alert{申请10个int，用10 * sizeof(int)；不要把所指对象的大小写成指针的大小。}
 \end{frame}
 
-\begin{frame}{输入决定数组大小：乘法之前也要检查}
-\begin{Code}*{c}\lstinputlisting{code/array.c}\end{Code}
-\note{课堂输入协议为可由size_t表示的非负整数。边界检查防止字节数乘法回绕，不是完整的任意文本数字解析器。}
-\end{frame}
 
 \begin{frame}{calloc：按元素数量申请，并把所有位清零}
 \begin{Code}*{c}\lstinputlisting{code/calloc.c}\end{Code}\begin{itemize}
