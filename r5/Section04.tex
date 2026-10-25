@@ -1,0 +1,135 @@
+\section{一起做：指针与宏练习}
+
+\begin{frame}{练习一：判断对错，并说明理由}
+\begin{itemize}
+\item A. 普通局部变量一定活到整个程序结束。
+\item B. 动态分配的对象可以跨越一次函数调用继续存在。
+\item C. 给指针赋值\texttt{NULL}会自动释放它原先指向的块。
+\item D. 全局变量可以通过\texttt{free(\&global)}释放。
+\item E. 对一个仍有效的分配，多个指针可以同时指向它。
+\end{itemize}
+\medskip\alert{先独立判断，再用“对象的生命周期”解释。}
+\end{frame}
+
+\begin{frame}{练习一答案：B、E正确}
+\begin{itemize}
+\item A错：普通automatic局部对象在离开对应块时结束生命周期。
+\item B对：动态分配对象的存在不依赖创建它的函数是否已经返回。
+\item C错：赋值改变的是指针变量；原分配可能因此泄漏。
+\item D错：全局对象不来自动态分配，不能这样释放。
+\item E对：多个别名共享同一个对象，但必须协调访问与释放责任。
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{练习二：移动形参，会改变调用者吗？}
+\begin{Code}*{c}\lstinputlisting{code/pointer.c}\end{Code}\alert{输出是4 4，还是4 6？画出调用前后的两个p。}
+\end{frame}
+
+\begin{frame}{练习二答案：输出4 4}
+\begin{itemize}
+\item C函数参数按值传递，\texttt{move}得到地址值的副本。
+\item 函数里的\texttt{p = p + 1}只改变形参，不改变调用者的\texttt{p}。
+\item \texttt{*a}仍然是\texttt{a[0]}；调用者的\texttt{p}也仍指向\texttt{a[0]}。
+\end{itemize}
+\begin{Code}*{c}\lstinputlisting{code/pointer-change.inc}\end{Code}\alert{改对象内容传对象地址；改调用者的指针，就传那个指针的地址。}
+\end{frame}
+
+\begin{frame}{练习三：加2，同时返回原值}
+补全函数：调用后\texttt{x}加2，返回修改前的值。\begin{Code}*{c}\lstinputlisting{code/add-two-question.inc}\end{Code}\begin{itemize}
+\item 调用者希望自己的\texttt{x}被修改，需要传什么？
+\item 如何保存修改前的值？
+\item 前提：\texttt{x}指向有效\texttt{int}对象，原值加2不发生有符号溢出。
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{练习三答案：先保存，再修改}
+\begin{Code}*{c}\lstinputlisting{code/add-two.c}\end{Code}输出\texttt{0 2}。\alert{指针让函数找到调用者的对象；它本身仍然是按值传递。}
+\end{frame}
+
+\begin{frame}{练习四：宏不会替你补括号}
+\begin{Code}*{c}\lstinputlisting{code/macro-mul-question.inc}\end{Code}\begin{itemize}
+\item 先做macro expansion（宏展开），再按运算符优先级计算。
+\item 展开后是\texttt{16 / 1 + 1 * 3 - 1}。
+\item 它和\texttt{16 / ((1 + 1) * (3 - 1))}一样吗？
+\item 怎么修改\texttt{MUL}，让这一次计算得到期望结果？
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{练习四答案：原式为18，修复后为4}
+\begin{Code}*{c}\lstinputlisting{code/macro-mul.c}\end{Code}\begin{itemize}
+\item 参数各自加括号，保证每个实参被当作完整表达式。
+\item 整体再加括号，保证整个展开结果参与外围运算。
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{练习五：用条件运算符写MIN}
+\begin{Code}*{c}\lstinputlisting{code/macro-min-question.inc}\end{Code}\begin{itemize}
+\item 比较\texttt{a}与\texttt{b}，较小时选择哪一个？
+\item 每个参数和整个表达式都要考虑括号。
+\item 追问：\texttt{MIN(i++, j)}会让\texttt{i}增加几次？
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{练习五答案：括号解决不了重复求值}
+\begin{Code}*{c}\lstinputlisting{code/macro-min.c}\end{Code}这里先比较\texttt{1 < 5}，再求真分支\texttt{i++}，输出\texttt{2 3}。\par\alert{避免把带副作用的表达式传给这类宏；普通整数比较可用函数。}
+\note{这里条件运算符的条件与选中分支之间有顺序保证，该例不是未定义行为。不要用MIN(i++, i++)作为对比，它会引入未定序修改问题。}
+\end{frame}
+
+\begin{frame}{练习六：打印类型名和sizeof结果}
+写一个宏\texttt{PS(type)}，例如\texttt{PS(long long)}。\begin{Code}*{c}\lstinputlisting{code/macro-size-question.inc}\end{Code}\begin{itemize}
+\item \texttt{sizeof}的结果类型是\texttt{size\_t}，使用\texttt{\%zu}。
+\item 如何把宏参数\texttt{long long}变成字符串？提示：\texttt{\#type}。
+\item \alert{示例里的8只是常见结果，不是所有平台的固定答案。}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{练习六答案：\#把参数字符串化}
+\begin{Code}*{c}\lstinputlisting{code/macro-size.c}\end{Code}\begin{itemize}
+\item \texttt{\#type}是stringification（字符串化）。
+\item 相邻字符串字面量在翻译时会拼接。
+\item \texttt{PS(int);}相当于打印\texttt{"Size of " "int" ": \%zu\\n"}并传入\texttt{sizeof(int)}。
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{最后一题：这段代码有哪些问题？}
+\begin{Code}*{c}\lstinputlisting{code/review-question.inc}\end{Code}假定已包含头文件，代码位于\texttt{main}中。\par\medskip\alert{逐行分析；不要尝试预测未定义行为后的输出。}
+\end{frame}
+
+\begin{frame}{最后一题答案：沿着分配与生命周期找问题}
+\begin{itemize}
+\item 没有检查\texttt{malloc}是否返回\texttt{NULL}。
+\item 只申请两个\texttt{int}，合法下标是0和1；\texttt{p[2]}越界。
+\item \texttt{free(p)}之后\texttt{q}也失去有效所指对象；读取\texttt{q[0]}是use-after-free。
+\item 最后\texttt{free(q)}重复释放同一分配。
+\item \texttt{p = NULL}只更新\texttt{p}，无法修复\texttt{q}。
+\end{itemize}
+\medskip\alert{正确顺序：检查分配 → 初始化 → 范围内访问 → 统一释放 → 停止使用旧别名。}
+\end{frame}
+
+\begin{frame}{带走这四个问题}
+\begin{itemize}
+\item \textbf{在哪里？}区分指针变量与所指对象；布局是实现模型。
+\item \textbf{活多久？}区分scope、automatic/static/allocated存储期。
+\item \textbf{能访问吗？}检查初始化、边界、NULL与生命周期。
+\item \textbf{谁释放？}每次分配都有明确责任；失败路径也要清理。
+\end{itemize}
+\medskip\alert{地址还在，不代表对象还在；函数返回，也不代表动态对象被释放。}
+\end{frame}
+
+\begin{frame}{资料与课后练习}
+\begin{itemize}
+\item 课件改编自\textit{Memory Management in C — Computer Architecture Discussion}，原稿日期2026年3月20日。
+\item C17接口参考：\href{https://en.cppreference.com/w/c/memory}{Dynamic memory management}。
+\item 配套\texttt{code/}包含完整C17示例及课堂片段；运行方法见\texttt{r5/README.md}。
+\item 课后练习：把固定数组扩容示例改成“容量不足就扩大一倍”，说明溢出检查、失败路径与释放责任。
+\end{itemize}
+\medskip 宏是原稿保留的C语法巩固题；不需要用宏封装内存分配。
+\end{frame}
+

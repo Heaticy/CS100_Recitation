@@ -1,0 +1,100 @@
+\section{运行时需要空间：动态分配}
+
+\begin{frame}{为什么需要Dynamic allocation？}
+\begin{itemize}
+\item 输入告诉你有多少个元素，编译时还不知道。
+\item 对象需要跨越一次函数调用继续存在。
+\item 数组需要扩容，或者需要逐个建立链表节点。
+\end{itemize}
+\medskip
+\begin{tabular}{lll}
+ & \textbf{automatic局部对象} & \textbf{动态分配对象}\\[4pt]
+创建 & 进入对应块时自动管理 & 调用\texttt{malloc/calloc}等\\
+结束 & 离开对应块 & 调用\texttt{free/realloc}等\\
+责任 & 注意作用域与生命周期 & 额外设计释放责任
+\end{tabular}
+\medskip\par\alert{选择依据是大小和生命周期需求，不是“heap一定比stack好”。}
+
+\end{frame}
+
+\begin{frame}{四个接口，先记住各自做什么}
+\begin{Code}*{c}\lstinputlisting{code/api.inc}\end{Code}\begin{itemize}
+\item \texttt{size\_t}：用于表示大小的无符号整数类型。
+\item \texttt{malloc}：申请指定字节数；\texttt{calloc}：申请数组并将所有位清零。
+\item \texttt{realloc}：调整已有分配；\texttt{free}：结束该次分配。
+\item 本节示例均使用\alert{正数大小}，避免零大小分配的特殊规则。
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{malloc：空间申请到了，不代表已经有初值}
+\begin{Code}*{c}\lstinputlisting{code/malloc.c}\end{Code}\alert{检查NULL之后再访问；读取之前先写入有效值。}
+\end{frame}
+
+\begin{frame}{sizeof *p：申请的是对象的大小}
+\begin{Code}*{c}\lstinputlisting{code/sizes.inc}\end{Code}\begin{itemize}
+\item \texttt{sizeof p}是指针本身的大小，不是一个\texttt{int}的大小。
+\item \texttt{sizeof *p}取所指类型的大小，修改指针类型时不必同步修改类型名。
+\item 对这里的非VLA类型，\texttt{sizeof *p}不求值\texttt{*p}，不会解引用未初始化的\texttt{p}。
+\item C中\texttt{void *}可转换成对象指针，不需要给\texttt{malloc}返回值强制类型转换。
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{输入决定数组大小：乘法之前也要检查}
+\begin{Code}*{c}\lstinputlisting{code/array.c}\end{Code}
+\note{课堂输入协议为可由size_t表示的非负整数。边界检查防止字节数乘法回绕，不是完整的任意文本数字解析器。}
+\end{frame}
+
+\begin{frame}{calloc：按元素数量申请，并把所有位清零}
+\begin{Code}*{c}\lstinputlisting{code/calloc.c}\end{Code}\begin{itemize}
+\item 这里的\texttt{int}数组初始值全是0，输出\texttt{0 0}。
+\item 所有位为0，不可推广成所有类型的语义零值；例如不保证得到空指针表示。
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{realloc：扩大数组，原有数据会怎样？}
+\begin{itemize}
+\item \texttt{realloc(p, new\_size)}调整由分配函数返回、尚未释放的块。
+\item 成功：保留新旧大小较小范围内的数据；新增部分未初始化。
+\item 成功后原分配结束，\alert{旧指针及指向旧块的别名都不能继续使用}。
+\item 失败且请求大小非零：返回\texttt{NULL}，原分配仍然有效。
+\end{itemize}
+\medskip\alert{它可能原地扩容，也可能搬家。代码必须同时支持两种情况。}
+\end{frame}
+
+\begin{frame}{为什么不能直接p = realloc(p, ...)？}
+\begin{Code}*{c}\lstinputlisting{code/realloc-wrong.inc}\end{Code}\begin{itemize}
+\item 失败时返回\texttt{NULL}，赋值覆盖了原来的指针。
+\item 原块没有被释放，却可能失去唯一可用的地址，造成memory leak。
+\item 用临时指针接住返回值，成功后再更新\texttt{p}。
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{安全扩容：先接住，再更新}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{Code}*{c}\lstinputlisting[firstline=1,lastline=10]{code/realloc.c}\end{Code}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{Code}*{c}\lstinputlisting[firstline=11,lastline=20,firstnumber=11]{code/realloc.c}\end{Code}
+\end{column}
+\end{columns}
+\medskip
+\alert{失败：原块仍有效，清理后退出。成功：更新指针，初始化新增元素。}
+\note{固定大小不会溢出。提醒同学：不要在成功后比较旧p或沿用旧块内部指针；这版例子没有建立别名。}
+\end{frame}
+
+\begin{frame}{选读：分配器大概在做什么？}
+\begin{itemize}
+\item \texttt{malloc}常维护空闲块信息，寻找合适空间，必要时拆分空闲块。
+\item 没有合适空间时，可能向操作系统申请更多内存。
+\item \texttt{free}可能把块放回分配器、合并相邻空闲块，供后续申请复用。
+\item \texttt{realloc}可能在原处调整，也可能申请新块、复制数据再释放旧块。
+\end{itemize}
+\medskip\alert{这是帮助理解的实现思路，不是C标准规定的算法。}\par\medskip 频繁申请与释放可能带来fragmentation（碎片）；\texttt{free}也不保证进程占用立刻下降。
+\note{补充页，按课堂时间决定是否展开，不实现malloc/calloc，不讲体系结构细节。}
+\end{frame}
+

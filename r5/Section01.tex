@@ -1,0 +1,124 @@
+\section{先看生命周期，再看内存布局}
+
+\begin{frame}{先猜输出：每次进入函数，变量都会重新开始吗？}
+\begin{Code}*{c}\lstinputlisting{code/lifetime.c}\end{Code}
+\note{先留一分钟，让同学写下两行输出；不要先把static等同于全局可见。}
+\end{frame}
+
+\begin{frame}{答案：作用域与生命周期是两件事}
+\begin{itemize}
+\item 第一次：\texttt{1 1 11}；第二次：\texttt{1 2 12}。
+\item \texttt{local}：每次进入函数体，开始新的automatic对象生命周期。
+\item \texttt{count}：具有static storage duration，整个程序执行期间都存在。
+\item \texttt{global}：同样具有static storage duration，值不会在函数返回时重置。
+\end{itemize}
+\medskip\alert{count只能在函数体内用名字访问，但它不会随着函数返回而消失。}
+\end{frame}
+
+\begin{frame}{Scope、storage duration、lifetime}
+\begin{itemize}
+\item \textbf{Scope（作用域）}：源码中，哪些位置能用这个名字？
+\item \textbf{Storage duration（存储期）}：对象的存储存在多长时间？
+\item \textbf{Lifetime（生命周期）}：对象在执行中何时存在、何时可以访问？
+\end{itemize}
+\medskip
+\begin{tabular}{lll}
+\textbf{对象} & \textbf{典型存储期} & \textbf{何时结束}\\[4pt]
+普通块内局部变量 & automatic & 离开对应的块\\
+全局变量／\texttt{static}局部变量 & static & 程序结束\\
+\texttt{malloc}分配的对象 & allocated & 被释放或被成功重新分配
+\end{tabular}
+
+\note{本节限定普通非VLA示例，不引入thread storage duration。指针也是对象，拥有自己的生命周期。}
+\end{frame}
+
+\begin{frame}{Memory layout：常见Linux进程的示意图}
+
+\begin{columns}[c]
+\begin{column}{0.43\textwidth}
+\centering
+\begin{tikzpicture}[every node/.style={draw=VSPPrimary,minimum width=4.7cm,minimum height=0.60cm,align=center,font=\small},node distance=0.06cm]
+\node (stack) {Stack：调用栈、部分局部对象};
+\node[below=of stack] (gap) {\(\downarrow\)\quad 空间／其他映射\quad\(\uparrow\)};
+\node[below=of gap] (heap) {Heap：动态分配区域};
+\node[below=of heap] (bss) {.bss：零初始化静态对象};
+\node[below=of bss] (data) {.data：非零初始化静态对象};
+\node[below=of data] (ro) {.rodata：字符串字面量等只读数据};
+\node[below=of ro] (text) {.text：机器指令};
+\end{tikzpicture}
+\end{column}
+\begin{column}{0.52\textwidth}
+高地址在上，低地址在下。\medskip
+\begin{itemize}
+\item 这是理解常见实现的模型。
+\item 实际进程还包括共享库、内存映射等区域。
+\item 动态分配也可能通过独立映射实现。
+\item \alert{C标准不保证这些分区、顺序或增长方向。}
+\end{itemize}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+\begin{frame}{对象放在哪里？先说规则，再说常见实现}
+\begin{Code}*{c}\lstinputlisting{code/locations.inc}\end{Code}\begin{itemize}
+\item \texttt{g}通常在.data；\texttt{z}、\texttt{count}通常在.bss。
+\item \texttt{local}和指针变量\texttt{p}通常在stack，也可能被优化到寄存器。
+\item \alert{p与*p不是同一个对象。}动态分配的空间通常来自heap。
+\end{itemize}
+
+\note{片段省略stdlib.h与失败处理，只用于标识位置；后续完整示例会检查NULL。}
+\end{frame}
+
+\begin{frame}{.bss与.data：为什么两个程序大小差这么多？}
+\begin{columns}[T]\begin{column}{0.53\textwidth}\begin{Code}*{c}\lstinputlisting{code/bss.c}\end{Code}\begin{Code}*{c}\lstinputlisting{code/data.c}\end{Code}\end{column}\begin{column}{0.43\textwidth}\begin{itemize}
+\item 两组数组在运行时都需要存储。
+\item 第一组默认全为0；第二组前三项非零，其余仍为0。
+\item .bss通常只记录需要多少零初始化空间。
+\item .data需要在文件中保存初始数据。
+\end{itemize}
+\end{column}\end{columns}\medskip\alert{可执行文件小，不代表程序运行时不占内存。}
+\end{frame}
+
+\begin{frame}{现场看一眼：size与objdump}
+在\texttt{r5/}目录执行：\begin{Code}*{bash}\lstinputlisting{code/layout.sh}\end{Code}\begin{itemize}
+\item \texttt{size}：比较text、data、bss所占空间。
+\item \texttt{objdump -t}：观察符号\texttt{array}属于哪个section。
+\item \texttt{int a;}与\texttt{int b = 0;}通常都进入.bss。
+\end{itemize}
+
+\note{工具演示约3分钟，只观察section归属。零初始化不是未初始化；具体文件大小取决于平台与工具链。}
+\end{frame}
+
+\begin{frame}{Stack frame：函数返回后发生了什么？}
+
+\begin{columns}[c]
+\begin{column}{0.43\textwidth}
+\begin{tikzpicture}[node distance=0.12cm,every node/.style={draw=VSPPrimary,minimum width=4.6cm,minimum height=0.85cm,align=center}]
+\node (c) {\texttt{function\_c}的frame};
+\node[below=of c] (b) {\texttt{function\_b}的frame};
+\node[below=of b] {\texttt{main}的frame};
+\end{tikzpicture}
+\end{column}
+\begin{column}{0.52\textwidth}
+\begin{itemize}
+\item 函数调用通常建立stack frame（栈帧）。
+\item 栈帧可能保存局部变量、返回地址与部分参数。
+\item 参数也可能通过寄存器传递。
+\item 函数返回后，普通局部对象生命周期结束。
+\end{itemize}
+\end{column}
+\end{columns}
+\medskip\alert{内存里的旧字节暂时没被覆盖，也不代表原来的对象还活着。}
+
+\end{frame}
+
+\begin{frame}{这段代码为什么不能返回局部变量的地址？}
+\begin{Code}*{c}\lstinputlisting{code/return-local.inc}\end{Code}\begin{itemize}
+\item 函数返回后，\texttt{x}的生命周期已经结束。
+\item 调用者不能通过返回值继续访问\texttt{x}。
+\item 若只需要数值，直接返回\texttt{int}；若需要长期存在的对象，重新设计存储与所有权。
+\end{itemize}
+\medskip\alert{不能根据某一次运行“恰好输出42”判断代码正确。}
+\end{frame}
+

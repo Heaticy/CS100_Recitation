@@ -1,0 +1,38 @@
+\makeatletter\def\input@path{{../template/vsp-beamer}{../template/minimus}}\makeatother
+\documentclass[red,tutorial,sectionpages,shtu]{vsp-beamer}
+\graphicspath{{../template/vsp-beamer/assets/}}
+\usepackage{minimus-section}
+\usepackage{minimus-text}
+\usepackage{minimus-math}
+\usepackage{minimus-float}
+\usepackage{minimus-code}
+\usepackage{minimus-colorbox}
+\usepackage{minimus-reference}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\lstset{basicstyle=\ttfamily\footnotesize,numberstyle=\tiny\color{gray},breaklines=true,xleftmargin=8pt}
+\title{CS100 Recitation 5}
+\subtitle{C语言内存管理：生命周期、指针与动态分配}
+\VSPsetspeaker{Chaofan Li}{CS100 Teaching Assistant}
+\VSPsetupfootline{CS100 Recitation 5}{Fall 2026}{Chaofan Li}
+\begin{document}
+\VSPtitleframe
+\begin{frame}{今天我们要回答什么？}
+    \begin{enumerate}
+        \item 一个变量离开函数之后，它还存在吗？
+        \item 指针变量还在，指向的对象就一定还在吗？
+        \item 运行时才知道需要多少空间，怎么办？
+        \item 一块动态分配的内存，最后应该由谁释放？
+    \end{enumerate}
+    \medskip
+    \alert{看到一个指针，先问：它指向谁？那个对象还活着吗？}
+\end{frame}
+\begin{frame}{目录}
+    \tableofcontents[hideallsubsections]
+\end{frame}
+\input{Section01.tex}
+\input{Section02.tex}
+\input{Section03.tex}
+\input{Section04.tex}
+\VSPendframe{指向谁？活多久？谁负责释放？}
+\end{document}

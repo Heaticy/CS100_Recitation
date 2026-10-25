@@ -1,0 +1,116 @@
+\section{谁负责free：指针、别名与所有权}
+
+\begin{frame}{free：释放的是分配，不是指针变量}
+\begin{Code}*{c}\lstinputlisting{code/free.inc}\end{Code}\begin{itemize}
+\item \texttt{free}结束该块的分配，后续不能再通过旧指针访问它。
+\item \texttt{p}变量本身仍然存在；\texttt{free}不会自动把它改为\texttt{NULL}。
+\item \texttt{free(NULL)}无操作；把\texttt{p}设为空有助于表达“当前不再持有对象”。
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{哪几种地址能传给free？}
+\begin{Code}*{c}\lstinputlisting{code/invalid-free.inc}\end{Code}\alert{只能传NULL，或与仍有效的动态分配返回值匹配的指针。}\par\medskip 局部对象、全局对象、块内部地址和已释放的地址都不符合要求。
+\end{frame}
+
+\begin{frame}{p = NULL之后，q就安全了吗？}
+\begin{Code}*{c}\lstinputlisting{code/alias.inc}\end{Code}\alert{q也指向同一个对象，p设为空不会自动更新q。}\par\medskip 释放后，所有旧别名都失去访问该对象的资格。
+\end{frame}
+
+\begin{frame}{画图：两个指针，只有一块分配}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,node distance=1cm,
+ptr/.style={draw=VSPPrimary,minimum width=1.7cm,minimum height=0.8cm},
+obj/.style={draw=VSPPrimary,minimum width=3.7cm,minimum height=1.6cm,align=center}]
+\node[ptr] (p) {\texttt{p}};
+\node[ptr,below=of p] (q) {\texttt{q}};
+\node[obj,right=2.4cm of p,yshift=-0.9cm] (x) {同一块动态分配\\\texttt{int: 42}};
+\draw[->,thick] (p.east) -- (x.north west);
+\draw[->,thick] (q.east) -- (x.south west);
+\end{tikzpicture}
+\end{center}
+\begin{itemize}
+\item \texttt{int *q = p;}复制地址值，没有复制对象。
+\item \texttt{free(p)}之后，右边的对象生命周期结束。
+\item \alert{释放次数看分配次数，不看有几个指针。}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Memory leak：指针没了，分配还在}
+\begin{Code}*{c}\lstinputlisting{code/leak.inc}\end{Code}\begin{itemize}
+\item \texttt{p}是automatic局部指针，离开函数后它的生命周期结束。
+\item 动态分配的对象不会因此自动释放。
+\item 如果没有留下其他可用的指针，这块内存就无法再由程序正常释放。
+\end{itemize}
+\medskip\alert{“指针生命周期结束”不等于“所指对象自动释放”。}
+\end{frame}
+
+\begin{frame}{Ownership：约定谁负责最后一次free}
+\begin{itemize}
+\item \textbf{Owner（拥有者）}：负责安排释放的一方。
+\item \textbf{Borrower（借用者）}：临时使用对象，不负责释放。
+\item 返回动态分配对象时，要说明：成功返回什么，失败返回什么，由谁释放。
+\item 传给函数一个指针时，要说明：函数只读、修改内容，还是接管所有权。
+\end{itemize}
+\medskip C不会替我们强制检查这些约定，\alert{需要用接口、注释和控制流程表达清楚}。
+\end{frame}
+
+\begin{frame}{函数可以返回动态分配的对象}
+\begin{Code}*{c}\lstinputlisting{code/owned.c}\end{Code}函数内的指针变量结束了，但动态分配的对象仍然存在，由调用者释放。
+\end{frame}
+
+\begin{frame}{链表：每个节点都是一次独立分配}
+\begin{Code}*{c}\lstinputlisting{code/list-node.inc}\end{Code}
+\begin{center}
+\begin{tikzpicture}[>=Stealth,node distance=0.7cm,
+every node/.style={draw=VSPPrimary,minimum height=0.8cm,inner sep=7pt}]
+\node (head) {head};
+\node[right=of head] (a) {20 | next};
+\node[right=of a] (b) {10 | next};
+\node[right=of b] (nil) {NULL};
+\draw[->,thick] (head)--(a);
+\draw[->,thick] (a)--(b);
+\draw[->,thick] (b)--(nil);
+\end{tikzpicture}
+\end{center}
+\alert{释放head指向的节点，不会自动释放next指向的节点。}
+\par\medskip 如果还没学过\texttt{struct}：这里把它看作“一个整数和一个指针打包成的节点”。
+
+\end{frame}
+
+\begin{frame}{头插：分配成功后再接入链表}
+\begin{Code}*{c}\lstinputlisting{code/list-insert.inc}\end{Code}\begin{itemize}
+\item \texttt{node->data}等价于\texttt{(*node).data}。
+\item 函数要修改调用者的\texttt{head}，所以传入\texttt{\&head}，形参是二级指针。
+\item 分配失败时返回0，旧链表仍有效，由调用者清理。
+\end{itemize}
+
+\note{选读案例，与后面的值传递练习呼应；struct与二级指针未学时可仅讲图示和释放顺序。}
+\end{frame}
+
+\begin{frame}{释放链表：先保存next，再free当前节点}
+\begin{Code}*{c}\lstinputlisting{code/list-free.inc}\end{Code}\begin{itemize}
+\item 如果先\texttt{free(head)}再读\texttt{head->next}，就是use-after-free。
+\item 这里的\texttt{head}是形参副本，不会自动清空调用者的指针。
+\item 每个节点只释放一次；释放后不再访问节点内容。
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{内存错误小结：先问哪条规则被破坏了}
+
+\begin{tabular}{ll}
+\textbf{错误} & \textbf{要检查什么}\\[5pt]
+Out-of-bounds（越界） & 下标是否位于有效范围内？\\
+Uninitialized read（未初始化读取） & 读取前是否写入了有效值？\\
+Use-after-free（释放后使用） & 所指对象是否已经结束生命周期？\\
+Double free（重复释放） & 这次分配是否已经被释放？\\
+Memory leak（内存泄漏） & 是否失去地址或遗漏了释放路径？
+\end{tabular}
+\medskip\par\alert{这些问题没有按stack、heap、global划分的固定严重程度。}
+\par\medskip 越界、use-after-free、double free等问题，可以结合\textbf{上节课的AddressSanitizer}检查。
+
+\end{frame}
+
