@@ -1,4 +1,4 @@
-int *p = malloc(2 * sizeof *p);
+int *p = malloc(2 * sizeof(int));
 int *q = p;
 p[0] = 10;
 p[2] = 20;

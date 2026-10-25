@@ -70,6 +70,8 @@ bash code/layout.sh
 | `macro-min.c` | 条件运算符与重复求值 | 两行：`2 3`、`3` |
 | `macro-size.c` | 字符串化与`%zu` | 类型名及本平台的`sizeof`结果 |
 
+课件及配套示例统一使用显式类型的sizeof表达式：整数用`sizeof(int)`，结构体用`sizeof(struct Point)`或`sizeof(struct Node)`。`sizeof(int *)`仅表示指针本身的大小，不用于代替int对象大小。
+
 所有完整程序均检查可能失败的动态分配。输入数组示例演示分配大小检查，不作为任意文本或超范围整数的完整输入解析器。`add_two`要求有效指针且原值加2可由int表示。
 
 `list.c`中的节点定义、头插与释放函数来自课件展示的`list-node.inc`、`list-insert.inc`与`list-free.inc`；修改时应保持二者一致。

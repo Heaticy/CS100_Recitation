@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 int main(void) {
-    int *p = malloc(sizeof *p);
+    int *p = malloc(sizeof(int));
     if (p == NULL) {
         return EXIT_FAILURE;
     }

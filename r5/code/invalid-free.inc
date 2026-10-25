@@ -1,7 +1,7 @@
 int global;
 void f(void) {
     int local = 0;
-    int *p = malloc(3 * sizeof *p);
+    int *p = malloc(3 * sizeof(int));
     if (p == NULL) return;
     /* free(&local);  wrong */
     /* free(&global); wrong */

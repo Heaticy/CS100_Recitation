@@ -7,7 +7,7 @@ int main(void) {
         n > SIZE_MAX / sizeof(int)) {
         return EXIT_FAILURE;
     }
-    int *a = malloc(n * sizeof *a);
+    int *a = malloc(n * sizeof(int));
     if (a == NULL) return EXIT_FAILURE;
     for (size_t i = 0; i < n; ++i) a[i] = 0;
     printf("%d\n", a[n - 1]);

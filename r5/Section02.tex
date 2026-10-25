@@ -142,14 +142,15 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{sizeof *p：申请的是对象的大小}
-\begin{Code}*{c}\lstinputlisting{code/sizes.inc}\end{Code}\begin{itemize}
-\item \texttt{sizeof p}是指针本身的大小，不是一个\texttt{int}的大小。
-\item \texttt{sizeof *p}取所指类型的大小，修改指针类型时不必同步修改类型名。
-\item 对这里的非VLA类型，\texttt{sizeof *p}不求值\texttt{*p}，不会解引用未初始化的\texttt{p}。
-\item C中\texttt{void *}可转换成对象指针，不需要给\texttt{malloc}返回值强制类型转换。
+\begin{frame}{sizeof：明确写出要申请的对象类型}
+\begin{Code}*{c}\lstinputlisting{code/sizes.inc}\end{Code}
+\begin{itemize}
+    \item \texttt{sizeof(int)}：一个\texttt{int}对象占多少字节。
+    \item \texttt{sizeof(struct Point)}：一个\texttt{struct Point}对象占多少字节。
+    \item \texttt{sizeof(int *)}：一个\texttt{int}指针本身占多少字节。
+    \item C中\texttt{void *}可转换成对象指针，\texttt{malloc}返回值不需要强制类型转换。
 \end{itemize}
-
+\medskip\alert{申请10个int，用10 * sizeof(int)；不要把所指对象的大小写成指针的大小。}
 \end{frame}
 
 \begin{frame}{输入决定数组大小：乘法之前也要检查}

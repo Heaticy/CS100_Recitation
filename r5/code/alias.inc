@@ -1,4 +1,4 @@
-int *p = malloc(sizeof *p);
+int *p = malloc(sizeof(int));
 if (p == NULL) return EXIT_FAILURE;
 *p = 42;
 int *q = p;

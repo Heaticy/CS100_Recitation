@@ -2,7 +2,7 @@
 #include <stdlib.h>
 /* Caller owns the returned block; NULL means failure. */
 int *make_number(int value) {
-    int *p = malloc(sizeof *p);
+    int *p = malloc(sizeof(int));
     if (p != NULL) *p = value;
     return p;
 }

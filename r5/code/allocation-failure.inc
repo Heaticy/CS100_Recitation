@@ -1,4 +1,4 @@
-int *a = malloc(n * sizeof *a);
+int *a = malloc(n * sizeof(int));
 if (a == NULL) {
     return; /* handle failure */
 }
