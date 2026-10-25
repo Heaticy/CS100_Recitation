@@ -17,6 +17,44 @@
 
 \end{frame}
 
+\begin{frame}{运行时才知道n，直接写int a[n]可以吗？}
+\begin{Code}*{c}\lstinputlisting{code/vla.inc}\end{Code}
+\begin{itemize}
+    \item 这里的\texttt{n}不是整型常量表达式，\texttt{a}是\textbf{variable-length array（VLA，变长数组）}。
+    \item 大小在运行时确定，但它是automatic局部对象，通常占用\textbf{stack}空间。
+    \item 离开作用域后生命周期结束，也不能通过改变\texttt{n}来扩容。
+\end{itemize}
+\medskip\alert{VLA不是malloc式的动态分配。本课程所有作业都禁止使用VLA。}
+\note{VLA是C中的语言特性，此处以支持它的常见实现说明行为；课程禁用是作业规则，不是声称该语法在所有C实现中都非法。示例仅用于阅读，不加入可运行作业示例。}
+\end{frame}
+
+\begin{frame}{为什么作业禁用VLA？空间不足时能否处理？}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{malloc：可以检查分配失败}
+\begin{Code}*{c}\lstinputlisting{code/allocation-failure.inc}\end{Code}
+\begin{itemize}
+    \item 空间申请失败时返回\texttt{NULL}。
+    \item 可以报告错误、清理资源，再结束当前操作。
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{VLA：没有NULL失败返回机制}
+\begin{Code}*{c}\lstinputlisting{code/vla-failure.inc}\end{Code}
+\begin{itemize}
+    \item \texttt{n}太大，可能直接耗尽栈空间，导致爆栈或崩溃。
+    \item 没有类似\texttt{malloc}的返回值可检查，存在安全风险。
+\end{itemize}
+\end{column}
+\end{columns}
+\medskip
+\begin{vspquotered}{类比：发射中心要建在酒泉，而不是紫禁城}
+    \small 大小不可控的数组，不要挤进空间有限、承担函数调用的栈里。
+\end{vspquotered}
+\small\alert{所有作业禁止使用VLA。运行时分配用malloc等接口，并检查失败。}
+\note{malloc示意假定n为正且字节数乘法已检查，下一部分展开完整检查。这里强调分配接口的失败处理能力，不承诺操作系统过量承诺内存后的一切访问都不会失败。}
+\end{frame}
+
 \begin{frame}{四个接口，先记住各自做什么}
 \begin{Code}*{c}\lstinputlisting{code/api.inc}\end{Code}\begin{itemize}
 \item \texttt{size\_t}：用于表示大小的无符号整数类型。

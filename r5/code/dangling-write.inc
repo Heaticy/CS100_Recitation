@@ -1,10 +1,12 @@
-int *remember(void) {
-    int old = 10;
-    return &old;             /* dangling after return */
+struct Point { int x; int y; };
+struct Point *create_point(int x, int y) {
+    struct Point point = {x, y};
+    return &point;           /* wrong: local object */
 }
-void later(int *p) {
-    int fresh = 20;
-    *p = 99;                 /* UB: not a valid way to reach fresh */
-    printf("%d\n", fresh); /* no guaranteed output */
+void later(struct Point *p) {
+    struct Point fresh = {20, 30};
+    p->x = 99;               /* UB: dangling pointer */
+    printf("%d\n", fresh.x); /* no guaranteed output */
 }
-/* caller: int *p = remember(); later(p); */
+/* caller: struct Point *p = create_point(10, 15); */
+/*         later(p); */

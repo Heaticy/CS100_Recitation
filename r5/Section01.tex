@@ -58,12 +58,12 @@
 \medskip 接下来：如果把\textbf{函数内部局部变量的地址}带出去，会怎样？
 \end{frame}
 
-\begin{frame}{常见Dangling pointer：返回局部变量的地址}
+\begin{frame}{尝试写一个“构造函数”：create\_point}
 \begin{Code}*{c}\lstinputlisting{code/dangling-write.inc}\end{Code}
 \begin{itemize}
-    \item \texttt{remember}返回后，\texttt{old}的生命周期结束，返回的地址悬空。
-    \item 再通过该指针读取或写入，就是\textbf{undefined behavior（UB）}。
-    \item \texttt{fresh}有没有被改、程序是否崩溃，都不能据此预测。
+    \item 想用\texttt{create\_point}创建并初始化结构体，再把指针交给调用者。
+    \item 但\texttt{point}是局部对象，函数返回后生命周期结束，返回的指针悬空。
+    \item 通过悬空指针访问成员是\textbf{UB}；\texttt{fresh.x}的结果没有保证。
 \end{itemize}
 \note{错误片段仅用于阅读分析，不运行或假定固定输出。所指对象生命周期结束后，指针值变为不确定值；C标准不保证悬空指针还能稳定保存或使用那个旧地址。}
 \end{frame}
@@ -75,8 +75,8 @@
 \medskip
 \begin{tikzpicture}[>=Stealth,font=\small]
     \node[draw=VSPPrimary,minimum width=4.6cm,minimum height=1.2cm,
-        fill=VSPPrimary!5,align=center] (slot) at (0,0) {某块栈空间\\\texttt{old = 10}};
-    \node[align=center] (addr) at (0,-1.6) {取得\texttt{\&old}};
+        fill=VSPPrimary!5,align=center] (slot) at (0,0) {某块栈空间\\\texttt{point = \{10, 15\}}};
+    \node[align=center] (addr) at (0,-1.6) {取得\texttt{\&point}};
     \draw[->,thick,VSPPrimary] (addr) -- (slot);
 \end{tikzpicture}
 \end{column}
@@ -85,8 +85,8 @@
 \medskip
 \begin{tikzpicture}[>=Stealth,font=\small]
     \node[draw=VSPPrimary,minimum width=4.6cm,minimum height=1.2cm,
-        fill=VSPPrimary!12,align=center] (slot) at (0,0) {原来的\texttt{old}已经不存在\\新对象\texttt{fresh = 20}};
-    \node[align=center,text=VSPPrimary] (addr) at (0,-1.6) {通过悬空指针写\texttt{99}（UB）};
+        fill=VSPPrimary!12,align=center] (slot) at (0,0) {原来的\texttt{point}已不存在\\新对象\texttt{fresh = \{20, 30\}}};
+    \node[align=center,text=VSPPrimary] (addr) at (0,-1.6) {\texttt{p->x = 99}（悬空写入，UB）};
     \draw[->,thick,dashed,VSPPrimary] (addr) -- (slot);
 \end{tikzpicture}
 \end{column}
@@ -95,7 +95,7 @@
 \begin{itemize}
     \item 常见栈实现会复用空间，错误写入\textbf{可能破坏后来创建的对象}。
     \item \alert{复用同一个地址，不会让悬空指针重新变得有效。}
-    \item 这是可能的故障过程，不保证地址复用，也不保证\texttt{fresh}最终为99。
+    \item 这是可能的故障过程，不保证地址复用，也不保证\texttt{fresh.x}最终为99。
 \end{itemize}
 \medskip\textbf{如果需要让对象在函数返回后继续存在，就要选择合适的存储期。下面看动态分配。}
 \end{frame}
