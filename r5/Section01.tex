@@ -33,31 +33,65 @@
 \end{frame}
 
 \begin{frame}{Memory layout：常见Linux进程的示意图}
-
 \begin{columns}[c]
-\begin{column}{0.43\textwidth}
+\begin{column}{0.59\textwidth}
 \centering
-\begin{tikzpicture}[every node/.style={draw=VSPPrimary,minimum width=4.7cm,minimum height=0.60cm,align=center,font=\small},node distance=0.06cm]
-\node (stack) {Stack：调用栈、部分局部对象};
-\node[below=of stack] (gap) {\(\downarrow\)\quad 空间／其他映射\quad\(\uparrow\)};
-\node[below=of gap] (heap) {Heap：动态分配区域};
-\node[below=of heap] (bss) {.bss：零初始化静态对象};
-\node[below=of bss] (data) {.data：非零初始化静态对象};
-\node[below=of data] (ro) {.rodata：字符串字面量等只读数据};
-\node[below=of ro] (text) {.text：机器指令};
+\begin{tikzpicture}[x=1cm,y=1cm,>=Stealth,
+    band/.style={draw=VSPPrimary!65,line width=0.55pt},
+    name/.style={anchor=west,font=\small\ttfamily\bfseries,text=VSPPrimary},
+    desc/.style={anchor=west,font=\small,text=black!80}]
+    % One address space, with a fixed width for every region.
+    \fill[VSPPrimary!7] (0,0) rectangle (6,-0.72);
+    \fill[black!2] (0,-0.72) rectangle (6,-2.22);
+    \fill[VSPPrimary!7] (0,-2.22) rectangle (6,-2.94);
+    \fill[VSPPrimary!3] (0,-2.94) rectangle (6,-4.86);
+    \draw[band] (0,0) rectangle (6,-4.86);
+    \foreach \y in {-0.72,-2.22,-2.94,-3.58,-4.22}
+        \draw[band] (0,\y) -- (6,\y);
+    % Read-only objects and instructions have a neutral background.
+    \fill[white] (0.01,-4.22) rectangle (5.99,-4.85);
+    \draw[band] (0,-4.86) -- (6,-4.86);
+    \node[name] at (0.24,-0.36) {Stack};
+    \node[desc] at (1.85,-0.36) {调用栈、部分局部对象};
+    \node[name] at (0.24,-2.58) {Heap};
+    \node[desc] at (1.85,-2.58) {动态分配区域};
+    \node[name] at (0.24,-3.26) {.bss};
+    \node[desc] at (1.85,-3.26) {零初始化静态对象};
+    \node[name] at (0.24,-3.90) {.data};
+    \node[desc] at (1.85,-3.90) {非零初始化静态对象};
+    \node[name] at (0.24,-4.54) {.rodata};
+    \node[desc] at (1.85,-4.54) {字符串字面量等只读数据};
+    % Code sits in its own equal-width region below the data regions.
+    \fill[white] (0,-4.86) rectangle (6,-5.50);
+    \draw[band] (0,-4.86) rectangle (6,-5.50);
+    \node[name] at (0.24,-5.18) {.text};
+    \node[desc] at (1.85,-5.18) {机器指令};
+    % The gap is not a segment; arrows connect growth to the right region.
+    \draw[->,VSPPrimary,very thick] (0.55,-0.87) -- (0.55,-1.55);
+    \node[anchor=west,font=\scriptsize,text=VSPPrimary] at (0.77,-1.12) {Stack向低地址增长};
+    \draw[->,VSPPrimary,very thick] (5.45,-2.07) -- (5.45,-1.39);
+    \node[anchor=east,font=\scriptsize,text=VSPPrimary] at (5.23,-1.83) {Heap向高地址增长};
+    \node[font=\small,text=black!55,fill=black!2,inner sep=2pt] at (3,-1.47) {空闲空间／其他映射};
+    % Address direction is independent from allocation growth.
+    \draw[->,black!45,line width=0.7pt] (-0.42,-5.35) -- (-0.42,-0.15);
+    \node[anchor=east,font=\scriptsize,text=black!65,align=center] at (-0.52,-0.30) {高\\地址};
+    \node[anchor=east,font=\scriptsize,text=black!65,align=center] at (-0.52,-5.15) {低\\地址};
 \end{tikzpicture}
 \end{column}
-\begin{column}{0.52\textwidth}
-高地址在上，低地址在下。\medskip
+\begin{column}{0.37\textwidth}
+\textbf{读图时先抓住三件事}
+\medskip
 \begin{itemize}
-\item 这是理解常见实现的模型。
-\item 实际进程还包括共享库、内存映射等区域。
-\item 动态分配也可能通过独立映射实现。
-\item \alert{C标准不保证这些分区、顺序或增长方向。}
+    \item 地址由下向上增大。
+    \item Stack与Heap的箭头表示常见增长方向。
+    \item .bss与.data等是可执行文件的section；这里画的是典型运行时分布。
 \end{itemize}
+\medskip
+\small 实际进程还包括共享库和其他映射；动态分配也可能使用独立映射。
+\par\medskip
+\alert{C标准不保证这些区域的排列和增长方向。}
 \end{column}
 \end{columns}
-
 \end{frame}
 
 \begin{frame}{对象放在哪里？先说规则，再说常见实现}
