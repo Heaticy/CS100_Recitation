@@ -12,6 +12,8 @@ OUT = ROOT / 'build' / 'demo'
 OUT.mkdir(parents=True, exist_ok=True)
 CC = shlex.split(os.environ.get('CC', 'cc'))
 CASES = {
+    'by-value': ('', 'inside: 42\noutside: 10\n'),
+    'by-address': ('', '42\n'),
     'lifetime': ('', '1 1 11\n1 2 12\n'),
     'malloc': ('', '42\n'),
     'calloc': ('', '0 0\n'),

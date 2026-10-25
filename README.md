@@ -42,7 +42,7 @@ CS100_Recitation
 |  |- Makefile
 |- r5/                # 习题课五（C语言内存管理、指针与宏练习）
 |  |- CS100_Recitation5.tex
-|  |- Section01.tex…Section04.tex
+|  |- Section01.tex…Section05.tex
 |  |- code/           # 完整C17示例与课堂片段
 |  |- Makefile
 |- AGENTS.md          # agent工作流约定

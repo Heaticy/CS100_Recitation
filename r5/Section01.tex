@@ -1,157 +1,101 @@
-\section{先看生命周期，再看内存布局}
+\section{我们为什么需要指针？}
 
-\begin{frame}{先猜输出：每次进入函数，变量都会重新开始吗？}
-\begin{Code}*{c}\lstinputlisting{code/lifetime.c}\end{Code}
-\note{先留一分钟，让同学写下两行输出；不要先把static等同于全局可见。}
+\begin{frame}{我们为什么需要指针？先看一次函数调用}
+目标：让\texttt{set\_number}把调用者的\texttt{n}改为42。
+\begin{Code}*{c}\lstinputlisting{code/by-value.c}\end{Code}
+\alert{先猜输出：函数里的x变了，main里的n会跟着变吗？}
 \end{frame}
 
-\begin{frame}{答案：作用域与生命周期是两件事}
-\begin{itemize}
-\item 第一次：\texttt{1 1 11}；第二次：\texttt{1 2 12}。
-\item \texttt{local}：每次进入函数体，开始新的automatic对象生命周期。
-\item \texttt{count}：具有static storage duration，整个程序执行期间都存在。
-\item \texttt{global}：同样具有static storage duration，值不会在函数返回时重置。
-\end{itemize}
-\medskip\alert{count只能在函数体内用名字访问，但它不会随着函数返回而消失。}
-\end{frame}
-
-\begin{frame}{Scope、storage duration、lifetime}
-\begin{itemize}
-\item \textbf{Scope（作用域）}：源码中，哪些位置能用这个名字？
-\item \textbf{Storage duration（存储期）}：对象的存储存在多长时间？
-\item \textbf{Lifetime（生命周期）}：对象在执行中何时存在、何时可以访问？
-\end{itemize}
-\medskip
-\begin{tabular}{lll}
-\textbf{对象} & \textbf{典型存储期} & \textbf{何时结束}\\[4pt]
-普通块内局部变量 & automatic & 离开对应的块\\
-全局变量／\texttt{static}局部变量 & static & 程序结束\\
-\texttt{malloc}分配的对象 & allocated & 被释放或被成功重新分配
-\end{tabular}
-
-\note{本节限定普通非VLA示例，不引入thread storage duration。指针也是对象，拥有自己的生命周期。}
-\end{frame}
-
-\begin{frame}{Memory layout：常见Linux进程的示意图}
-\begin{columns}[c]
-\begin{column}{0.59\textwidth}
-\centering
-\begin{tikzpicture}[x=1cm,y=1cm,>=Stealth,
-    band/.style={draw=VSPPrimary!65,line width=0.55pt},
-    name/.style={anchor=west,font=\small\ttfamily\bfseries,text=VSPPrimary},
-    desc/.style={anchor=west,font=\small,text=black!80}]
-    % One address space, with a fixed width for every region.
-    \fill[VSPPrimary!7] (0,0) rectangle (6,-0.72);
-    \fill[black!2] (0,-0.72) rectangle (6,-2.22);
-    \fill[VSPPrimary!7] (0,-2.22) rectangle (6,-2.94);
-    \fill[VSPPrimary!3] (0,-2.94) rectangle (6,-4.86);
-    \draw[band] (0,0) rectangle (6,-4.86);
-    \foreach \y in {-0.72,-2.22,-2.94,-3.58,-4.22}
-        \draw[band] (0,\y) -- (6,\y);
-    % Read-only objects and instructions have a neutral background.
-    \fill[white] (0.01,-4.22) rectangle (5.99,-4.85);
-    \draw[band] (0,-4.86) -- (6,-4.86);
-    \node[name] at (0.24,-0.36) {Stack};
-    \node[desc] at (1.85,-0.36) {调用栈、部分局部对象};
-    \node[name] at (0.24,-2.58) {Heap};
-    \node[desc] at (1.85,-2.58) {动态分配区域};
-    \node[name] at (0.24,-3.26) {.bss};
-    \node[desc] at (1.85,-3.26) {零初始化静态对象};
-    \node[name] at (0.24,-3.90) {.data};
-    \node[desc] at (1.85,-3.90) {非零初始化静态对象};
-    \node[name] at (0.24,-4.54) {.rodata};
-    \node[desc] at (1.85,-4.54) {字符串字面量等只读数据};
-    % Code sits in its own equal-width region below the data regions.
-    \fill[white] (0,-4.86) rectangle (6,-5.50);
-    \draw[band] (0,-4.86) rectangle (6,-5.50);
-    \node[name] at (0.24,-5.18) {.text};
-    \node[desc] at (1.85,-5.18) {机器指令};
-    % The gap is not a segment; arrows connect growth to the right region.
-    \draw[->,VSPPrimary,very thick] (0.55,-0.87) -- (0.55,-1.55);
-    \node[anchor=west,font=\scriptsize,text=VSPPrimary] at (0.77,-1.12) {Stack向低地址增长};
-    \draw[->,VSPPrimary,very thick] (5.45,-2.07) -- (5.45,-1.39);
-    \node[anchor=east,font=\scriptsize,text=VSPPrimary] at (5.23,-1.83) {Heap向高地址增长};
-    \node[font=\small,text=black!55,fill=black!2,inner sep=2pt] at (3,-1.47) {空闲空间／其他映射};
-    % Address direction is independent from allocation growth.
-    \draw[->,black!45,line width=0.7pt] (-0.42,-5.35) -- (-0.42,-0.15);
-    \node[anchor=east,font=\scriptsize,text=black!65,align=center] at (-0.52,-0.30) {高\\地址};
-    \node[anchor=east,font=\scriptsize,text=black!65,align=center] at (-0.52,-5.15) {低\\地址};
+\begin{frame}{实参传给形参的是值的副本}
+\begin{center}
+\begin{tikzpicture}[>=Stealth,
+    box/.style={draw=VSPPrimary,fill=VSPPrimary!4,rounded corners=2pt,
+        minimum width=4.6cm,minimum height=1.5cm,align=center,font=\small}]
+    \node[box] (caller) at (0,0) {\texttt{main}中的实参\texttt{n}\\值一直是10};
+    \node[box] (callee) at (7,0) {\texttt{set\_number}中的形参\texttt{x}\\初值10，随后改为42};
+    \draw[->,thick,VSPPrimary] (caller.east) -- node[above,font=\small] {复制值} (callee.west);
 \end{tikzpicture}
-\end{column}
-\begin{column}{0.37\textwidth}
-\textbf{读图时先抓住三件事}
-\medskip
+\end{center}
 \begin{itemize}
-    \item 地址由下向上增大。
-    \item Stack与Heap的箭头表示常见增长方向。
-    \item .bss与.data等是可执行文件的section；这里画的是典型运行时分布。
+    \item 输出\texttt{inside: 42}，随后输出\texttt{outside: 10}。
+    \item \texttt{x}与\texttt{n}是两个不同对象；修改\texttt{x}只改了副本。
+    \item \textbf{生命周期（lifetime）}：形参\texttt{x}属于这次调用，返回后生命周期结束；此时调用者的\texttt{n}仍然活着。
 \end{itemize}
-\medskip
-\small 实际进程还包括共享库和其他映射；动态分配也可能使用独立映射。
-\par\medskip
-\alert{C标准不保证这些区域的排列和增长方向。}
-\end{column}
-\end{columns}
+\medskip\alert{我们需要让函数找到调用者的那个对象，而不只是拿到它当前的值。}
 \end{frame}
 
-\begin{frame}{对象放在哪里？先说规则，再说常见实现}
-\begin{Code}*{c}\lstinputlisting{code/locations.inc}\end{Code}\begin{itemize}
-\item \texttt{g}通常在.data；\texttt{z}、\texttt{count}通常在.bss。
-\item \texttt{local}和指针变量\texttt{p}通常在stack，也可能被优化到寄存器。
-\item \alert{p与*p不是同一个对象。}动态分配的空间通常来自heap。
-\end{itemize}
-
-\note{片段省略stdlib.h与失败处理，只用于标识位置；后续完整示例会检查NULL。}
-\end{frame}
-
-\begin{frame}{.bss与.data：为什么两个程序大小差这么多？}
-\begin{columns}[T]\begin{column}{0.53\textwidth}\begin{Code}*{c}\lstinputlisting{code/bss.c}\end{Code}\begin{Code}*{c}\lstinputlisting{code/data.c}\end{Code}\end{column}\begin{column}{0.43\textwidth}\begin{itemize}
-\item 两组数组在运行时都需要存储。
-\item 第一组默认全为0；第二组前三项非零，其余仍为0。
-\item .bss通常只记录需要多少零初始化空间。
-\item .data需要在文件中保存初始数据。
-\end{itemize}
-\end{column}\end{columns}\medskip\alert{可执行文件小，不代表程序运行时不占内存。}
-\end{frame}
-
-\begin{frame}{现场看一眼：size与objdump}
-在\texttt{r5/}目录执行：\begin{Code}*{bash}\lstinputlisting{code/layout.sh}\end{Code}\begin{itemize}
-\item \texttt{size}：比较text、data、bss所占空间。
-\item \texttt{objdump -t}：观察符号\texttt{array}属于哪个section。
-\item \texttt{int a;}与\texttt{int b = 0;}通常都进入.bss。
-\end{itemize}
-
-\note{工具演示约3分钟，只观察section归属。零初始化不是未初始化；具体文件大小取决于平台与工具链。}
-\end{frame}
-
-\begin{frame}{Stack frame：函数返回后发生了什么？}
-
+\begin{frame}{把地址传进去，函数才能找到原来的对象}
 \begin{columns}[c]
-\begin{column}{0.43\textwidth}
-\begin{tikzpicture}[node distance=0.12cm,every node/.style={draw=VSPPrimary,minimum width=4.6cm,minimum height=0.85cm,align=center}]
-\node (c) {\texttt{function\_c}的frame};
-\node[below=of c] (b) {\texttt{function\_b}的frame};
-\node[below=of b] {\texttt{main}的frame};
-\end{tikzpicture}
-\end{column}
 \begin{column}{0.52\textwidth}
+\begin{Code}*{c}\lstinputlisting{code/by-address.c}\end{Code}
+\end{column}
+\begin{column}{0.44\textwidth}
 \begin{itemize}
-\item 函数调用通常建立stack frame（栈帧）。
-\item 栈帧可能保存局部变量、返回地址与部分参数。
-\item 参数也可能通过寄存器传递。
-\item 函数返回后，普通局部对象生命周期结束。
+    \item \texttt{\&n}：取得\texttt{n}的地址，作为实参。
+    \item \texttt{int *p}：形参\texttt{p}保存这个地址值的副本。
+    \item \texttt{*p = 42}：通过地址修改\texttt{n}，输出42。
 \end{itemize}
+\medskip\alert{C仍然按值传递，这次复制的值是地址。}
 \end{column}
 \end{columns}
-\medskip\alert{内存里的旧字节暂时没被覆盖，也不代表原来的对象还活着。}
-
+\medskip 若只需要返回一个结果，也可以\texttt{return}后由调用者赋值；这里演示直接修改调用者指定的对象。
 \end{frame}
 
-\begin{frame}{这段代码为什么不能返回局部变量的地址？}
-\begin{Code}*{c}\lstinputlisting{code/return-local.inc}\end{Code}\begin{itemize}
-\item 函数返回后，\texttt{x}的生命周期已经结束。
-\item 调用者不能通过返回值继续访问\texttt{x}。
-\item 若只需要数值，直接返回\texttt{int}；若需要长期存在的对象，重新设计存储与所有权。
+\begin{frame}{指针变量和它指向的对象，各有生命周期}
+\begin{center}
+\begin{tikzpicture}[>=Stealth,
+    box/.style={draw=VSPPrimary,minimum width=4.1cm,minimum height=1.2cm,align=center,font=\small}]
+    \node[box,fill=VSPPrimary!4] (p) at (0,0) {形参\texttt{p}\\保存\texttt{n}的地址};
+    \node[box,fill=VSPPrimary!4] (n) at (7,0) {调用者的\texttt{n}\\值变为42};
+    \draw[->,very thick,VSPPrimary] (p.east) -- node[above,font=\small] {指向} (n.west);
+\end{tikzpicture}
+\end{center}
+\begin{itemize}
+    \item \texttt{set\_number}返回：形参\texttt{p}结束生命周期，\texttt{n}继续存在。
+    \item 反过来也可能发生：指针变量还在，所指对象已经结束生命周期。
+    \item \alert{能否通过指针访问对象，取决于所指对象此时是否仍然有效。}
 \end{itemize}
-\medskip\alert{不能根据某一次运行“恰好输出42”判断代码正确。}
+\medskip 接下来：如果把\textbf{函数内部局部变量的地址}带出去，会怎样？
+\end{frame}
+
+\begin{frame}{常见Dangling pointer：返回局部变量的地址}
+\begin{Code}*{c}\lstinputlisting{code/dangling-write.inc}\end{Code}
+\begin{itemize}
+    \item \texttt{remember}返回后，\texttt{old}的生命周期结束，返回的地址悬空。
+    \item 再通过该指针读取或写入，就是\textbf{undefined behavior（UB）}。
+    \item \texttt{fresh}有没有被改、程序是否崩溃，都不能据此预测。
+\end{itemize}
+\note{错误片段仅用于阅读分析，不运行或假定固定输出。所指对象生命周期结束后，指针值变为不确定值；C标准不保证悬空指针还能稳定保存或使用那个旧地址。}
+\end{frame}
+
+\begin{frame}{为什么新变量可能“无辜被改”？}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\centering\textbf{第一次调用：对象仍然活着}
+\medskip
+\begin{tikzpicture}[>=Stealth,font=\small]
+    \node[draw=VSPPrimary,minimum width=4.6cm,minimum height=1.2cm,
+        fill=VSPPrimary!5,align=center] (slot) at (0,0) {某块栈空间\\\texttt{old = 10}};
+    \node[align=center] (addr) at (0,-1.6) {取得\texttt{\&old}};
+    \draw[->,thick,VSPPrimary] (addr) -- (slot);
+\end{tikzpicture}
+\end{column}
+\begin{column}{0.48\textwidth}
+\centering\textbf{后续调用：同一空间可能被复用}
+\medskip
+\begin{tikzpicture}[>=Stealth,font=\small]
+    \node[draw=VSPPrimary,minimum width=4.6cm,minimum height=1.2cm,
+        fill=VSPPrimary!12,align=center] (slot) at (0,0) {原来的\texttt{old}已经不存在\\新对象\texttt{fresh = 20}};
+    \node[align=center,text=VSPPrimary] (addr) at (0,-1.6) {通过悬空指针写\texttt{99}（UB）};
+    \draw[->,thick,dashed,VSPPrimary] (addr) -- (slot);
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\medskip
+\begin{itemize}
+    \item 常见栈实现会复用空间，错误写入\textbf{可能破坏后来创建的对象}。
+    \item \alert{复用同一个地址，不会让悬空指针重新变得有效。}
+    \item 这是可能的故障过程，不保证地址复用，也不保证\texttt{fresh}最终为99。
+\end{itemize}
+\medskip\textbf{如果需要让对象在函数返回后继续存在，就要选择合适的存储期。下面看动态分配。}
 \end{frame}
