@@ -81,18 +81,17 @@ every node/.style={draw=VSPPrimary,minimum height=0.8cm,inner sep=7pt}]
 \end{tikzpicture}
 \end{center}
 \alert{释放head指向的节点，不会自动释放next指向的节点。}
-\par\medskip 如果还没学过\texttt{struct}：这里把它看作“一个整数和一个指针打包成的节点”。
 
 \end{frame}
 
 \begin{frame}{头插：分配成功后再接入链表}
 \begin{Code}*{c}\lstinputlisting{code/list-insert.inc}\end{Code}\begin{itemize}
-\item \texttt{node->data}等价于\texttt{(*node).data}。
+\item 先让\texttt{node->next}指向旧表头，再更新调用者的\texttt{head}。
 \item 函数要修改调用者的\texttt{head}，所以传入\texttt{\&head}，形参是二级指针。
 \item 分配失败时返回0，旧链表仍有效，由调用者清理。
 \end{itemize}
 
-\note{选读案例，与后面的值传递练习呼应；struct与二级指针未学时可仅讲图示和释放顺序。}
+\note{同学已学过struct，本例聚焦二级指针如何更新调用者的head，以及节点分配失败与释放责任。与后面的值传递练习呼应。}
 \end{frame}
 
 \begin{frame}{释放链表：先保存next，再free当前节点}
