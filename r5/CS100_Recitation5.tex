@@ -34,6 +34,16 @@
 \input{Section02.tex}
 \input{Section03.tex}
 \input{Section04.tex}
-\input{Section05.tex}
+\begin{frame}{带走这四个问题}
+\begin{itemize}
+\item \textbf{在哪里？}区分指针变量与所指对象；布局是实现模型。
+\item \textbf{活多久？}区分scope、automatic/static/allocated存储期。
+\item \textbf{能访问吗？}检查初始化、边界、NULL与生命周期。
+\item \textbf{谁释放？}每次分配都有明确责任；失败路径也要清理。
+\end{itemize}
+\medskip\alert{地址还在，不代表对象还在；函数返回，也不代表动态对象被释放。}
+\end{frame}
 \VSPendframe{}
+\appendix
+\input{Section05.tex}
 \end{document}
