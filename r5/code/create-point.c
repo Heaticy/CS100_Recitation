@@ -3,7 +3,7 @@
 struct Point { int x; int y; };
 struct Point *create_point(int x, int y) {
     struct Point *point;
-    point = malloc(sizeof *point);
+    point = malloc(sizeof(struct Point));
     if (point == NULL) return NULL;
     point->x = x;
     point->y = y;
