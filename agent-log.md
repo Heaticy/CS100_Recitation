@@ -289,3 +289,8 @@
 
 - 根据用户要求移除danglingpointer示例中的later函数，改为直接在main调用create_point、创建fresh结构体并通过悬空指针写入成员；同步图示标题与README。
 - PDF重编译与页数、示例文本检查通过，共61页，无Overfull或缺字诊断；错误示例仍仅作阅读分析。
+
+## 2026.10.25 22:40
+
+- 按用户最终拼写将悬空指针示例与图示中的fresh统一改为new_point。
+- 重编译PDF并核对两页变量名，61页，无Overfull或缺字诊断。
