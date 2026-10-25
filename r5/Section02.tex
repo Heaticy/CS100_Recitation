@@ -198,14 +198,3 @@
 \alert{失败：原块仍有效，清理后退出。成功：更新指针，初始化新增元素。}
 \note{固定大小不会溢出。提醒同学：不要在成功后比较旧p或沿用旧块内部指针；这版例子没有建立别名。}
 \end{frame}
-
-\begin{frame}{选读：分配器大概在做什么？}
-\begin{itemize}
-\item \texttt{malloc}常维护空闲块信息，寻找合适空间，必要时拆分空闲块。
-\item 没有合适空间时，可能向操作系统申请更多内存。
-\item \texttt{free}可能把块放回分配器、合并相邻空闲块，供后续申请复用。
-\item \texttt{realloc}可能在原处调整，也可能申请新块、复制数据再释放旧块。
-\end{itemize}
-\medskip\alert{这是帮助理解的实现思路，不是C标准规定的算法。}\par\medskip 频繁申请与释放可能带来fragmentation（碎片）；\texttt{free}也不保证进程占用立刻下降。
-\note{补充页，按课堂时间决定是否展开，不实现malloc/calloc，不讲体系结构细节。}
-\end{frame}
