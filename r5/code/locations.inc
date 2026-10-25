@@ -1,9 +1,8 @@
-int g = 7;
-int z;
-void f(void) {
-    static int count;
-    int local = 1;
-    int *p = malloc(sizeof *p);
-    /* ... */
-    free(p);
+int global_uninit;
+int global_init = 7;
+static int static_global = 8;
+void demo(void) {
+    static int static_local = 9;
+    static int static_zero;
+    const char *p = "hello";
 }

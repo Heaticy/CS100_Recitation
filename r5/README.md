@@ -78,7 +78,7 @@ bash code/layout.sh
 
 原材料为用户提供的《Discussion 3 memory.pdf》，标题为《Memory Management in C — Computer Architecture Discussion》，日期为2026年3月20日。按CS100习题课的语言与版式重新组织，不直接嵌入原稿页面。
 
-- 区分C语言的存储期／生命周期规则和常见Linux／ELF实现，补充.rodata与布局限制。
+- 区分C语言的存储期／生命周期规则和常见Linux／ELF实现，布局图将.bss与.data标为Static区，保留.rodata与布局限制；紧接代码对照未初始化／非零初始化全局变量、静态局部／全局变量、零初始化static对象、字符串字面量及局部指针的常见位置。
 - 明确零初始化对象可进入.bss，.bss在运行时仍占存储。
 - 补齐分配失败、字节数乘法溢出、realloc失败保留原块、成功后旧别名失效等条件。
 - 不按stack／heap／global给越界错误作固定严重程度排名。
