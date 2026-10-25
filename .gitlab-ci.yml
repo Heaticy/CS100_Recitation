@@ -19,6 +19,7 @@ build:
     - make -j -C r1
     - make -j -C r3
     - make -j -C r4
+    - make -j -C r5
 
 # 打tag时发release，PDF作为可下载产物
 release:
@@ -33,12 +34,14 @@ release:
     - make -j -C r1
     - make -j -C r3
     - make -j -C r4
+    - make -j -C r5
     - mkdir -p dist
     - cp intro/build/CS100_Intro.pdf dist/CS100_Intro.pdf
     - cp r0/build/CS100_Recitation0.pdf dist/CS100_Recitation0.pdf
     - cp r1/build/CS100_Recitation1.pdf dist/CS100_Recitation1.pdf
     - cp r3/build/CS100_Recitation3.pdf dist/CS100_Recitation3.pdf
     - cp r4/build/CS100_Recitation4.pdf dist/CS100_Recitation4.pdf
+    - cp r5/build/CS100_Recitation5.pdf dist/CS100_Recitation5.pdf
   artifacts:
     name: "CS100_Recitations-$CI_COMMIT_TAG"
     paths:
@@ -60,3 +63,5 @@ release:
           url: '${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/raw/dist/CS100_Recitation3.pdf?inline=false'
         - name: 'CS100_Recitation4.pdf'
           url: '${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/raw/dist/CS100_Recitation4.pdf?inline=false'
+        - name: 'CS100_Recitation5.pdf'
+          url: '${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/raw/dist/CS100_Recitation5.pdf?inline=false'
