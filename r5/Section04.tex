@@ -57,8 +57,13 @@ obj/.style={draw=VSPPrimary,minimum width=3.7cm,minimum height=1.6cm,align=cente
 \medskip C不会替我们强制检查这些约定，\alert{需要用接口、注释和控制流程表达清楚}。
 \end{frame}
 
-\begin{frame}{函数可以返回动态分配的对象}
-\begin{Code}*{c}\lstinputlisting{code/owned.c}\end{Code}函数内的指针变量结束了，但动态分配的对象仍然存在，由调用者释放。
+\begin{frame}{回看create\_point：谁接过了释放责任？}
+\begin{Code}*{c}\lstinputlisting[firstline=12,lastline=22,firstnumber=12]{code/create-point.c}\end{Code}
+\begin{itemize}
+    \item \texttt{create\_point}把动态对象交给调用者；返回\texttt{NULL}表示创建失败。
+    \item \texttt{main}持有返回的指针，使用结束后负责\texttt{free(p)}。
+    \item 局部结构体\texttt{new\_point}自动结束生命周期，不需要也不能\texttt{free(\&new\_point)}。
+\end{itemize}
 \end{frame}
 
 \begin{frame}{链表：每个节点都是一次独立分配}

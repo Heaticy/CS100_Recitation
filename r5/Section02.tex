@@ -3,7 +3,7 @@
 \begin{frame}{为什么需要Dynamic allocation？}
 \begin{itemize}
 \item 输入告诉你有多少个元素，编译时还不知道。
-\item 对象需要跨越一次函数调用继续存在。
+\item 刚才的\texttt{create\_point}：我们希望创建出的结构体在函数返回后继续存在。
 \item 数组需要扩容，或者需要逐个建立链表节点。
 \end{itemize}
 \medskip
@@ -15,6 +15,49 @@
 \end{tabular}
 \medskip\par\alert{选择依据是大小和生命周期需求，不是“heap一定比stack好”。}
 
+\end{frame}
+
+\begin{frame}{先认识Stack与Heap：一层层调用，与一块块申请}
+\begin{columns}[T]
+\begin{column}{0.46\textwidth}
+\centering\textbf{Stack（栈）：一层层栈帧}
+\medskip
+\begin{tikzpicture}[>=Stealth,font=\small]
+    \draw[draw=VSPPrimary,line width=0.8pt] (0,0) rectangle (4.8,2.9);
+    \fill[VSPPrimary!7] (0.01,0.01) rectangle (4.79,2.1);
+    \draw[VSPPrimary] (0,0.7)--(4.8,0.7) (0,1.4)--(4.8,1.4) (0,2.1)--(4.8,2.1);
+    \node at (2.4,0.35) {\texttt{main}的栈帧};
+    \node at (2.4,1.05) {\texttt{create\_point}的栈帧};
+    \node at (2.4,1.75) {更深一层函数调用};
+    \node[text=black!50] at (2.4,2.5) {剩余栈空间（有限）};
+\end{tikzpicture}
+\begin{itemize}
+    \item 调用进入一层，返回退出一层。
+    \item 局部对象通常随作用域自动管理。
+\end{itemize}
+\end{column}
+\begin{column}{0.50\textwidth}
+\centering\textbf{Heap（堆）：相对较大的分配空间}
+\medskip
+\begin{tikzpicture}[font=\scriptsize]
+    \filldraw[fill=black!2,draw=VSPPrimary,line width=0.8pt] (0,0) rectangle (5.4,2.9);
+    \filldraw[fill=VSPPrimary!12,draw=VSPPrimary] (0.25,1.9) rectangle (2.25,2.6);
+    \node at (1.25,2.25) {已分配A};
+    \filldraw[fill=VSPPrimary!12,draw=VSPPrimary] (3.1,0.3) rectangle (5.1,1.05);
+    \node at (4.1,0.675) {已分配B};
+    \filldraw[fill=VSPPrimary!12,draw=VSPPrimary] (0.25,0.3) rectangle (1.9,1.05);
+    \node at (1.075,0.675) {已分配C};
+    \node[text=black!55] at (3.75,2.25) {空闲};
+    \node[text=black!55] at (2.7,1.45) {空闲};
+\end{tikzpicture}
+\begin{itemize}
+    \item 可以想成“比较散的一块空间”，有空闲块，也有已分配块。
+    \item 要用就\texttt{malloc}申请，不用了\texttt{free}；释放不必按调用顺序。
+\end{itemize}
+\end{column}
+\end{columns}
+\medskip\small\alert{Stack按调用层次组织；Heap按需申请，使用完毕后释放。}
+\note{这是常见实现的概念图，不是数据结构课的堆，也不是按比例的地址空间图。一个malloc成功返回的块内部连续；不同分配块可以分散，不保证heap总比stack大或拥有无限容量。完整memory区域在后面介绍。}
 \end{frame}
 
 \begin{frame}{运行时才知道n，直接写int a[n]可以吗？}
@@ -65,8 +108,38 @@
 
 \end{frame}
 
-\begin{frame}{malloc：空间申请到了，不代表已经有初值}
-\begin{Code}*{c}\lstinputlisting{code/malloc.c}\end{Code}\alert{检查NULL之后再访问；读取之前先写入有效值。}
+\begin{frame}{create\_point续集：让对象活到函数返回之后}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{创建对象：申请、检查、初始化}
+\begin{Code}*{c}\lstinputlisting[firstline=1,lastline=11]{code/create-point.c}\end{Code}
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{调用者：使用完毕后释放}
+\begin{Code}*{c}\lstinputlisting[firstline=12,lastline=22,firstnumber=12]{code/create-point.c}\end{Code}
+\end{column}
+\end{columns}
+\medskip
+\alert{这次返回的是动态分配对象的地址，main可以继续使用它。}
+\par\small 输出两行：\texttt{99 15}、\texttt{20 30}。\texttt{new\_point}是另一个对象，不会被这次有效写入修改。
+\note{与前面的错误版使用相同函数名、参数和调用流程。C没有内建构造函数，这里是承担创建与初始化职责的普通C函数。malloc不会自动初始化成员，要在返回前显式赋值；分配失败则返回NULL。}
+\end{frame}
+
+\begin{frame}{同一个故事：改了什么，生命周期为什么不同？}
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\small,
+    box/.style={draw=VSPPrimary,rounded corners=2pt,minimum width=4.5cm,minimum height=1.15cm,align=center}]
+    \node[box,fill=VSPPrimary!4] (p) at (0,0) {\texttt{main}中的指针\texttt{p}\\保存返回的地址};
+    \node[box,fill=VSPPrimary!10] (obj) at (7,0) {Heap中的\texttt{struct Point}\\函数返回后仍然存在};
+    \draw[->,very thick,VSPPrimary] (p.east) -- node[above,font=\small] {指向} (obj.west);
+    \node[box,dashed,draw=black!40,text=black!55,minimum height=0.8cm] at (0,-1.55) {\texttt{create\_point}的局部指针\texttt{point}\\函数返回后已经结束生命周期};
+\end{tikzpicture}
+\end{center}
+\begin{itemize}
+    \item 错误版：结构体本身是局部对象，返回时就不存在了。
+    \item malloc版：局部的是\textbf{指针变量}；动态分配的\textbf{结构体对象}继续存在。
+    \item 新责任：调用者必须检查\texttt{NULL}，并在不再使用时\texttt{free(p)}。
+\end{itemize}
 \end{frame}
 
 \begin{frame}{sizeof *p：申请的是对象的大小}
