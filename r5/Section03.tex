@@ -72,6 +72,13 @@
     \draw[band] (0,-4.86) rectangle (6,-5.50);
     \node[name] at (0.24,-5.18) {.text};
     \node[desc] at (1.85,-5.18) {机器指令};
+    % RAM/ROM are teaching analogies for writable objects vs read-only content.
+    \draw[VSPPrimary,line width=1pt] (6.68,0) -- (6.84,0)
+        -- (6.84,-4.22) -- (6.68,-4.22);
+    \node[rotate=90,font=\scriptsize\bfseries,text=VSPPrimary] at (7.08,-2.11) {RAM（类比）};
+    \draw[black!65,line width=1pt] (6.68,-4.22) -- (6.84,-4.22)
+        -- (6.84,-5.50) -- (6.68,-5.50);
+    \node[rotate=90,font=\scriptsize\bfseries,text=black!65] at (7.08,-4.86) {ROM（类比）};
     % The gap is not a segment; arrows connect growth to the right region.
     \draw[->,VSPPrimary,very thick] (0.55,-0.87) -- (0.55,-1.55);
     \node[anchor=west,font=\scriptsize,text=VSPPrimary] at (0.77,-1.12) {Stack向低地址增长};
@@ -85,20 +92,20 @@
 \end{tikzpicture}
 \end{column}
 \begin{column}{0.37\textwidth}
-\textbf{Stack、Heap与Static}
+\textbf{再按读写用途分组}
 \medskip
 \begin{itemize}
-    \item 地址由下向上增大。
-    \item Stack与Heap的箭头表示常见增长方向。
-    \item \textbf{Static区}：此处将.bss与.data归为一组，通常存放全局变量与\texttt{static}局部变量。
+    \item \textbf{RAM类比}：Stack、Heap及Static区中的可写对象。
+    \item \textbf{ROM类比}：.rodata的只读数据与.text的机器指令。
+    \item \textbf{Static区}：将.bss与.data归组，对象存储期贯穿程序。
 \end{itemize}
 \medskip
-\small Static区中的对象具有static存储期，贯穿整个程序执行。\par\medskip 实际进程还包括共享库和其他映射。
+\small\alert{Linux中.text／.rodata通常也驻留在物理RAM中；图中ROM仅类比只读属性。}
 \par\medskip
-\alert{C标准不保证这些区域的排列和增长方向。}
+\small 地址由下向上增大；箭头表示常见增长方向。C标准不保证这些排列与方向。
 \end{column}
 \end{columns}
-\note{Static是这里为教学使用的分组标签，不是另一个ELF section；.bss与.data分别保留。具有static存储期的只读对象也可能放在.rodata，故不把此分组说成所有static对象唯一所在的区域。}
+\note{RAM与ROM在本图中仅作按访问属性的教学类比，并非物理内存或硬件地址区间。实际Linux的.text通常可读可执行、.rodata通常只读，二者均可驻留物理RAM，权限由映射控制。空闲空间与其他映射不据此统一规定读写权限。Static是这里为教学使用的分组标签，不是另一个ELF section；.bss与.data分别保留。具有static存储期的只读对象也可能放在.rodata，故不把此分组说成所有static对象唯一所在的区域。}
 \end{frame}
 
 \begin{frame}{这些对象都在哪？没写初值时会怎样？}
