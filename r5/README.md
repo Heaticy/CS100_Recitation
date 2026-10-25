@@ -80,7 +80,7 @@ bash code/layout.sh
 
 原材料为用户提供的《Discussion 3 memory.pdf》，标题为《Memory Management in C — Computer Architecture Discussion》，日期为2026年3月20日。按CS100习题课的语言与版式重新组织，不直接嵌入原稿页面。
 
-- 区分C语言的存储期／生命周期规则和常见Linux／ELF实现，布局图将.bss与.data标为Static区，并按读写用途增加RAM／ROM教学类比分组；明确Linux中的.text与.rodata通常也驻留物理RAM，ROM标签仅类比只读属性，保留布局限制；紧接代码对照未初始化／非零初始化全局变量、静态局部／全局变量、零初始化static对象、字符串字面量及局部指针的常见位置；同页列初始值，明确未显式初始化的全局／static对象零初始化，而普通automatic局部变量不会自动置零，应先赋值再读。
+- 区分C语言规则与具体存储实现，以典型程序存储布局说明RAM／ROM／Flash，.bss与.data标为Static区；结合嵌入式系统说明.data初值可存Flash、启动时复制到RAM，.bss启动时清零，具体地址与介质由平台决定；紧接代码对照未初始化／非零初始化全局变量、静态局部／全局变量、零初始化static对象、字符串字面量及局部指针的常见位置；同页列初始值，明确未显式初始化的全局／static对象零初始化，而普通automatic局部变量不会自动置零，应先赋值再读。
 - 明确零初始化对象可进入.bss，.bss在运行时仍占存储。
 - 补齐分配失败、字节数乘法溢出、realloc失败保留原块、成功后旧别名失效等条件。
 - 不按stack／heap／global给越界错误作固定严重程度排名。

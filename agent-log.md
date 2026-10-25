@@ -346,3 +346,9 @@
 - 按用户要求在Memorylayout图Static分组之外增加RAM／ROM分组括号，分别类比可写对象与只读数据／指令。
 - 图内明确这不是Linux物理硬件的RAM／ROM划分：.text与.rodata通常也驻留物理RAM，ROM标签仅类比只读访问属性。
 - PDF仍为62页，重编译、图示目视检查及分组标签检查通过，无Overfull或缺字诊断。
+
+## 2026.10.26 00:33
+
+- 根据用户要求，Memorylayout改为典型程序存储布局，去掉Linux专门对照及RAM／ROM类比标签，直接以RAM可写数据和ROM／Flash代码／只读数据讲解。
+- 补充嵌入式启动过程：.data初值可存Flash、启动时复制到RAM，.bss启动时清零；保留具体介质与地址由平台决定的说明。
+- 62页PDF重编译、修改页目视与文本检查通过，无Overfull或缺字诊断。
