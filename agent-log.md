@@ -377,3 +377,10 @@
 - 用户要求将R5课件放到课程网站。核对线上目录当前仅有R0至R4，最新稳定Release为v0.3.6；按既有规范准备新Release和R5稳定资源卡片。
 - 将当前最终版Section02／03／04纳入发布，保留构造函数主线与新版图示，PDF共49页编号正文、56个物理页；课堂P1—P41、课后练习P42—P56，与视频使用的PDF逐页文本一致。
 - 更新README页数和索引；本地PDF编译及17份完整C17示例检查通过。网站草稿仅新增R5单元，其他课程和既有资源保持原数据，视频仍为计划占位。
+
+## 2026.10.26 17:30
+
+- R5正式发布为v0.3.7，GitLabpipeline672的build／release均成功，课件资产来自job1614；按Release原始字节首次初始化稳定路径CS100_Recitation5.pdf，不覆盖已有文件。
+- 网站仅新增R5内存管理卡片、主讲李超凡、2026年秋季信息、PDF按钮和计划视频占位；草稿构建与预览检查通过，经合并请求37发布，线上SHA为c0ad2c76e3eeaed6a8fbff1e8bc5512f6249f230，main构建job1616成功。
+- 触发现有课件同步服务，状态ok=true、tag=v0.3.7，六份托管PDF包含R5。公网PDF返回200、解析为56页，SHA-256为865fc780423a976f18046b1c1ed2a61625cf5d0b6e309fe11b729113710f19a8，与Release资产完全一致。
+- 课程页为https://vsplab.cn/courses/cs100/，R5稳定地址为https://vsplab.cn/resources/cs100/recitations/fall2026/CS100_Recitation5.pdf；视频未在本轮发布。
