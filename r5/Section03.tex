@@ -15,20 +15,28 @@
 \medskip\alert{count只能在函数体内用名字访问，但它不会随着函数返回而消失。}
 \end{frame}
 
-\begin{frame}{Scope、storage duration、lifetime}
+\begin{frame}{Scope（作用域）与Lifetime（生命周期）}
 \begin{itemize}
 \item \textbf{Scope（作用域）}：源码中，哪些位置能用这个名字？
-\item \textbf{Storage duration（存储期）}：对象的存储存在多长时间？
-\item \textbf{Lifetime（生命周期）}：对象在执行中何时存在、何时可以访问？
+\item \textbf{Lifetime（生命周期）}：对象在程序运行期间何时存在、何时可以访问？
 \end{itemize}
 \medskip
-\begin{tabular}{lll}
-\textbf{对象} & \textbf{典型存储期} & \textbf{何时结束}\\[4pt]
-普通块内局部变量 & automatic & 离开对应的块\\
-全局变量／\texttt{static}局部变量 & static & 程序结束\\
-\texttt{malloc}分配的对象 & allocated & 被释放或被成功重新分配
-\end{tabular}
-
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\scriptsize,y=0.72cm]
+    \draw[->,thick,black!60] (1.8,0) -- (10.5,0) node[right] {程序运行时间};
+    \node[anchor=east,font=\footnotesize\bfseries] at (1.6,2.7) {\texttt{static}／全局};
+    \filldraw[fill=VSPPrimary!15,draw=VSPPrimary] (2.0,2.45) rectangle (10.0,2.95);
+    \node at (6.0,2.7) {贯穿整个程序运行期（程序结束才销毁）};
+    \node[anchor=east,font=\footnotesize\bfseries] at (1.6,1.65) {\texttt{malloc}对象};
+    \filldraw[fill=VSPPrimary!10,draw=VSPPrimary] (3.2,1.4) rectangle (8.4,1.9);
+    \node at (5.8,1.65) {\texttt{malloc}创建 $\longrightarrow$ 跨函数存活 $\longrightarrow$ \texttt{free}释放};
+    \node[anchor=east,font=\footnotesize\bfseries] at (1.6,0.6) {普通局部变量};
+    \filldraw[fill=VSPPrimary!6,draw=VSPPrimary] (2.5,0.35) rectangle (4.7,0.85);
+    \node at (3.6,0.6) {第1次调用};
+    \filldraw[fill=VSPPrimary!6,draw=VSPPrimary] (6.1,0.35) rectangle (8.3,0.85);
+    \node at (7.2,0.6) {第2次调用};
+\end{tikzpicture}
+\end{center}
 \note{本节限定普通非VLA示例，不引入thread storage duration。指针也是对象，拥有自己的生命周期。}
 \end{frame}
 
@@ -137,26 +145,6 @@
     \item \alert{p保存地址，"hello"是所指数据；字符串字面量不能修改。}
 \end{itemize}
 \note{这里的“默认初始化行为”是在C17语境中解释未显式初始化时会发生什么，不套用C++的default-initialization分类。普通automatic局部对象未初始化时具有不确定值，不以“随机数”或“垃圾值”描述，更不能读取后猜测结果。位置是常见实现，对象可能被优化；字符串字面量具有static存储期。}
-\end{frame}
-
-\begin{frame}{.bss与.data：为什么两个程序大小差这么多？}
-\begin{columns}[T]\begin{column}{0.53\textwidth}\begin{Code}*{c}\lstinputlisting{code/bss.c}\end{Code}\begin{Code}*{c}\lstinputlisting{code/data.c}\end{Code}\end{column}\begin{column}{0.43\textwidth}\begin{itemize}
-\item 两组数组在运行时都需要存储。
-\item 第一组默认全为0；第二组前三项非零，其余仍为0。
-\item .bss通常只记录需要多少零初始化空间。
-\item .data需要在文件中保存初始数据。
-\end{itemize}
-\end{column}\end{columns}\medskip\alert{可执行文件小，不代表程序运行时不占内存。}
-\end{frame}
-
-\begin{frame}{现场看一眼：size与objdump}
-在\texttt{r5/}目录执行：\begin{Code}*{bash}\lstinputlisting{code/layout.sh}\end{Code}\begin{itemize}
-\item \texttt{size}：比较text、data、bss所占空间。
-\item \texttt{objdump -t}：观察符号\texttt{array}属于哪个section。
-\item \texttt{int a;}与\texttt{int b = 0;}通常都进入.bss。
-\end{itemize}
-
-\note{工具演示约3分钟，只观察section归属。零初始化不是未初始化；具体文件大小取决于平台与工具链。}
 \end{frame}
 
 \begin{frame}{Stack frame：函数返回后发生了什么？}

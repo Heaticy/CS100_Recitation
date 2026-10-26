@@ -1,68 +1,108 @@
 \section{谁负责free：指针、别名与所有权}
 
 \begin{frame}{free：释放的是分配，不是指针变量}
-\begin{Code}*{c}\lstinputlisting{code/free.inc}\end{Code}\begin{itemize}
-\item \texttt{free}结束该块的分配，后续不能再通过旧指针访问它。
-\item \texttt{p}变量本身仍然存在；\texttt{free}不会自动把它改为\texttt{NULL}。
-\item \texttt{free(NULL)}无操作；把\texttt{p}设为空有助于表达“当前不再持有对象”。
+\begin{columns}[c]
+\begin{column}{0.46\textwidth}
+\begin{Code}*{c}\lstinputlisting{code/free.inc}\end{Code}
+\end{column}
+\begin{column}{0.50\textwidth}
+\centering
+\begin{tikzpicture}[>=Stealth,font=\scriptsize]
+    \node[font=\bfseries,text=black!70] at (0,1.15) {1. \texttt{free(p);} 之后};
+    \node[draw=VSPPrimary,fill=VSPPrimary!6,minimum width=1.5cm,minimum height=0.65cm] (p1) at (-1.3,0.45) {\texttt{p}（旧地址）};
+    \node[draw=black!45,dashed,fill=black!5,minimum width=2.2cm,minimum height=0.65cm,text=black!55] (b1) at (1.5,0.45) {已归还Heap（禁访）};
+    \draw[->,dashed,VSPPrimary,thick] (p1.east) -- node[above,font=\tiny,text=VSPPrimary] {悬空!} (b1.west);
+    \node[font=\bfseries,text=black!70] at (0,-0.35) {2. \texttt{p = NULL;} 之后};
+    \node[draw=VSPPrimary,fill=VSPPrimary!6,minimum width=1.5cm,minimum height=0.65cm] (p2) at (-1.3,-1.05) {\texttt{p = NULL}};
+    \node[draw=black!40,minimum width=1.2cm,minimum height=0.55cm,text=black!60] (n2) at (1.2,-1.05) {\texttt{NULL}};
+    \draw[->,thick,black!55] (p2.east) -- (n2.west);
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\medskip
+\begin{itemize}
+\item \texttt{free}结束该块的分配，但\textbf{不会自动把\texttt{p}改为\texttt{NULL}}。
+\item \texttt{free(NULL)}安全无操作；主动置\texttt{p = NULL}可避免误用悬空指针。
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}{哪几种地址能传给free？}
-\begin{Code}*{c}\lstinputlisting{code/invalid-free.inc}\end{Code}\alert{只能传NULL，或与仍有效的动态分配返回值匹配的指针。}\par\medskip 局部对象、全局对象、块内部地址和已释放的地址都不符合要求。
-\end{frame}
-
-\begin{frame}{p = NULL之后，q就安全了吗？}
-\begin{Code}*{c}\lstinputlisting{code/alias.inc}\end{Code}\alert{q也指向同一个对象，p设为空不会自动更新q。}\par\medskip 释放后，所有旧别名都失去访问该对象的资格。
-\end{frame}
-
-\begin{frame}{画图：两个指针，只有一块分配}
-
-\begin{center}
-\begin{tikzpicture}[>=Stealth,node distance=1cm,
-ptr/.style={draw=VSPPrimary,minimum width=1.7cm,minimum height=0.8cm},
-obj/.style={draw=VSPPrimary,minimum width=3.7cm,minimum height=1.6cm,align=center}]
-\node[ptr] (p) {\texttt{p}};
-\node[ptr,below=of p] (q) {\texttt{q}};
-\node[obj,right=2.4cm of p,yshift=-0.9cm] (x) {同一块动态分配\\\texttt{int: 42}};
-\draw[->,thick] (p.east) -- (x.north west);
-\draw[->,thick] (q.east) -- (x.south west);
+\begin{columns}[c]
+\begin{column}{0.48\textwidth}
+\begin{Code}*{c}\lstinputlisting{code/invalid-free.inc}\end{Code}
+\end{column}
+\begin{column}{0.48\textwidth}
+\centering
+\begin{tikzpicture}[>=Stealth,font=\scriptsize]
+    \node[font=\bfseries,text=black!75] at (1.65,1.25) {整租一套房，退房必须交整套房钥匙};
+    \filldraw[fill=VSPPrimary!12,draw=VSPPrimary] (0,0) rectangle (1.1,0.65);
+    \node at (0.55,0.325) {\texttt{p[0]}};
+    \filldraw[fill=VSPPrimary!12,draw=VSPPrimary] (1.1,0) rectangle (2.2,0.65);
+    \node at (1.65,0.325) {\texttt{p[1]}};
+    \filldraw[fill=VSPPrimary!12,draw=VSPPrimary] (2.2,0) rectangle (3.3,0.65);
+    \node at (2.75,0.325) {\texttt{p[2]}};
+    \node[draw=VSPPrimary,fill=white,inner sep=2pt] (p0) at (0.55,-0.75) {\checkmark\ \texttt{free(p)}（块首地址）};
+    \draw[->,thick,VSPPrimary] (p0.north) -- (0.55,0);
+    \node[draw=black!50,dashed,fill=black!4,inner sep=2pt,text=VSPPrimary] (p1) at (2.35,-1.55) {$\times$\ \texttt{free(p + 1)}（内部地址）};
+    \draw[->,thick,dashed,VSPPrimary] (p1.north) -- (1.65,0);
 \end{tikzpicture}
-\end{center}
-\begin{itemize}
-\item \texttt{int *q = p;}复制地址值，没有复制对象。
-\item \texttt{free(p)}之后，右边的对象生命周期结束。
+\end{column}
+\end{columns}
+\medskip
+\alert{只能传NULL，或与仍有效的动态分配返回值完全匹配的块首指针。}\par\smallskip\small 局部变量（Stack）、全局变量（Static）、块内部偏移地址（\texttt{p + 1}）和已释放的地址都不能传给\texttt{free}。
+\end{frame}
+
+\begin{frame}{两个指针指向同一块分配：p = NULL后，q安全吗？}
+\begin{columns}[c]
+\begin{column}{0.46\textwidth}
+\begin{Code}*{c}\lstinputlisting{code/alias.inc}\end{Code}
+\end{column}
+\begin{column}{0.50\textwidth}
+\centering
+\begin{tikzpicture}[>=Stealth,font=\scriptsize]
+    \node[draw=VSPPrimary,fill=VSPPrimary!6,minimum width=1.5cm,minimum height=0.65cm] (p) at (0,0.65) {\texttt{p = NULL}};
+    \node[draw=VSPPrimary,fill=VSPPrimary!6,minimum width=1.5cm,minimum height=0.65cm] (q) at (0,-0.65) {\texttt{q}（旧地址）};
+    \node[draw=black!45,dashed,fill=black!5,minimum width=2.4cm,minimum height=1.35cm,align=center,text=black!55] (x) at (3.6,0) {同一块动态分配\\（已被\texttt{free(p)}释放）};
+    \draw[->,thick,dashed,VSPPrimary] (q.east) -- node[below=2pt,font=\tiny,text=VSPPrimary] {悬空!} (x.west);
+\end{tikzpicture}
+\medskip
+\begin{itemize}\footnotesize
+\item \texttt{int *q = p;}只复制地址，没有复制对象。
+\item \texttt{p = NULL}不会自动更新别名\texttt{q}。
 \item \alert{释放次数看分配次数，不看有几个指针。}
 \end{itemize}
-
+\end{column}
+\end{columns}
 \end{frame}
 
-\begin{frame}{Memory leak：指针没了，分配还在}
-\begin{Code}*{c}\lstinputlisting{code/leak.inc}\end{Code}\begin{itemize}
-\item \texttt{p}是automatic局部指针，离开函数后它的生命周期结束。
-\item 动态分配的对象不会因此自动释放。
-\item 如果没有留下其他可用的指针，这块内存就无法再由程序正常释放。
-\end{itemize}
-\medskip\alert{“指针生命周期结束”不等于“所指对象自动释放”。}
-\end{frame}
-
-\begin{frame}{Ownership：约定谁负责最后一次free}
+\begin{frame}{Memory leak：指针没了，堆上的分配还在}
+\begin{columns}[c]
+\begin{column}{0.48\textwidth}
+\begin{Code}*{c}\lstinputlisting{code/leak.inc}\end{Code}
+\end{column}
+\begin{column}{0.48\textwidth}
+\centering
+\begin{tikzpicture}[>=Stealth,font=\scriptsize]
+    \node[draw=black!45,dashed,fill=black!4,minimum width=2.1cm,minimum height=1.1cm,align=center,text=black!55] (stack) at (0,0) {\texttt{f}的栈帧已销毁\\局部指针\texttt{p}消失};
+    \node[draw=VSPPrimary,fill=VSPPrimary!12,minimum width=2.3cm,minimum height=1.1cm,align=center] (heap) at (3.9,0) {Heap中的100个\texttt{int}\\仍然占着内存};
+    \draw[->,dashed,black!35,thick] (stack.east) -- node[above,text=VSPPrimary,font=\bfseries] {$\times$ 断联} (heap.west);
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\medskip
 \begin{itemize}
-\item \textbf{Owner（拥有者）}：负责安排释放的一方。
-\item \textbf{Borrower（借用者）}：临时使用对象，不负责释放。
-\item 返回动态分配对象时，要说明：成功返回什么，失败返回什么，由谁释放。
-\item 传给函数一个指针时，要说明：函数只读、修改内容，还是接管所有权。
+\item \texttt{p}是automatic局部指针，离开函数\texttt{f}后自动销毁。
+\item 但Heap里的对象不会自动释放；丢失唯一地址后，程序再也无法\texttt{free}它。
 \end{itemize}
-\medskip C不会替我们强制检查这些约定，\alert{需要用接口、注释和控制流程表达清楚}。
+\alert{“指针生命周期结束”不等于“所指对象自动释放”。}
 \end{frame}
 
-\begin{frame}{回看create\_point：谁接过了释放责任？}
+\begin{frame}{回看create\_point：约定谁负责free}
 \begin{Code}*{c}\lstinputlisting[firstline=12,lastline=22,firstnumber=12]{code/create-point.c}\end{Code}
 \begin{itemize}
-    \item \texttt{create\_point}把动态对象交给调用者；返回\texttt{NULL}表示创建失败。
-    \item \texttt{main}持有返回的指针，使用结束后负责\texttt{free(p)}。
-    \item 局部结构体\texttt{new\_point}自动结束生命周期，不需要也不能\texttt{free(\&new\_point)}。
+    \item \texttt{create\_point}把动态对象交给调用者（转移\textbf{ownership}）；返回\texttt{NULL}表示失败。
+    \item \texttt{main}接管返回的指针，使用结束后负责\texttt{free(p)}。
+    \item 局部结构体\texttt{new\_point}随作用域自动结束生命周期，不能\texttt{free(\&new\_point)}。
 \end{itemize}
 \end{frame}
 
@@ -84,36 +124,45 @@ every node/.style={draw=VSPPrimary,minimum height=0.8cm,inner sep=7pt}]
 
 \end{frame}
 
-\begin{frame}{头插：分配成功后再接入链表}
-\begin{Code}*{c}\lstinputlisting{code/list-insert.inc}\end{Code}\begin{itemize}
-\item 先让\texttt{node->next}指向旧表头，再更新调用者的\texttt{head}。
-\item 函数要修改调用者的\texttt{head}，所以传入\texttt{\&head}，形参是二级指针。
-\item 分配失败时返回0，旧链表仍有效，由调用者清理。
-\end{itemize}
+\begin{frame}{释放链表：为什么必须先保存next，再free？}
+\begin{columns}[c]
+\begin{column}{0.47\textwidth}
+\begin{Code}*{c}\lstinputlisting{code/list-free.inc}\end{Code}
+\end{column}
+\begin{column}{0.49\textwidth}
+\centering
+\begin{tikzpicture}[>=Stealth,font=\scriptsize]
+    \node[font=\bfseries,text=VSPPrimary] at (1.8,1.35) {$\times$ 错误：先\texttt{free(head)}，桥已经炸断};
+    \node[draw=black!45,dashed,fill=black!6,minimum width=1.6cm,minimum height=0.6cm,text=black!50] (wa) at (0.1,0.6) {已\texttt{free}节点};
+    \node[draw=VSPPrimary,fill=VSPPrimary!8,minimum width=1.5cm,minimum height=0.6cm] (wb) at (3.5,0.6) {下一节点};
+    \draw[->,dashed,VSPPrimary,thick] (wa.east) -- node[above,font=\tiny,text=VSPPrimary] {读\texttt{next} = UAF!} (wb.west);
 
-\note{同学已学过struct，本例聚焦二级指针如何更新调用者的head，以及节点分配失败与释放责任。与后面的值传递练习呼应。}
-\end{frame}
-
-\begin{frame}{释放链表：先保存next，再free当前节点}
-\begin{Code}*{c}\lstinputlisting{code/list-free.inc}\end{Code}\begin{itemize}
-\item 如果先\texttt{free(head)}再读\texttt{head->next}，就是use-after-free。
-\item 这里的\texttt{head}是形参副本，不会自动清空调用者的指针。
-\item 每个节点只释放一次；释放后不再访问节点内容。
-\end{itemize}
-
+    \node[font=\bfseries,text=black!75] at (1.8,-0.15) {$\checkmark$ 正确：先用\texttt{next}探路，再拆当前桥};
+    \node[draw=VSPPrimary,fill=VSPPrimary!8,minimum width=1.6cm,minimum height=0.6cm] (ca) at (0.1,-0.85) {\texttt{head}当前节点};
+    \node[draw=VSPPrimary,fill=VSPPrimary!8,minimum width=1.5cm,minimum height=0.6cm] (cb) at (3.5,-0.85) {下一节点};
+    \draw[->,thick,VSPPrimary] (ca.east) -- (cb.west);
+    \node[draw=VSPPrimary,fill=white,inner sep=2pt] (nx) at (3.5,-1.7) {1. \texttt{next}先指向它};
+    \draw[->,thick,VSPPrimary] (nx.north) -- (cb.south);
+    \node[font=\tiny,text=VSPPrimary] at (0.1,-1.5) {2. 安全\texttt{free(head)}};
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\medskip
+\alert{先保存next指针，再free当前节点；否则读取已释放节点的next就是use-after-free。}
 \end{frame}
 
 \begin{frame}{内存错误小结：先问哪条规则被破坏了}
-
-\begin{tabular}{ll}
-\textbf{错误} & \textbf{要检查什么}\\[5pt]
-Out-of-bounds（越界） & 下标是否位于有效范围内？\\
-Uninitialized read（未初始化读取） & 读取前是否写入了有效值？\\
-Use-after-free（释放后使用） & 所指对象是否已经结束生命周期？\\
-Double free（重复释放） & 这次分配是否已经被释放？\\
-Memory leak（内存泄漏） & 是否失去地址或遗漏了释放路径？
+\small
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.28}
+\begin{tabular}{lll}
+\textbf{错误类型} & \textbf{破坏了哪条规则} & \textbf{本节典型现场}\\[3pt]
+Out-of-bounds（越界） & 下标超出有效分配范围 & 申请\texttt{n}个元素却访问\texttt{a[n]}\\
+Uninitialized read & 读取前未写入确定值 & 局部\texttt{int local;}或\texttt{malloc}后直接读\\
+Dangling / UAF & 所指对象生命周期已结束 & 返回\texttt{\&point}、先\texttt{free(head)}再读\texttt{next}\\
+Double free（重复释放） & 同一块分配被\texttt{free}两次 & 别名\texttt{free(p)}后又执行\texttt{free(q)}\\
+Memory leak（内存泄漏） & 丢失地址，遗漏释放路径 & \texttt{p = realloc(p, ...)}失败覆盖原指针
 \end{tabular}
 \medskip\par\alert{这些问题没有按stack、heap、global划分的固定严重程度。}
-\par\medskip 越界、use-after-free、double free等问题，可以结合\textbf{上节课的AddressSanitizer}检查。
-
+\par\smallskip 越界、use-after-free、double free等问题，可结合\textbf{上节课的AddressSanitizer}检查。
 \end{frame}

@@ -98,16 +98,6 @@
 \note{malloc示意假定n为正且字节数乘法已检查，下一部分展开完整检查。这里强调分配接口的失败处理能力，不承诺操作系统过量承诺内存后的一切访问都不会失败。}
 \end{frame}
 
-\begin{frame}{四个接口，先记住各自做什么}
-\begin{Code}*{c}\lstinputlisting{code/api.inc}\end{Code}\begin{itemize}
-\item \texttt{size\_t}：用于表示大小的无符号整数类型。
-\item \texttt{malloc}：申请指定字节数；\texttt{calloc}：申请数组并将所有位清零。
-\item \texttt{realloc}：调整已有分配；\texttt{free}：结束该次分配。
-\item 本节示例均使用\alert{正数大小}，避免零大小分配的特殊规则。
-\end{itemize}
-
-\end{frame}
-
 \begin{frame}{create\_point续集：让对象活到函数返回之后}
 \begin{columns}[T]
 \begin{column}{0.48\textwidth}
@@ -142,43 +132,110 @@
 \end{itemize}
 \end{frame}
 
+\begin{frame}{动态分配的四个核心接口}
+\begin{Code}*{c}\lstinputlisting{code/api.inc}\end{Code}\begin{itemize}
+\item \texttt{size\_t}：用于表示大小的无符号整数类型。
+\item \texttt{malloc}：申请指定字节数；\texttt{calloc}：申请数组并将所有字节清零。
+\item \texttt{realloc}：调整已有分配大小；\texttt{free}：结束该次分配。
+\item 本节示例均使用\alert{正数大小}，避免零大小分配的特殊规则。
+\end{itemize}
+\end{frame}
+
 \begin{frame}{sizeof：明确写出要申请的对象类型}
 \begin{Code}*{c}\lstinputlisting{code/sizes.inc}\end{Code}
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\scriptsize]
+    \node[anchor=east,font=\footnotesize\bfseries,text=VSPPrimary] at (-0.2,0.28) {\texttt{10 * sizeof(int)}：10个\texttt{int}对象};
+    \foreach \i in {0,...,9} {
+        \filldraw[fill=VSPPrimary!8,draw=VSPPrimary] (\i*0.55,0) rectangle (\i*0.55+0.55,0.56);
+        \node at (\i*0.55+0.275,0.28) {\texttt{int}};
+    }
+    \node[anchor=east,font=\footnotesize\bfseries,text=black!65] at (-0.2,-0.55) {\texttt{sizeof(int *)}：仅1个指针变量本身};
+    \filldraw[fill=black!5,draw=black!55] (0,-0.83) rectangle (1.1,-0.27);
+    \node at (0.55,-0.55) {\texttt{int *}};
+    \node[anchor=west,text=black!65] at (1.3,-0.55) {（64位平台通常为8字节，与所指对象大小无关）};
+\end{tikzpicture}
+\end{center}
 \begin{itemize}
-    \item \texttt{sizeof(int)}：一个\texttt{int}对象占多少字节。
-    \item \texttt{sizeof(struct Point)}：一个\texttt{struct Point}对象占多少字节。
-    \item \texttt{sizeof(int *)}：一个\texttt{int}指针本身占多少字节。
+    \item \texttt{sizeof(int)}：一个\texttt{int}对象占多少字节；\texttt{sizeof(struct Point)}：一个结构体对象占多少字节。
     \item C中\texttt{void *}可转换成对象指针，\texttt{malloc}返回值不需要强制类型转换。
 \end{itemize}
-\medskip\alert{申请10个int，用10 * sizeof(int)；不要把所指对象的大小写成指针的大小。}
+\alert{申请10个int，用10 * sizeof(int)；不要把所指对象的大小写成指针的大小。}
 \end{frame}
 
 
 \begin{frame}{calloc：按元素数量申请，并把所有位清零}
 \begin{Code}*{c}\lstinputlisting{code/calloc.c}\end{Code}\begin{itemize}
+\item \texttt{calloc(count, size)}按元素个数申请空间，并把所有字节清零。
 \item 这里的\texttt{int}数组初始值全是0，输出\texttt{0 0}。
-\item 所有位为0，不可推广成所有类型的语义零值；例如不保证得到空指针表示。
 \end{itemize}
 
 \end{frame}
 
-\begin{frame}{realloc：扩大数组，原有数据会怎样？}
+\begin{frame}{realloc：原地扩容，还是搬家？}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\centering\textbf{情况A：后面有空位，原地延长}
+\medskip
+\begin{tikzpicture}[>=Stealth,font=\scriptsize]
+    \filldraw[fill=VSPPrimary!12,draw=VSPPrimary] (0,0) rectangle (1.1,0.65);
+    \node at (0.55,0.325) {\texttt{10}};
+    \filldraw[fill=VSPPrimary!12,draw=VSPPrimary] (1.1,0) rectangle (2.2,0.65);
+    \node at (1.65,0.325) {\texttt{20}};
+    \filldraw[fill=VSPPrimary!4,draw=VSPPrimary,dashed] (2.2,0) rectangle (3.3,0.65);
+    \node[text=black!55] at (2.75,0.325) {新增?};
+    \filldraw[fill=VSPPrimary!4,draw=VSPPrimary,dashed] (3.3,0) rectangle (4.4,0.65);
+    \node[text=black!55] at (3.85,0.325) {新增?};
+    \node[draw=VSPPrimary,fill=white,minimum width=1.1cm,minimum height=0.5cm] (p1) at (0.55,-0.8) {返回同址};
+    \draw[->,thick,VSPPrimary] (p1.north) -- (0.55,0);
+\end{tikzpicture}
+\end{column}
+\begin{column}{0.48\textwidth}
+\centering\textbf{情况B：后面被挡住，搬去新块}
+\medskip
+\begin{tikzpicture}[>=Stealth,font=\scriptsize]
+    \filldraw[fill=black!6,draw=black!45,dashed] (0,0.85) rectangle (1.8,1.4);
+    \node[text=black!50] at (0.9,1.125) {旧块（已释放）};
+    \filldraw[fill=black!18,draw=black!60] (1.8,0.85) rectangle (3.2,1.4);
+    \node[text=black!75] at (2.5,1.125) {别的已分配块};
+    \filldraw[fill=VSPPrimary!12,draw=VSPPrimary] (0,-0.25) rectangle (0.95,0.35);
+    \node at (0.475,0.05) {\texttt{10}};
+    \filldraw[fill=VSPPrimary!12,draw=VSPPrimary] (0.95,-0.25) rectangle (1.9,0.35);
+    \node at (1.425,0.05) {\texttt{20}};
+    \filldraw[fill=VSPPrimary!4,draw=VSPPrimary,dashed] (1.9,-0.25) rectangle (2.85,0.35);
+    \node[text=black!55] at (2.375,0.05) {新增?};
+    \filldraw[fill=VSPPrimary!4,draw=VSPPrimary,dashed] (2.85,-0.25) rectangle (3.8,0.35);
+    \node[text=black!55] at (3.325,0.05) {新增?};
+    \draw[->,thick,VSPPrimary] (0.9,0.85) -- node[right,font=\tiny] {自动复制旧数据} (0.9,0.35);
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\medskip
 \begin{itemize}
-\item \texttt{realloc(p, new\_size)}调整由分配函数返回、尚未释放的块。
-\item 成功：保留新旧大小较小范围内的数据；新增部分未初始化。
-\item 成功后原分配结束，\alert{旧指针及指向旧块的别名都不能继续使用}。
-\item 失败且请求大小非零：返回\texttt{NULL}，原分配仍然有效。
+\item 成功：保留原有数据，新增区域未初始化；\alert{旧指针及指向旧块的别名全部失效}。
+\item 失败且请求大小非零：返回\texttt{NULL}，\textbf{原分配仍然有效}（不会自动释放）。
 \end{itemize}
-\medskip\alert{它可能原地扩容，也可能搬家。代码必须同时支持两种情况。}
 \end{frame}
 
 \begin{frame}{为什么不能直接p = realloc(p, ...)？}
-\begin{Code}*{c}\lstinputlisting{code/realloc-wrong.inc}\end{Code}\begin{itemize}
-\item 失败时返回\texttt{NULL}，赋值覆盖了原来的指针。
-\item 原块没有被释放，却可能失去唯一可用的地址，造成memory leak。
-\item 用临时指针接住返回值，成功后再更新\texttt{p}。
+\begin{columns}[c]
+\begin{column}{0.48\textwidth}
+\begin{Code}*{c}\lstinputlisting{code/realloc-wrong.inc}\end{Code}
+\begin{itemize}
+\item 失败返回\texttt{NULL}，直接赋给\texttt{p}会覆盖旧地址。
+\item 原内存块还活着，但钥匙丢了 $\rightarrow$ \textbf{memory leak}。
+\item 正确做法：先用临时指针\texttt{tmp}接住返回值。
 \end{itemize}
-
+\end{column}
+\begin{column}{0.48\textwidth}
+\centering
+\begin{tikzpicture}[>=Stealth,font=\scriptsize]
+    \node[draw=VSPPrimary,fill=VSPPrimary!6,minimum width=1.4cm,minimum height=0.75cm,align=center] (p) at (0,0) {\texttt{p}\\\texttt{NULL}};
+    \node[draw=VSPPrimary,fill=VSPPrimary!12,minimum width=2.7cm,minimum height=1.1cm,align=center] (blk) at (4.3,0) {原来的Heap块\\（仍占内存，无人能\texttt{free}）};
+    \draw[->,thick,dashed,black!40] (p.east) -- node[above,text=VSPPrimary,font=\tiny\bfseries] {$\times$ 地址被覆盖} (blk.west);
+\end{tikzpicture}
+\end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}{安全扩容：先接住，再更新}
