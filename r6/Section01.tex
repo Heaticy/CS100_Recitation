@@ -1,0 +1,133 @@
+\section{从C程序到C++程序}
+
+\begin{frame}{同一件事，两种写法}
+\begin{columns}[T]
+\begin{column}{0.47\textwidth}
+\textbf{C：\texttt{printf}输出字符串}
+\begin{Code}*{c}\lstinputlisting{code/c-hello.inc}\end{Code}
+\end{column}
+\begin{column}{0.49\textwidth}
+\textbf{C++：向输出流插入字符串}
+\begin{Code}*{cpp}\lstinputlisting{code/hello.cpp}\end{Code}
+\end{column}
+\end{columns}
+\medskip
+\begin{itemize}
+\item C++程序通常使用\texttt{.cpp}后缀，入口仍然是\texttt{main}。
+\item \texttt{std::cout}是标准输出流对象，\texttt{<<}在这里是插入运算符。
+\end{itemize}
+\end{frame}
+
+\begin{frame}{编译器与语言标准}
+\begin{Code}*{bash}\lstinputlisting{code/compile.inc}\end{Code}
+\begin{itemize}
+\item 本课程使用\textbf{C17}与\textbf{C++17}；编译C++时使用\texttt{g++}或\texttt{clang++}。
+\item 编译器会根据源文件后缀选择语言，但构建命令中仍应明确指定标准。
+\end{itemize}
+\medskip
+\begin{vspquotered}{C++不是“带类的C”}
+\small 两种语言共享大量语法，却具有不同的类型规则、标准库和惯用写法。不要假定每份C程序都能直接作为C++编译。
+\end{vspquotered}
+\end{frame}
+
+\begin{frame}{输入输出：对象与运算符}
+\begin{Code}*{cpp}\lstinputlisting{code/io.cpp}\end{Code}
+\begin{itemize}
+\item \texttt{std::cin >> x}从输入流提取一个值，\texttt{std::cout << x}向输出流插入一个值。
+\item 运算符返回流本身，因此可以连续书写；流的转换结果可用于检查输入是否成功。
+\end{itemize}
+\end{frame}
+
+\begin{frame}{为什么不再需要格式串和取地址？}
+\begin{columns}[T]
+\begin{column}{0.47\textwidth}
+\textbf{C：调用者描述类型与地址}
+\begin{Code}*{c}\lstinputlisting{code/c-input.inc}\end{Code}
+\end{column}
+\begin{column}{0.49\textwidth}
+\textbf{C++：运算根据对象类型选择}
+\begin{Code}*{cpp}\lstinputlisting{code/cpp-input.inc}\end{Code}
+\end{column}
+\end{columns}
+\medskip
+\begin{itemize}
+\item \texttt{scanf}依赖格式串；\texttt{std::cin}知道\texttt{x}的类型，并通过引用完成写入。
+\item 输出同样不需要\texttt{\%d}/\texttt{\%s}；插入运算根据表达式类型进行处理。
+\end{itemize}
+\alert{方向记忆：数据从\texttt{cin}流向变量，从变量流向\texttt{cout}。}
+\end{frame}
+
+\begin{frame}{\texttt{std::endl}不只是换行}
+\begin{Code}*{cpp}\lstinputlisting{code/endl.inc}\end{Code}
+\begin{itemize}
+\item \texttt{'\textbackslash n'}写入换行符；\texttt{std::endl}写入换行符并\textbf{刷新输出缓冲区}。
+\item 普通逐行输出优先使用\texttt{'\textbackslash n'}；需要立刻显示或刷新日志时再使用\texttt{std::endl}。
+\end{itemize}
+\medskip
+\alert{刷新是额外语义，不是每次换行都必须做的事情。}
+\end{frame}
+
+\begin{frame}{名字住在哪里：\texttt{namespace std}}
+\begin{Code}*{cpp}\lstinputlisting{code/namespace.inc}\end{Code}
+\begin{itemize}
+\item 标准库的大部分名字位于命名空间\texttt{std}中，避免与用户代码重名。
+\item 最明确的写法是\texttt{std::cout}；也可用\texttt{using std::cout}只引入一个名字。
+\item 避免依赖\texttt{using namespace std}；\alert{不要在头文件的全局作用域中写任何这类using声明或指令}。
+\end{itemize}
+\end{frame}
+
+\begin{frame}{C标准库在C++中的入口}
+\begin{columns}[T]
+\begin{column}{0.47\textwidth}
+\begin{Code}*{cpp}\lstinputlisting{code/cstdio.inc}\end{Code}
+\end{column}
+\begin{column}{0.49\textwidth}
+\small
+\begin{tabular}{ll}
+\textbf{C头文件} & \textbf{C++对应头文件}\\
+\texttt{<stdio.h>} & \texttt{<cstdio>}\\
+\texttt{<string.h>} & \texttt{<cstring>}\\
+\texttt{<ctype.h>} & \texttt{<cctype>}\\
+\texttt{<math.h>} & \texttt{<cmath>}
+\end{tabular}
+
+\medskip\texttt{<cxxx>}把相应设施放入\texttt{std}，并可能同时提供全局名字。
+
+\medskip\alert{\texttt{<string>}与\texttt{<cstring>}不是一回事。}
+\end{column}
+\end{columns}
+\medskip
+\small 旧代码中的C头文件仍可能可用；新的C++代码优先使用对应\texttt{<cxxx>}形式。
+\end{frame}
+
+\begin{frame}{兼容不等于完全相同}
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{p{0.22\textwidth}p{0.32\textwidth}p{0.36\textwidth}}
+\textbf{规则} & \textbf{C17} & \textbf{C++17}\\
+\hline
+布尔类型 & 包含\texttt{<stdbool.h>}后使用\texttt{bool} & \texttt{bool}、\texttt{true}、\texttt{false}内建\\
+字符串字面量类型 & \texttt{char[N]}；修改仍是UB & \texttt{const char[N]}\\
+字符字面量\texttt{'a'} & 类型为\texttt{int} & 类型为\texttt{char}\\
+声明\texttt{int f()} & 参数信息未指定 & 不接受参数\\
+逻辑与关系表达式 & 结果为\texttt{int} & 结果为\texttt{bool}\\
+\texttt{void *}到对象指针 & 允许隐式转换 & 必须显式转换
+\end{tabular}
+
+\medskip\normalsize
+\alert{把\texttt{.c}改名为\texttt{.cpp}，得到的是另一门语言中的程序。}
+\note{这里只列迁移初期最常见的差异。C中的int f()表示未指定参数列表，不是接受任意数量参数的可靠接口；C中应写int f(void)表示无参数。}
+\end{frame}
+
+\begin{frame}{迁移第一段代码：按顺序检查}
+\begin{enumerate}
+\item 源文件与编译器匹配：\texttt{.cpp}、\texttt{g++}、\texttt{-std=c++17}。
+\item 每个使用的设施都有对应头文件：\texttt{<iostream>}、\texttt{<string>}、\texttt{<vector>}等。
+\item 标准库名字写全，或只引入需要的名字。
+\item 不机械混用两套接口：本讲优先使用iostream、\texttt{std::string}与\texttt{std::vector}。
+\item 保留C中学到的检查：输入失败、边界、对象生命周期和未定义行为仍然重要。
+\end{enumerate}
+\medskip
+\alert{先用小而完整的C++程序建立正确习惯，再逐步迁移复杂代码。}
+\end{frame}

@@ -1,0 +1,49 @@
+\makeatletter\def\input@path{{../template/vsp-beamer}{../template/minimus}}\makeatother
+\documentclass[red,tutorial,sectionpages,shtu]{vsp-beamer}
+\graphicspath{{../template/vsp-beamer/assets/}}
+\usepackage{minimus-section}
+\usepackage{minimus-text}
+\usepackage{minimus-math}
+\usepackage{minimus-float}
+\usepackage{minimus-code}
+\usepackage{minimus-colorbox}
+\usepackage{minimus-reference}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\lstset{basicstyle=\ttfamily\footnotesize,numberstyle=\tiny\color{gray},breaklines=true,xleftmargin=8pt}
+\title{CS100 Recitation 6}
+\subtitle{从C到C++：输入输出、字符串与动态容器}
+\VSPsetspeaker{Chaofan Li}{CS100 Teaching Assistant}
+\VSPsetupfootline{CS100 Recitation 6}{Fall 2026}{Chaofan Li}
+\begin{document}
+\VSPtitleframe
+\begin{frame}{今天我们要回答什么？}
+    \begin{enumerate}
+        \item C++的输入输出为什么不需要格式串和取地址？
+        \item \texttt{std::string}与C风格字符串有什么本质区别？
+        \item \texttt{std::vector}如何替我们管理动态数组？
+        \item 容器增长时，哪些指针、引用和迭代器会失效？
+    \end{enumerate}
+    \medskip
+    \alert{从C到C++，不是换一个文件后缀，而是把资源管理交给对象。}
+\end{frame}
+\begin{frame}{目录}
+    \tableofcontents[hideallsubsections]
+\end{frame}
+\input{Section01.tex}
+\input{Section02.tex}
+\input{Section03.tex}
+\input{Section04.tex}
+\begin{frame}{带走这四个改写动作}
+\begin{itemize}
+\item \textbf{换工具：}使用C++17编译器和\texttt{g++}，明确包含所需标准库头文件。
+\item \textbf{换表达：}用\texttt{std::cin}/\texttt{std::cout}表达输入输出，名字按需从\texttt{std}引入。
+\item \textbf{换字符串：}用\texttt{std::string}表达字符串值，拷贝、比较和连接直接作用于内容。
+\item \textbf{换动态数组：}用\texttt{std::vector}管理存储；仍要检查边界、空容器与失效规则。
+\end{itemize}
+\medskip\alert{标准库减少了手工管理，却没有取消类型、生命周期和未定义行为。}
+\end{frame}
+\VSPendframe{}
+\appendix
+\input{Section05.tex}
+\end{document}

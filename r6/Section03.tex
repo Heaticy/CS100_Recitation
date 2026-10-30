@@ -1,0 +1,137 @@
+\section{std::vector：动态数组成为容器}
+
+\begin{frame}{从手工动态数组到\texttt{std::vector}}
+\small
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{0.22\textwidth}p{0.31\textwidth}p{0.34\textwidth}}
+ & \textbf{C中的手工方案} & \textbf{\texttt{std::vector}}\\
+\hline
+存储 & \texttt{malloc}/\texttt{realloc} & 容器按需要管理\\
+元素个数 & 单独保存\texttt{size}变量 & \texttt{v.size()}\\
+当前容量 & 单独保存\texttt{capacity}变量 & \texttt{v.capacity()}\\
+追加元素 & 检查容量、扩容、写入 & \texttt{v.push\_back(x)}\\
+释放 & 每条成功与失败路径配对\texttt{free} & 析构时自动释放
+\end{tabular}
+
+\medskip\normalsize
+\begin{itemize}
+\item 头文件是\texttt{<vector>}；元素在容器中连续存储。
+\item 它适合表达“大小可变化的一列同类型元素”。
+\end{itemize}
+\alert{自动化的是存储管理，不是算法复杂度、边界检查或失效规则。}
+\end{frame}
+
+\begin{frame}{\texttt{std::vector}是类模板}
+\begin{Code}*{cpp}\lstinputlisting[firstline=1,lastline=3]{code/vector-init.inc}\end{Code}
+\begin{itemize}
+\item \texttt{vector<T>}中的\texttt{T}是元素类型；给出模板参数后才得到具体类型。
+\item \texttt{std::vector<int>}与\texttt{std::vector<double>}是不同类型。
+\item \texttt{std::vector}本身不是可直接声明对象的完整元素类型。
+\end{itemize}
+\medskip
+\begin{Code}*{cpp}\lstinputlisting{code/vector-nested.inc}\end{Code}
+\small “vector of vector”可以表达每行长度不同的二维结构。
+\end{frame}
+
+\begin{frame}{初始化：圆括号与花括号不一样}
+\begin{Code}*{cpp}\lstinputlisting{code/vector-init.inc}\end{Code}
+\begin{itemize}
+\item \texttt{vector<int>(10)}创建10个值初始化元素，即10个零。
+\item \texttt{vector<int>\{10\}}创建1个元素，其值为10。
+\item \texttt{vector<int>(10, 42)}创建10个42；花括号形式优先表示元素列表。
+\end{itemize}
+\alert{先确认你想表达的是“元素列表”还是“元素个数”。}
+\end{frame}
+
+\begin{frame}{拷贝：复制整列元素}
+\begin{Code}*{cpp}\lstinputlisting{code/vector-copy.inc}\end{Code}
+\begin{itemize}
+\item 拷贝构造与拷贝赋值复制所有元素，不需要手动写循环。
+\item 修改\texttt{b[0]}不会改变\texttt{a[0]}；两个对象分别拥有自己的元素存储。
+\end{itemize}
+\medskip
+\alert{如果只是读取较大的对象，后续学习引用后可避免不必要的拷贝。}
+\end{frame}
+
+\begin{frame}{大小、空容器与清空}
+\begin{Code}*{cpp}\lstinputlisting{code/vector-size.inc}\end{Code}
+\begin{itemize}
+\item \texttt{v.size()}是元素个数；\texttt{v.empty()}判断是否为空。
+\item \texttt{v.clear()}移除全部元素，使大小变为0；不要手写循环逐个\texttt{pop\_back()}。
+\item \texttt{clear()}不保证释放已分配存储，因此不保证\texttt{capacity()}变为0。
+\end{itemize}
+\end{frame}
+
+\begin{frame}{追加、访问首尾与删除末尾}
+\begin{Code}*{cpp}\lstinputlisting[firstline=5,lastline=14]{code/vector-basics.cpp}\end{Code}
+\begin{itemize}
+\item \texttt{push\_back(x)}在末尾添加元素；\texttt{pop\_back()}删除末尾元素。
+\item \texttt{front()}与\texttt{back()}返回首、尾元素的引用，因此可以修改原元素。
+\end{itemize}
+\alert{空容器上调用\texttt{front()}、\texttt{back()}或\texttt{pop\_back()}都是未定义行为。}
+\end{frame}
+
+\begin{frame}{读入\texttt{n}个整数：不再手写扩容}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{Code}*{cpp}\lstinputlisting[firstline=1,lastline=12]{code/vector-read.cpp}\end{Code}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{Code}*{cpp}\lstinputlisting[firstline=13,lastline=18,firstnumber=13]{code/vector-read.cpp}\end{Code}
+\end{column}
+\end{columns}
+\medskip
+\begin{itemize}
+\item 每次成功读入后调用\texttt{push\_back}，容器自动管理元素存储。
+\item 逆序输出使用有效下标\texttt{i - 1}；无符号下标循环在\texttt{i == 0}时结束。
+\end{itemize}
+\end{frame}
+
+\begin{frame}{遍历容器：基于范围的\texttt{for}}
+\begin{Code}*{cpp}\lstinputlisting{code/vector-range.inc}\end{Code}
+\begin{itemize}
+\item \texttt{int x : numbers}逐个复制元素，适合廉价复制且只需读取的元素。
+\item \texttt{const std::string \&s : words}通过常量引用读取，避免复制每个字符串。
+\end{itemize}
+\medskip
+\alert{遍历期间不要改变同一个容器的大小；失效问题在下一章专门讨论。}
+\end{frame}
+
+\begin{frame}{下标访问与边界检查}
+\begin{Code}*{cpp}\lstinputlisting{code/vector-access.inc}\end{Code}
+\begin{itemize}
+\item 有效下标范围是\texttt{[0, v.size())}；\texttt{v[i]}不检查边界，越界是未定义行为。
+\item \texttt{v.at(i)}检查边界，越界时抛出\texttt{std::out\_of\_range}。
+\item 下标与大小比较时使用\texttt{std::size\_t}，避免有符号／无符号比较告警。
+\end{itemize}
+\end{frame}
+
+\begin{frame}{标准库接口具有统一性}
+\small
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{lll}
+\textbf{操作} & \textbf{\texttt{std::string}} & \textbf{\texttt{std::vector<T>}}\\
+\hline
+元素个数 & \texttt{s.size()} & \texttt{v.size()}\\
+是否为空 & \texttt{s.empty()} & \texttt{v.empty()}\\
+清空 & \texttt{s.clear()} & \texttt{v.clear()}\\
+首／尾元素 & \texttt{s.front()}、\texttt{s.back()} & \texttt{v.front()}、\texttt{v.back()}\\
+末尾添加／删除 & \texttt{s.push\_back(c)}、\texttt{s.pop\_back()} & \texttt{v.push\_back(x)}、\texttt{v.pop\_back()}\\
+下标／检查访问 & \texttt{s[i]}、\texttt{s.at(i)} & \texttt{v[i]}、\texttt{v.at(i)}
+\end{tabular}
+
+\medskip\normalsize
+学会一个容器的基本词汇，可以把同样的意图迁移到另一个容器。
+\end{frame}
+
+\begin{frame}{C++17 CTAD：让编译器推导元素类型}
+\begin{Code}*{cpp}\lstinputlisting{code/vector-deduction.inc}\end{Code}
+\begin{itemize}
+\item Class Template Argument Deduction（类模板参数推导）利用初始值推导模板参数。
+\item 信息不足时不能推导；例如只有元素个数，编译器不知道元素类型。
+\end{itemize}
+\medskip
+\alert{初学时写出\texttt{std::vector<int>}更直观；CTAD是便利语法，不是新的容器。}
+\end{frame}
