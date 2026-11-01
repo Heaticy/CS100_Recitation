@@ -1,24 +1,9 @@
 \section{资源管理、增长与失效}
 
-\begin{frame}{\texttt{vector}替我们管理什么？}
-\begin{center}
-\begin{tikzpicture}[>=Stealth,font=\small,
-box/.style={draw=VSPPrimary,rounded corners=2pt,minimum height=1.0cm,align=center}]
-\node[box,fill=VSPPrimary!7,minimum width=3.2cm] (obj) {\texttt{std::vector}对象\\记录大小、容量等资源状态};
-\node[box,fill=VSPPrimary!12,minimum width=5.2cm,right=2.0cm of obj] (buf) {连续元素存储\\增长时可能搬迁，析构时释放};
-\draw[->,very thick,VSPPrimary] (obj) -- node[above]{拥有并管理} (buf);
-\end{tikzpicture}
-\end{center}
-\begin{itemize}
-\item 局部\texttt{vector}对象离开作用域时自动析构并释放元素存储；这种对象生命周期绑定资源的思路称为\textbf{RAII}。
-\item 不需要也不应该对\texttt{vector}的元素缓冲区调用\texttt{free}。
-\end{itemize}
-\alert{局部\texttt{vector}对象本身与它管理的元素存储是两处不同的内存：对象随作用域自动销毁，元素存储由对象在析构时释放。}
-\end{frame}
-
-\begin{frame}{\texttt{size}与\texttt{capacity}不是一回事}
-\begin{center}
-\begin{tikzpicture}[font=\scriptsize]
+\begin{frame}{\texttt{vector}如何管理存储与增长？}
+\begin{columns}[T]
+\begin{column}{0.42\textwidth}
+\begin{tikzpicture}[font=\scriptsize,scale=0.7]
 \foreach \i in {0,...,7} {
   \pgfmathsetmacro{\x}{\i*1.05}
   \ifnum\i<4
@@ -28,44 +13,25 @@ box/.style={draw=VSPPrimary,rounded corners=2pt,minimum height=1.0cm,align=cente
   \fi
 }
 \node at (2.1,-0.45) {\texttt{size() == 4}：已有元素};
-\node at (6.3,-0.45) {\texttt{capacity() == 8}：当前存储可容纳元素};
+\node at (6.3,-0.45) {\texttt{capacity() == 8}：可容纳};
 \draw[<->,VSPPrimary,thick] (0,1.15) -- node[above]{已有元素} (4.2,1.15);
 \draw[<->,black!55,thick] (0,1.55) -- node[above]{当前分配容量} (8.4,1.55);
 \end{tikzpicture}
-\end{center}
-\begin{itemize}
-\item \texttt{size()}是元素个数；\texttt{capacity()}是无需重新分配即可容纳的元素个数。
-\item 恒有\texttt{size() <= capacity()}；容量按元素计，不是字节数。
-\item 容量大于大小不代表额外元素已经存在，不能通过下标访问它们。
-\end{itemize}
-\end{frame}
 
-\begin{frame}{为什么几何增长能做到均摊常数？}
-\begin{columns}[T]
-\begin{column}{0.47\textwidth}
-\textbf{每次只增加1个容量}
-\medskip
-
-第$i+1$个元素到来时，复制原有$i$个元素。连续$n$次追加的总复制量：
-\[
-\sum_{i=0}^{n-1} i = O(n^2)
-\]
+\small 对象管理一片连续元素存储；增长时可能搬迁，析构时自动释放，不需要\texttt{free}。
 \end{column}
-\begin{column}{0.49\textwidth}
-\textbf{容量按倍数增长}
-\medskip
-
-例如容量按$0\to1\to2\to4\to8\to\cdots$增长。扩容时总复制量：
-\[
-1+2+4+\cdots+2^{m-1}=O(n)
-\]
-均摊到$n$次\texttt{push\_back}，每次为$O(1)$。
+\begin{column}{0.54\textwidth}
+\textbf{每次只增加1个容量}：第$i+1$个元素到来时复制原有$i$个元素，$n$次追加总复制量
+\[\textstyle\sum_{i=0}^{n-1} i = O(n^2)\]
+\textbf{容量按倍数增长}（$0\to1\to2\to4\to\cdots$）：扩容总复制量
+\[1+2+\cdots+2^{m-1}=O(n)\]
+均摊到$n$次\texttt{push\_back}，每次$O(1)$；单次扩容仍昂贵，增长因子由实现选择。
 \end{column}
 \end{columns}
 \medskip
 \begin{itemize}
-\item 单次扩容仍然昂贵；“均摊$O(1)$”描述一串操作的总成本。
-\item 具体增长因子由实现选择，标准并不规定必须为2倍。
+\item \texttt{size()}是元素个数；\texttt{capacity()}是当前存储可容纳的元素个数。容量大于大小不代表额外元素存在，不能通过下标访问。
+\item 已知大致元素个数时可用\texttt{reserve(n)}提前请求容量，减少重分配；但它\textbf{不创建元素}，\texttt{v[0]}仍是未定义行为。
 \end{itemize}
 \end{frame}
 
@@ -78,14 +44,6 @@ box/.style={draw=VSPPrimary,rounded corners=2pt,minimum height=1.0cm,align=cente
 \alert{不要把某次运行得到的容量序列写成所有编译器都保证的规则。}
 \end{frame}
 
-\begin{frame}{已知大致元素个数：\texttt{reserve()}}
-\begin{Code}*{cpp}\lstinputlisting{code/vector-reserve.inc}\end{Code}
-\begin{itemize}
-\item \texttt{reserve(n)}请求至少容纳$n$个元素的容量，可以减少后续重新分配。
-\item 它\textbf{不改变大小}；示例中\texttt{v}仍为空，\texttt{v[0]}与\texttt{v.back()}仍是未定义行为。
-\item 需要创建$n$个值初始化元素时使用\texttt{resize(n)}或相应构造函数，而不是\texttt{reserve(n)}。
-\end{itemize}
-\end{frame}
 
 \begin{frame}{重新分配会使哪些东西失效？}
 \begin{Code}*{cpp}\lstinputlisting{code/vector-reference-invalid.inc}\end{Code}
