@@ -13,7 +13,7 @@ box/.style={draw=VSPPrimary,rounded corners=2pt,minimum height=1.0cm,align=cente
 \item 局部\texttt{vector}对象离开作用域时自动析构并释放元素存储；这种对象生命周期绑定资源的思路称为\textbf{RAII}。
 \item 不需要也不应该对\texttt{vector}的元素缓冲区调用\texttt{free}。
 \end{itemize}
-\alert{对象可以位于automatic存储期，而它管理的元素存储通常动态分配；两者不要混为一谈。}
+\alert{局部\texttt{vector}对象本身与它管理的元素存储是两处不同的内存：对象随作用域自动销毁，元素存储由对象在析构时释放。}
 \end{frame}
 
 \begin{frame}{\texttt{size}与\texttt{capacity}不是一回事}
