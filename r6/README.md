@@ -47,7 +47,7 @@ make check-demos
 |---|---|---|
 | `hello.cpp` | 无 | 输出`Hello, CS100!` |
 | `io.cpp` | `17 3.5` | 输出`a=17, b=3.5` |
-| `string-basics.cpp` | 无 | 输出`CS100`和长度`5` |
+| `string-basics.cpp` | 无 | 三行输出`Hello, C++!`、`Hello`和`size=11` |
 | `string-io.cpp` | 两行`Ada`、`C++` | 输出`Hello, Ada!`和`Language: C++` |
 | `vector-basics.cpp` | 无 | 输出`1 99 3 4`、大小`4`和首元素`1`，其间保留空行 |
 | `vector-read.cpp` | `5`，随后`2 3 5 7 11` | 逆序输出`11 7 5 3 2` |
