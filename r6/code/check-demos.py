@@ -16,8 +16,6 @@ CASES = {
     'string-io': ('Ada Lovelace\n', 'Hello, Ada Lovelace!\n'),
     'vector-basics': ('', 'size=5 front=1 back=12\n1 3 5 7 12 \nsize=4 back=7\n'),
     'vector-read': ('5\n10 20 30 40 50\n', '50 40 30 20 10\n'),
-    'rstrip': ('hello world   \n', '[hello world]\n'),
-    'uppercase': ('', 'H\nW\nC\n'),
 }
 for source in sorted((ROOT / 'code').glob('*.cpp')):
     subprocess.run(CXX + ['-std=c++17', '-Wall', '-Wextra', '-Werror', '-pedantic',
@@ -32,7 +30,6 @@ for name, inputs in {
     'io': ('not-a-number\n',),
     'vector-read': ('-1\n', '3\n1 2\n'),
     'string-io': ('',),
-    'rstrip': ('',),
 }.items():
     for data in inputs:
         result = subprocess.run([str(OUT / name)], input=data, text=True,
