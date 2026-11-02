@@ -384,3 +384,9 @@
 - 网站仅新增R5内存管理卡片、主讲李超凡、2026年秋季信息、PDF按钮和计划视频占位；草稿构建与预览检查通过，经合并请求37发布，线上SHA为c0ad2c76e3eeaed6a8fbff1e8bc5512f6249f230，main构建job1616成功。
 - 触发现有课件同步服务，状态ok=true、tag=v0.3.7，六份托管PDF包含R5。公网PDF返回200、解析为56页，SHA-256为865fc780423a976f18046b1c1ed2a61625cf5d0b6e309fe11b729113710f19a8，与Release资产完全一致。
 - 课程页为https://vsplab.cn/courses/cs100/，R5稳定地址为https://vsplab.cn/resources/cs100/recitations/fall2026/CS100_Recitation5.pdf；视频未在本轮发布。
+
+## 2026.11.02 17:57
+
+- 合并蒋烨上传的R6最新修订（截至e2385ea），内容为从C到C++：输入输出、字符串、动态数组与资源管理。
+- R6源码编译通过，共44个物理页；7份完整C++17程序的输出、错误输入与容量增长检查通过。
+- 将r6接入普通推送编译与tag发布流程，新增CS100_Recitation6.pdf下载资产，准备发布v0.3.8并同步课程网站。时间统一使用Asia/Singapore。

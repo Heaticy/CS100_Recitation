@@ -45,6 +45,11 @@ CS100_Recitation
 |  |- Section01.tex…Section05.tex
 |  |- code/           # 完整C17示例与课堂片段
 |  |- Makefile
+|- r6/                # 习题课六（从C到C++，主讲蒋烨）
+|  |- CS100_Recitation6.tex
+|  |- Section01.tex…Section04.tex
+|  |- code/           # 完整C++17示例、课堂片段与示例检查脚本
+|  |- Makefile
 |- AGENTS.md          # agent工作流约定
 |- agent-request.md
 |- agent-log.md
@@ -69,7 +74,7 @@ make -j
 
 导论课件可使用`make -j -C intro`编译，输出为`intro/build/CS100_Intro.pdf`。TA自我介绍页位于`intro/Section02.tex`，依次为李超凡、李宇轩、蒋烨、王诗涵、刘文杰与孟祥琨。课程语言标准为C17与C++17。
 
-GitLab的CI在普通推送时编译验证intro、r0、r1、r3、r4和r5；仅打tag时发布六份PDF。
+GitLab的CI在普通推送时编译验证intro、r0、r1、r3、r4、r5和r6；仅打tag时发布七份PDF。
 
 [GitHub仓库](https://github.com/Heaticy/CS100_Recitation)公开托管同一套源码，可按上述方式本地编译。GitHub Actions已禁用，GitHub端不运行CI或自动发布；自动编译与发布仅在GitLab运行。
 
