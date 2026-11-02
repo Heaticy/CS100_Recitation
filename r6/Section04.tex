@@ -1,0 +1,84 @@
+\section{资源管理、增长与失效}
+
+\begin{frame}{\texttt{vector}如何管理存储与增长？}
+\begin{columns}[T]
+\begin{column}{0.42\textwidth}
+\begin{tikzpicture}[font=\scriptsize,scale=0.7]
+\foreach \i in {0,...,7} {
+  \pgfmathsetmacro{\x}{\i*1.05}
+  \ifnum\i<4
+    \filldraw[fill=VSPPrimary!14,draw=VSPPrimary] (\x,0) rectangle (\x+1.05,0.85);
+  \else
+    \filldraw[fill=black!2,draw=black!35] (\x,0) rectangle (\x+1.05,0.85);
+  \fi
+}
+\node at (2.1,-0.45) {\texttt{size() == 4}：已有元素};
+\node at (6.3,-0.45) {\texttt{capacity() == 8}：可容纳};
+\draw[<->,VSPPrimary,thick] (0,1.15) -- node[above]{已有元素} (4.2,1.15);
+\draw[<->,black!55,thick] (0,1.55) -- node[above]{当前分配容量} (8.4,1.55);
+\end{tikzpicture}
+
+\small 对象管理一片连续元素存储；增长时可能搬迁，析构时自动释放，不需要\texttt{free}。
+\end{column}
+\begin{column}{0.54\textwidth}
+\textbf{每次只增加1个容量}：第$i+1$个元素到来时复制原有$i$个元素，$n$次追加总复制量
+\[\textstyle\sum_{i=0}^{n-1} i = O(n^2)\]
+\textbf{容量按倍数增长}（$0\to1\to2\to4\to\cdots$）：扩容总复制量
+\[1+2+\cdots+2^{m-1}=O(n)\]
+均摊到$n$次\texttt{push\_back}，每次$O(1)$；单次扩容仍昂贵，增长因子由实现选择。
+\end{column}
+\end{columns}
+\medskip
+\begin{itemize}
+\item \texttt{size()}是元素个数；\texttt{capacity()}是当前存储可容纳的元素个数。容量大于大小不代表额外元素存在，不能通过下标访问。
+\item 已知大致元素个数时可用\texttt{reserve(n)}提前请求容量，减少重分配；但它\textbf{不创建元素}，\texttt{v[0]}仍是未定义行为。
+\end{itemize}
+\end{frame}
+
+\begin{frame}{观察实际增长：输出随实现而变化}
+\begin{Code}*{cpp}\lstinputlisting{code/growth.cpp}\end{Code}
+\begin{itemize}
+\item 每次追加后打印\texttt{size}与\texttt{capacity}，观察何时发生容量增长。
+\item 可检查不变量：大小依次为$1$到$17$，容量不减且始终不小于大小。
+\end{itemize}
+\alert{不要把某次运行得到的容量序列写成所有编译器都保证的规则。}
+\end{frame}
+
+
+\begin{frame}{重新分配会使哪些东西失效？}
+\begin{Code}*{cpp}\lstinputlisting{code/vector-reference-invalid.inc}\end{Code}
+\begin{itemize}
+\item 若\texttt{push\_back}触发重新分配，元素被转移到新存储，旧存储被释放。
+\item 指向旧元素的\textbf{指针、引用和迭代器全部失效}；再使用就是未定义行为。
+\item 是否失效取决于是否重新分配，因此错误可能时隐时现，不能靠一次运行证明安全。
+\end{itemize}
+\end{frame}
+
+\begin{frame}{遍历时追加：从错误写法到安全写法}
+\begin{columns}[T]
+\begin{column}{0.47\textwidth}
+\textbf{错误：范围for依赖迭代器}
+\begin{Code}*{cpp}\lstinputlisting{code/vector-invalidate.inc}\end{Code}
+重新分配会使遍历所用的迭代器失效。
+\end{column}
+\begin{column}{0.49\textwidth}
+\textbf{一种安全写法：固定原范围}
+\begin{Code}*{cpp}\lstinputlisting{code/vector-safe-update.inc}\end{Code}
+先复制当前元素再追加；不保存可能失效的引用。
+\end{column}
+\end{columns}
+\medskip
+\alert{不要在基于范围的\texttt{for}遍历容器时改变该容器的大小。}
+\end{frame}
+
+\begin{frame}{迁移到C++后，仍然要保留哪些C语言直觉？}
+\begin{enumerate}
+\item \textbf{类型：}对象知道类型，不代表转换和初始化规则可以忽略。
+\item \textbf{边界：}\texttt{size()}给出有效范围；\texttt{[]}不检查，空容器没有首尾元素。
+\item \textbf{生命周期：}对象自动析构；保存到对象失效后的指针或引用仍然危险。
+\item \textbf{失效：}容器增长可能搬迁元素；不要继续持有旧位置的访问句柄。
+\item \textbf{复杂度：}\texttt{push\_back}是均摊$O(1)$，单次扩容仍需移动元素。
+\end{enumerate}
+\medskip
+\alert{优先让标准库拥有资源，把精力留给真正需要推理的边界与算法。}
+\end{frame}

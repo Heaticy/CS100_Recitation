@@ -1,0 +1,123 @@
+\section{std::string：字符串成为对象}
+
+\begin{frame}{从字符数组到字符串对象}
+\small
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{0.19\textwidth}p{0.33\textwidth}p{0.35\textwidth}}
+ & \textbf{C风格字符串} & \textbf{\texttt{std::string}}\\
+\hline
+表达 & 以NUL结尾的字符数组 & 标准库字符串对象\\
+长度 & \texttt{strlen}逐字符查找 & \texttt{s.size()}直接查询\\
+拷贝 & 字符数组不能直接赋值 & \texttt{s2 = s1}复制内容\\
+连接 & \texttt{strcat}要求目标容量足够 & \texttt{+}、\texttt{+=}管理所需存储\\
+释放 & 若动态分配，调用者负责\texttt{free} & 对象析构时自动释放其资源
+\end{tabular}
+
+\medskip\normalsize
+\begin{itemize}
+\item 头文件是\textbf{\texttt{<string>}}，不是\texttt{<string.h>}或\texttt{<cstring>}。
+\item \texttt{std::string}表达的是\textbf{字符串值}，不是指向首字符的裸指针。
+\end{itemize}
+\alert{自动管理内存不等于没有边界、生命周期和无效访问。}
+\end{frame}
+
+\begin{frame}{定义、初始化与拷贝}
+\begin{Code}*{cpp}\lstinputlisting{code/string-basics.cpp}\end{Code}
+\begin{itemize}
+\item \texttt{std::string s}得到空串；\texttt{std::string s(7, 'a')}得到七个\texttt{'a'}。
+\item 拷贝构造和拷贝赋值复制内容；修改一个对象不会改变另一个对象。
+\end{itemize}
+\end{frame}
+
+\begin{frame}{对象替我们管理什么？}
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\small,
+box/.style={draw=VSPPrimary,rounded corners=2pt,minimum height=0.9cm,align=center}]
+\node[box,fill=VSPPrimary!7,minimum width=3.0cm] (obj) {\texttt{std::string}对象\\内容、大小与资源管理};
+\node[box,fill=VSPPrimary!12,minimum width=5.0cm,right=2.0cm of obj] (buf) {动态字符存储\\需要时增长，析构时释放};
+\draw[->,very thick,VSPPrimary] (obj) -- node[above]{管理} (buf);
+\end{tikzpicture}
+\end{center}
+\begin{itemize}
+\item 不再手动维护末尾NUL、用\texttt{realloc}扩容或配对\texttt{free}。
+\item 关注字符串内容；具体成员布局与增长策略属于实现细节。
+\end{itemize}
+\medskip
+\alert{对象本身与其管理的字符存储不是同一个概念；不要把示意图当作内存布局保证。}
+\end{frame}
+
+\begin{frame}{长度与空串：\texttt{size()}、\texttt{empty()}}
+\begin{Code}*{cpp}\lstinputlisting{code/string-size.inc}\end{Code}
+\begin{itemize}
+\item \texttt{s.size()}返回字符单元数，类型通常是\texttt{std::size\_t}；不是\texttt{strlen}，更不是\texttt{sizeof}。
+\item \texttt{s.empty()}直接表达“是否为空”，通常比\texttt{s.size() == 0}更清晰。
+\end{itemize}
+\medskip
+\small 对UTF-8文本，\texttt{size()}统计的是字节数，不一定是人类感知的字符个数。
+\end{frame}
+
+\begin{frame}{连接：\texttt{+}与\texttt{+=}}
+\begin{Code}*{cpp}\lstinputlisting{code/string-concat.inc}\end{Code}
+\begin{itemize}
+\item 二元\texttt{+}生成新字符串；两侧至少一个操作数必须是\texttt{std::string}。
+\item \texttt{+}左结合：\texttt{hello + " world" + "!"}先得到字符串，再继续连接。
+\item \texttt{+=}直接追加到左侧对象；不需要调用\texttt{strcat}或手动检查目标容量。
+\end{itemize}
+\end{frame}
+
+\begin{frame}{比较的是内容，不是地址}
+\begin{Code}*{cpp}\lstinputlisting{code/string-compare.inc}\end{Code}
+\begin{itemize}
+\item 使用\texttt{==}、\texttt{!=}、\texttt{<}、\texttt{<=}、\texttt{>}、\texttt{>=}直接比较内容。
+\item 顺序比较是字典序，不需要调用\texttt{strcmp}；赋值也复制内容而非别名。
+\end{itemize}
+\alert{不要比较\texttt{s1.c\_str() == s2.c\_str()}：那比较的是两个指针值。}
+\end{frame}
+
+\begin{frame}{下标访问与边界}
+\begin{Code}*{cpp}\lstinputlisting{code/string-access.inc}\end{Code}
+\begin{itemize}
+\item 有效下标范围是$[0,\texttt{s.size()})$；\texttt{s[i]}不检查越界，越界是未定义行为。
+\item \texttt{s.at(i)}在越界时抛出\texttt{std::out\_of\_range}异常。
+\item \texttt{front()}、\texttt{back()}、\texttt{pop\_back()}作用于非空字符串；空串上使用是未定义行为。
+\end{itemize}
+\end{frame}
+
+\begin{frame}{遍历字符串：基于范围的\texttt{for}}
+\begin{Code}*{cpp}\lstinputlisting{code/string-range.inc}\end{Code}
+\begin{itemize}
+\item 读作“对\texttt{text}中的每个\texttt{char c}”，不必手动维护下标。
+\item \texttt{std::isupper}的参数要先转换为\texttt{unsigned char}，避免负\texttt{char}值导致未定义行为。
+\end{itemize}
+\alert{这里的\texttt{c}是当前字符的副本；修改\texttt{c}不会修改\texttt{text}。}
+\end{frame}
+
+\begin{frame}{字符串输入：读一个词，还是读一行？}
+\begin{columns}[T]
+\begin{column}{0.46\textwidth}
+\textbf{两种提取方式}
+\begin{Code}*{cpp}\lstinputlisting{code/string-input.inc}\end{Code}
+\end{column}
+\begin{column}{0.50\textwidth}
+\textbf{完整的逐行输入示例}
+\begin{Code}*{cpp}\lstinputlisting{code/string-io.cpp}\end{Code}
+\end{column}
+\end{columns}
+\medskip
+\small
+\begin{itemize}
+\item \texttt{cin >> word}跳过前导空白，读到下一个空白为止；空白不存入字符串。
+\item \texttt{getline(cin, line)}从当前位置读到换行符；换行符被取出但不存入字符串。
+\item 混用时若前一次输入留下换行符，下一次\texttt{getline}可能立即读到空串或本行剩余内容。
+\end{itemize}
+\end{frame}
+
+\begin{frame}{与C接口交接：\texttt{c\_str()}}
+\begin{Code}*{cpp}\lstinputlisting{code/c-str.inc}\end{Code}
+\begin{itemize}
+\item \texttt{s.c\_str()}提供指向NUL结尾字符数组的指针，便于调用只读C接口。
+\item 不要通过该指针修改内容，也不要在字符串失效或被后续非const成员操作使指针失效后继续使用。
+\end{itemize}
+\alert{优先传递和使用\texttt{std::string}；只在API边界处转换为C风格字符串。}
+\end{frame}
