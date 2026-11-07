@@ -83,15 +83,15 @@
 \begin{frame}{没有sudo权限时怎么使用GDB？}
     \texttt{is not in the sudoers file}表示当前账号没有sudo权限。
     \begin{itemize}
-        \item 在共享服务器上，使用管理员提供的工具，或已准备好的用户目录工具。
-        \item 本项目当前演示机是\alert{RHEL 8.10}；Ubuntu的\texttt{apt}安装命令不适用。
+        \item 在共享服务器上，按管理员说明加载GCC与GDB工具环境。
+        \item 先确认服务器的发行版；Ubuntu的\texttt{apt}命令不适用于所有系统。
     \end{itemize}
     \medskip
-    当前工作区已准备好本地GDB与运行库，可以在Bash中执行：
+    加载环境后，在提交包的\texttt{r4/}目录检查工具路径：
     \begin{Code}*{bash}
-        \lstinputlisting{code/commands/use-local-tools.sh}
+        \lstinputlisting{code/commands/check-server-tools.sh}
     \end{Code}
-    \small 这里加载的是本工作区已有工具。每次打开新终端需重新加载；清理\texttt{build/}后需重新准备这些工具。其他服务器的工具路径以管理员说明为准。
+    \small 两条命令都应输出可执行文件路径。若没有输出，先检查是否已加载工具环境；具体加载命令与安装位置以管理员说明为准。
 \end{frame}
 
 \begin{frame}{安装完成后，如何验证？}

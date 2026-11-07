@@ -1,5 +1,5 @@
 set print repeats 0
-break array_loop.c:6 if i == 6
+break code/sanitizer/array_loop.c:6 if i == 6
 run
 print i
 print data

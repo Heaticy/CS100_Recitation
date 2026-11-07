@@ -56,10 +56,10 @@
             \begin{Code}*{c}
                 \lstinputlisting[lastline=16]{code/sanitizer/polynomial.c}
             \end{Code}
-            \scriptsize 完整演示副本：\texttt{demo/HW2/HW2\_P3.c}。
+            \scriptsize 完整源码：\texttt{code/sanitizer/polynomial.c}。
         \end{column}
         \begin{column}{0.38\textwidth}
-            \small 在\texttt{slides/r4/}中编译：
+            \small 在\texttt{r4/}中编译：
             \lstset{basicstyle=\ttfamily\fontsize{6.5}{7.8}\selectfont,
                 numberstyle=\fontsize{4.8}{5.5}\selectfont\color{gray},xleftmargin=6pt,
                 breakatwhitespace=true}
@@ -74,13 +74,13 @@
             \end{itemize}
         \end{column}
     \end{columns}
-    \note{完整引用现有code/sanitizer/polynomial.c，与工作区demo/HW2/HW2_P3.c内容一致。保留i=count的错误，首次访问coef[3]，由ASan报告栈数组越界；改为count-1后输出17.000。这是依据HW2 P3要求编写的固定数据课堂变体，不假定完整题面的输入格式；正式评测参数以作业说明为准。}
+    \note{完整引用提交包中的code/sanitizer/polynomial.c。保留i=count的错误，首次访问coef[3]，由ASan报告栈数组越界；改为count-1后输出17.000。这是依据HW2 P3要求编写的固定数据课堂变体，不假定完整题面的输入格式；正式评测参数以作业说明为准。}
 \end{frame}
 
 \begin{frame}{HW2 P3：解读这份ASan实测报告}
     \begin{columns}[T]
         \begin{column}{0.61\textwidth}
-            \small 终端实测报告（关键原文节选）：
+            \small 终端实测报告节选（路径统一为包内路径）：
             \lstset{basicstyle=\ttfamily\fontsize{6.4}{8.0}\selectfont,
                 numbers=none,xleftmargin=0pt,breakatwhitespace=true}
             \begin{Code}*{plain}
@@ -105,7 +105,7 @@
             重新编译并运行，预期输出\texttt{17.000}。
         \end{column}
     \end{columns}
-    \note{原始报告由用户提供，完整保存为code/output/asan-hw2-p3-user.txt。页面直接选取原文第2—5与9—13行，不改写地址和路径。先看错误类别、访问大小、源码位置、调用栈，再看对象范围；[32,56)是相对于main栈帧的偏移区间，三个double共24字节。Shadow bytes是补充诊断，本次先聚焦数组下标和循环初值。}
+    \note{报告选自用户实测，保存为code/output/asan-hw2-p3-user.txt。为课堂直接定位源码，文本中的路径统一为提交包内相对路径，地址和诊断内容保留实测值；页面选取第2—5与9—13行。先看错误类别、访问大小、源码位置、调用栈，再看对象范围；[32,56)是相对于main栈帧的偏移区间，三个double共24字节。Shadow bytes是补充诊断，本次先聚焦数组下标和循环初值。}
 \end{frame}
 
 \begin{frame}{HW2 P3：多项式求值为什么越界了？}
