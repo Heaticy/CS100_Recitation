@@ -395,3 +395,10 @@
 
 - 按用户要求将GitLab习题课仓库同步到对应GitHub公开仓库，GitHub不运行CI；读取Actions设置确认enabled=false。
 - 以GitLab最新main提交54efae2为源合入GitHub独有的R4修订b956b86，保留助教上传内容；同步R5、R6及GitLab已有版本标签，不创建新发布标签，不改动GitLab。
+
+## 2026.11.08 23:36
+
+- 新增独立r7源码工程，以Lecture14的Student为主线，聚焦封装、接口和const，补充析构与new/delete；不包含拷贝控制或Dynarray。
+- 沿用R5/R6的VSPBeamer与Minimus、原生封面/章节页/尾页和共享Makefile，仅保留实际引用的17个短代码片段，不复制共享模板和已有演示程序。
+- 本地make-j编译通过，25个物理页；全部页面已目视检查，修正const表格换行和内存分配对比表排版。
+- 原生编译环境缺失的TeX宏包及NotoCJK字体仅在忽略的r7/build/env补齐，未改共享template或系统环境；未修改r0至r6。

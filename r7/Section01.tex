@@ -1,0 +1,137 @@
+\section{对象与接口}
+
+\begin{frame}{Class是类型，Object是具体的一个}
+    \begin{columns}[T]
+        \begin{column}{0.54\textwidth}
+            \begin{Code}*{cpp}
+                \lstinputlisting{code/members.inc}
+            \end{Code}
+        \end{column}
+        \begin{column}{0.42\textwidth}
+            \textbf{Class：}规定学生有何信息、能做何操作。\\[8pt]
+            \textbf{Object：}按这个类型创建的某个学生，如Alice、Bob。\\[8pt]
+            \textbf{成员变量：}每个对象各自保存的信息。\\[8pt]
+            \textbf{成员函数：}对这个对象执行的操作。
+        \end{column}
+    \end{columns}
+    \medskip
+    \small 使用\texttt{std::string}需包含\texttt{<string>}。类定义最后的分号不能省。
+\end{frame}
+
+\begin{frame}{看到一个名字，先分清它从哪里来}
+    \begin{Code}*{cpp}
+        \lstinputlisting{code/names.inc}
+    \end{Code}
+    \begin{itemize}
+        \item \texttt{m\_entranceYear}：\textbf{成员变量}，保存在当前学生对象里。
+        \item \texttt{year}：\textbf{参数}，由这一次调用传入。
+        \item \texttt{years}：\textbf{局部变量}，进入函数后计算，函数结束即离开作用域。
+    \end{itemize}
+    \medskip
+    \alert{本课所有成员变量统一加\texttt{m\_}前缀；成员函数中可直接使用已声明的成员。}
+\end{frame}
+
+\begin{frame}{public、private、protected分别给谁用？}
+    \renewcommand{\arraystretch}{1.35}
+    \begin{tabular}{p{0.18\textwidth}p{0.71\textwidth}}
+        \textbf{访问权限} & \textbf{本课需要记住的含义}\\
+        \hline
+        \texttt{public} & 类外代码也可访问，是对外接口。\\
+        \texttt{private} & 类的成员可访问；普通类外代码和派生类不能直接访问。\\
+        \texttt{protected} & 类的成员可访问，派生类也可按规则访问；普通类外代码不能访问。
+    \end{tabular}
+    \medskip
+    \begin{Code}*{cpp}
+        \lstinputlisting{code/access.inc}
+    \end{Code}
+    \small 权限标签持续生效，直到下一个标签或类结束。友元是另行授权机制，本课不展开。\\
+    \alert{Student的数据选private，操作选public；本课不需要protected数据。}
+\end{frame}
+
+\begin{frame}{课堂提问：struct与class究竟差在哪里？}
+    \renewcommand{\arraystretch}{1.35}
+    \begin{tabular}{lll}
+        & \textbf{struct} & \textbf{class}\\
+        \hline
+        未写权限标签的成员 & \texttt{public} & \texttt{private}\\
+        未写继承权限时 & \texttt{public}继承 & \texttt{private}继承
+    \end{tabular}
+    \medskip
+    \begin{Code}*{cpp}
+        \lstinputlisting{code/default-access.inc}
+    \end{Code}
+    \small 后两行假定已有\texttt{Base}类型，只用来辨认默认值，不展开继承。\\
+    \alert{两者都能有成员函数、构造函数和访问权限；不是“一个只能放数据”。}
+\end{frame}
+
+\begin{frame}{public成员变量：检查可以被绕过}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{Code}*{cpp}
+                \lstinputlisting{code/public-data.inc}
+            \end{Code}
+        \end{column}
+        \begin{column}{0.44\textwidth}
+            这段\textbf{反例}可以编译，却出现不合理年份。\\[8pt]
+            即使另写一个带检查的函数，外部仍能直接赋值。\\[8pt]
+            \textbf{封装：}隐藏内部表示，让对外操作维护对象的约束。
+        \end{column}
+    \end{columns}
+    \medskip
+    \begin{vspquotered}{Student的设计选择}
+        把成员变量设为private，只公开需要的操作。\textbf{private是起点，接口检查才负责守住规则。}
+    \end{vspquotered}
+\end{frame}
+
+\begin{frame}{接口先检查，再修改对象状态}
+    \begin{columns}[T]
+        \begin{column}{0.56\textwidth}
+            \begin{Code}*{cpp}
+                \lstinputlisting{code/set-name.inc}
+            \end{Code}
+        \end{column}
+        \begin{column}{0.40\textwidth}
+            \textbf{规则：姓名不能为空。}\\[8pt]
+            输入为空：返回\texttt{false}，原姓名保留。\\[8pt]
+            输入有效：修改\texttt{m\_name}，返回\texttt{true}。\\[8pt]
+            \texttt{const std::string \&name}：只读取传入的字符串。
+        \end{column}
+    \end{columns}
+    \medskip
+    \alert{接口不是把赋值换个位置；它规定允许做什么，以及失败时保留什么。}
+\end{frame}
+
+\begin{frame}{跟着执行：改名成功与改名失败}
+    \begin{Code}*{cpp}
+        \lstinputlisting{code/use-interface.inc}
+    \end{Code}
+    \begin{enumerate}
+        \item 创建学生，开始时姓名为\texttt{Alice}；构造过程稍后讲。
+        \item \texttt{ok1 == true}：姓名变为\texttt{Alicia}。
+        \item \texttt{ok2 == false}：拒绝空姓名，仍然是\texttt{Alicia}。
+        \item 通过查看接口\texttt{getName()}取得姓名，最终输出\texttt{Alicia}。
+    \end{enumerate}
+    \alert{提问：若\texttt{m\_name}仍然public，空姓名检查还能保证规则吗？}
+\end{frame}
+
+\begin{frame}{硬件类比：我们究竟开放了哪些操作？}
+    \begin{columns}[T]
+        \begin{column}{0.47\textwidth}
+            \begin{vspquotered}{单片机开发板}
+                开放GPIO、芯片引脚等低层连接。\\[7pt]
+                开发者自由度高，也需要自己遵守电压、接线等限制。\\[7pt]
+                直接接触内部，影响内部状态的路径更多。
+            \end{vspquotered}
+        \end{column}
+        \begin{column}{0.47\textwidth}
+            \begin{vspquotered}{日常使用的笔记本}
+                通常通过USB、键盘、电源键操作，通过屏幕查看结果。\\[7pt]
+                使用者通过约定接口完成任务，无需直接操作内部芯片。\\[7pt]
+                类似通过成员函数使用Student。
+            \end{vspquotered}
+        \end{column}
+    \end{columns}
+    \medskip
+    \small 开发板开放引脚是有意的设计，不代表质量差。这里类比的是\textbf{接口边界与使用责任}。\\
+    \alert{回到Student：隐藏成员变量，开放经过检查的操作。}
+\end{frame}

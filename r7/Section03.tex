@@ -1,0 +1,101 @@
+\section{初始化与生命周期}
+
+\begin{frame}{构造函数：让对象从有效状态开始}
+    \begin{Code}*{cpp}
+        \lstinputlisting{code/constructor.inc}
+    \end{Code}
+    \begin{itemize}
+        \item 名字与类相同，\textbf{没有返回类型}；创建对象时自动调用。
+        \item 冒号后的\textbf{初始化列表}直接初始化成员，随后才执行函数体。
+        \item 无效输入抛出异常：本次构造失败，不会得到一个构造完成的无效Student。
+    \end{itemize}
+    \small 需包含\texttt{<stdexcept>}；这里只把\texttt{throw}读作“报告错误并中止本次构造”，不展开异常处理。
+\end{frame}
+
+\begin{frame}{先初始化成员，再执行构造函数体}
+    \begin{columns}[T]
+        \begin{column}{0.56\textwidth}
+            \begin{Code}*{cpp}
+                \lstinputlisting{code/init-order.inc}
+            \end{Code}
+        \end{column}
+        \begin{column}{0.40\textwidth}
+            \textbf{实际顺序看声明位置：}\\[6pt]
+            1. \texttt{m\_name}\\
+            2. \texttt{m\_id}\\
+            3. \texttt{m\_entranceYear}\\
+            4. 构造函数体\\[8pt]
+            调换初始化列表的顺序，\textbf{不会改变}这个顺序。
+        \end{column}
+    \end{columns}
+    \medskip
+    若只在函数体写\texttt{m\_name = name;}，字符串先默认初始化，再被赋值。\\
+    未指定初值的内置整数成员可能没有确定值，不能先读后写。\\
+    \alert{初始化列表与声明顺序保持一致；不要依赖尚未初始化的后续成员。}
+\end{frame}
+
+\begin{frame}{默认构造：无参数也要有合理含义}
+    \begin{Code}*{cpp}
+        \lstinputlisting{code/default-ctor.inc}
+    \end{Code}
+    \begin{itemize}
+        \item 默认构造函数可以无实参调用；自己声明构造函数后，编译器不再自动提供无参版本。
+        \item 本课Student要求信息有效，因此\textbf{不提供默认构造}。StudentDraft是另一种设计。
+        \item 类内初值可提供默认状态；\texttt{= default}不等于所有整数自动变成0。
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{析构函数：对象结束时自动执行}
+    \begin{Code}*{cpp}
+        \lstinputlisting{code/lifetime.inc}
+    \end{Code}
+    \begin{itemize}
+        \item 析构函数名为\texttt{\textasciitilde Student}，没有返回类型，也没有参数。
+        \item 这里两个局部对象离开花括号时自动析构，\textbf{后创建的先结束}。
+        \item 输出依次为\texttt{Bob leaves}、\texttt{Alice leaves}；即使无显式析构函数，成员仍会自动清理。
+    \end{itemize}
+    \alert{这里打印仅为了观察生命周期；本课Student不需要手写清理字符串。}
+\end{frame}
+
+\begin{frame}{new创建对象，delete结束动态对象}
+    \begin{Code}*{cpp}
+        \lstinputlisting{code/new-delete.inc}
+    \end{Code}
+    \begin{enumerate}
+        \item \texttt{new Student(...)}分配存储，并调用构造函数；\texttt{p}得到对象地址。
+        \item \texttt{p->getName()}通过指针访问成员，等价于\texttt{(*p).getName()}。
+        \item \texttt{delete p}调用析构函数，然后释放存储；不能再访问原对象。
+        \item \texttt{p = nullptr}只清空这个指针，不会替其他指针清除旧地址。
+    \end{enumerate}
+    \alert{局部指针离开作用域，不会自动delete它指向的动态对象。}
+\end{frame}
+
+\begin{frame}{malloc/free与new/delete差的不只是拼写}
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular}{p{0.21\textwidth}>{\raggedright\arraybackslash}p{0.32\textwidth}>{\raggedright\arraybackslash}p{0.34\textwidth}}
+        \textbf{对比项} & \textbf{malloc/free} & \textbf{new/delete表达式}\\
+        \hline
+        提供什么 & 原始存储，返回\mbox{\texttt{void *}} & 指定类型对象，返回\mbox{\texttt{T *}}\\
+        创建类对象 & \textbf{不调用构造函数} & \texttt{new T(...)}调用构造函数\\
+        结束类对象 & \textbf{不调用析构函数} & \texttt{delete}调用析构函数后释放\\
+        普通分配失败 & \texttt{malloc}返回空指针 & 普通\texttt{new}抛出\texttt{std::bad\_alloc}\\
+        配对要求 & \texttt{malloc}配\texttt{free} & \texttt{new}配\texttt{delete}
+    \end{tabular}
+    \par\medskip
+    \alert{Student含有字符串，不能把malloc得到的地址直接当作构造好的Student使用。}\\
+    \small 不混用分配与释放方式；不把\texttt{new}的结果交给\texttt{free}，反之亦然。
+\end{frame}
+
+\begin{frame}{数组逐个构造，用delete[]逐个析构}
+    \begin{Code}*{cpp}
+        \lstinputlisting{code/array.inc}
+    \end{Code}
+    \begin{itemize}
+        \item 明确给出两个学生的初值，\textbf{不需要Student的默认构造函数}。
+        \item 按顺序构造Alice、Bob；\texttt{delete[]}按相反顺序析构，再释放数组存储。
+        \item \texttt{new Student[2]}没有给出初值，会需要默认构造，本课Student不支持。
+    \end{itemize}
+    \medskip
+    \alert{离堂三问：改名失败留下什么？查看函数少写const怎样？new[]应配谁？}\\
+    \small 答案：原状态保留；const对象调用失败；\texttt{delete[]}。
+\end{frame}

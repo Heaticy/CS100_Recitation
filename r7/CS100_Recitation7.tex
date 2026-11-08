@@ -1,0 +1,38 @@
+\makeatletter\def\input@path{{../template/vsp-beamer}{../template/minimus}}\makeatother
+\documentclass[red,tutorial,sectionpages,shtu]{vsp-beamer}
+\graphicspath{{../template/vsp-beamer/assets/}}
+\usepackage{minimus-section}
+\usepackage{minimus-text}
+\usepackage{minimus-math}
+\usepackage{minimus-float}
+\usepackage{minimus-code}
+\usepackage{minimus-colorbox}
+\usepackage{minimus-reference}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\lstset{basicstyle=\ttfamily\footnotesize,numberstyle=\tiny\color{gray},breaklines=true,xleftmargin=8pt}
+\title{CS100 Recitation 7}
+\subtitle{C++ Class基础：封装、接口与对象生命周期}
+\VSPsetspeaker{Xiangkun Meng}{CS100 Teaching Assistant}
+\VSPsetupfootline{CS100 Recitation 7}{Fall 2026}{Xiangkun Meng}
+\begin{document}
+    \VSPtitleframe
+    \begin{frame}{今天用一个Student回答三个问题}
+        \begin{enumerate}
+            \item \textbf{对象与接口：}学生的信息属于谁？谁可以修改？
+            \item \textbf{查看与const：}只查看信息，应该作出什么承诺？
+            \item \textbf{初始化与生命周期：}对象如何开始，又在何时结束？
+        \end{enumerate}
+        \medskip
+        \begin{vspquotered}{贯穿案例}
+            姓名\texttt{m\_name}、学号\texttt{m\_id}、入学年份\texttt{m\_entranceYear}。\\
+            我们希望姓名和学号非空，入学年份在1900至2100之间。
+        \end{vspquotered}
+        \medskip
+        全部代码使用C++17；片段按页逐步补齐。
+    \end{frame}
+    \input{Section01.tex}
+    \input{Section02.tex}
+    \input{Section03.tex}
+    \VSPendframe{}
+\end{document}
