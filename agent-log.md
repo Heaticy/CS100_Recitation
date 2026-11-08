@@ -420,5 +420,11 @@
 
 - 基于现有963eff0定向修订R7，保留Student主线、25个物理页与原生模板；前置getName的const声明，补全Base及protected继承示例，统一函数命名与片段上下文标记。
 - 默认构造部分删除StudentDraft，数组改用两个整数演示new[]/delete[]，删除末页离堂三问及答案；封装、接口、const、构造/析构和硬件接口类比均保留。
-- 新增可复现的code/check-demos.py与Makefile目标，18个片段的16项正常编译运行、8项预期编译拒绝均通过；实际执行make-j-Cr7成功，无溢出或缺字诊断，字体全部嵌入。
+- 新增可复现的code/check-demos.py与Makefile目标，18个片段的16项正常编译运行、8项预期编译拒绝均通过；实际执行`make -j -C r7`成功，无溢出或缺字诊断，字体全部嵌入。
 - 以本轮上传Word为基础仅同步7个受影响页面，渲染后仍为25页，所有物理页号与PDF对应；完整逐页检查通过，讲稿建议60分钟。
+
+## 2026.11.09 01:08
+
+- 将r7/README改为与R5/R6一致的课程项目说明，保留内容结构、构建/代码检查、片段阅读方式及课堂进度，移除内部工作指令和旧验收统计；根README新增R7及八份PDF发布说明。
+- GitLabCI的build/release均纳入R7编译与代码检查，release补齐PDF复制和资产链接；本地YAML解析、八份课件目标/复制/链接对应关系及README链接检查通过，不宣称已执行远端流水线。
+- 本轮仅修改R7、根README、GitLabCI及工作日志；R0至R6、共享template和GitHubActions配置均未改动，不打tag。
