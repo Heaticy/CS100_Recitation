@@ -71,19 +71,18 @@
 \end{frame}
 
 \begin{frame}{malloc/free与new/delete差的不只是拼写}
-    \renewcommand{\arraystretch}{1.5}
-    \begin{tabular}{p{0.21\textwidth}>{\raggedright\arraybackslash}p{0.32\textwidth}>{\raggedright\arraybackslash}p{0.34\textwidth}}
-        \textbf{对比项} & \textbf{malloc/free} & \textbf{new/delete表达式}\\
+    \renewcommand{\arraystretch}{1.25}
+    \begin{tabular}{p{0.16\textwidth}>{\raggedright\arraybackslash}p{0.33\textwidth}>{\raggedright\arraybackslash}p{0.38\textwidth}}
+        \textbf{对比项} & \textbf{malloc/free} & \textbf{new/delete}\\
         \hline
-        提供什么 & 原始存储，返回\mbox{\texttt{void *}} & 指定类型对象，返回\mbox{\texttt{T *}}\\
-        创建类对象 & \textbf{不调用构造函数} & \texttt{new T(...)}调用构造函数\\
-        结束类对象 & \textbf{不调用析构函数} & \texttt{delete}调用析构函数后释放\\
-        普通分配失败 & \texttt{malloc}返回空指针 & 普通\texttt{new}抛出\texttt{std::bad\_alloc}\\
+        创建 & \texttt{malloc}申请原始存储，\newline 返回\mbox{\texttt{void *}} & \texttt{new}分配存储并初始化对象，\newline 返回\mbox{\texttt{T *}}\\
+        创建类对象 & 不调用构造函数 & 调用构造函数\\
+        释放 & \texttt{free}释放存储，\newline 不调用析构函数 & \texttt{delete}调用析构函数，\newline 再释放存储\\
+        分配失败 & \texttt{malloc}返回空指针 & 普通\texttt{new}抛出\texttt{std::bad\_alloc}\\
         配对要求 & \texttt{malloc}配\texttt{free} & \texttt{new}配\texttt{delete}
     \end{tabular}
     \par\medskip
-    \alert{Student含有字符串，不能把malloc得到的地址直接当作构造好的Student使用。}\\
-    \small 不混用分配与释放方式；不把\texttt{new}的结果交给\texttt{free}，反之亦然。
+    \small 实际C++项目中，通常优先使用\texttt{std::string}、\texttt{std::vector}等能够自动管理资源的标准库类型；这里讲解\texttt{new/delete}主要是为了理解对象的创建与销毁。
 \end{frame}
 
 \begin{frame}{数组用new[]创建，用delete[]释放}

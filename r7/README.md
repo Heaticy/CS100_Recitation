@@ -14,7 +14,8 @@
 - [Section01.tex](Section01.tex)、[Section02.tex](Section02.tex)、[Section03.tex](Section03.tex)：依次对应上述三个主题。
 - [课堂代码片段](code/)：由课件直接引用的`.inc`文件，以及[代码检查脚本](code/check-demos.py)。
 - [Makefile](Makefile)：引用仓库共享构建规则。
-- [课件PDF](build/CS100_Recitation7.pdf)：编译后生成。
+
+PDF由源码编译生成，本地输出位置为build/CS100_Recitation7.pdf；build目录不纳入版本控制。
 
 ## 构建与代码检查
 
