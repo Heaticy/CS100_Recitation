@@ -1,3 +1,4 @@
+// Inside class Student
 std::string getName() const {
     return m_name;
 }

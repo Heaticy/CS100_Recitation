@@ -5,5 +5,6 @@ private:
     int m_entranceYear;
 public:
     bool setName(const std::string &name);
+    std::string getName() const;
     bool graduated(int year) const;
 };

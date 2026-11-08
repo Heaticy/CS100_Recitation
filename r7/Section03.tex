@@ -40,8 +40,8 @@
     \end{Code}
     \begin{itemize}
         \item 默认构造函数可以无实参调用；自己声明构造函数后，编译器不再自动提供无参版本。
-        \item 本课Student要求信息有效，因此\textbf{不提供默认构造}。StudentDraft是另一种设计。
-        \item 类内初值可提供默认状态；\texttt{= default}不等于所有整数自动变成0。
+        \item 本课Student要求姓名、学号和入学年份有效，因此\textbf{创建时必须提供这三项信息}。
+        \item 无实参调用是否合理，取决于类的设计；不要为了让代码通过而随意补一个默认学生。
     \end{itemize}
 \end{frame}
 
@@ -86,16 +86,18 @@
     \small 不混用分配与释放方式；不把\texttt{new}的结果交给\texttt{free}，反之亦然。
 \end{frame}
 
-\begin{frame}{数组逐个构造，用delete[]逐个析构}
+\begin{frame}{数组用new[]创建，用delete[]释放}
     \begin{Code}*{cpp}
         \lstinputlisting{code/array.inc}
     \end{Code}
     \begin{itemize}
-        \item 明确给出两个学生的初值，\textbf{不需要Student的默认构造函数}。
-        \item 按顺序构造Alice、Bob；\texttt{delete[]}按相反顺序析构，再释放数组存储。
-        \item \texttt{new Student[2]}没有给出初值，会需要默认构造，本课Student不支持。
+        \item \texttt{new int[2]\{90, 95\}}创建两个整数，初值分别为90和95。
+        \item \texttt{scores}指向第一个元素；输出为\texttt{90 95}。
+        \item \texttt{delete[] scores}释放整个数组；若元素为类对象，还会逐个调用析构函数。
     \end{itemize}
     \medskip
-    \alert{离堂三问：改名失败留下什么？查看函数少写const怎样？new[]应配谁？}\\
-    \small 答案：原状态保留；const对象调用失败；\texttt{delete[]}。
+    \begin{vspquotered}{配对规则}
+        单个对象：\texttt{new}配\texttt{delete}。\\[5pt]
+        动态数组：\texttt{new[]}配\texttt{delete[]}，不能省去方括号。
+    \end{vspquotered}
 \end{frame}

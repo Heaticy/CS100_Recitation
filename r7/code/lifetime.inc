@@ -1,4 +1,4 @@
-// In class Student:
+// Inside class Student
 ~Student() { std::cout << m_name << " leaves\n"; }
 
 // In main():

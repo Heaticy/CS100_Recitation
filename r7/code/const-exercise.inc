@@ -1,3 +1,4 @@
+// Inside class Student
 std::string getID() const;
 bool graduated(int year) const;
 bool setName(const std::string &name);

@@ -1,3 +1,4 @@
+// Inside class Student
 // Member declarations:
 std::string m_name;
 std::string m_id;

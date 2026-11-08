@@ -1,3 +1,4 @@
+// Inside class Student
 bool graduated(int year) const {
     return year - this->m_entranceYear >= 4;
 }

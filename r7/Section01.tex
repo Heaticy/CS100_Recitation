@@ -28,24 +28,32 @@
         \item \texttt{years}：\textbf{局部变量}，进入函数后计算，函数结束即离开作用域。
     \end{itemize}
     \medskip
-    \alert{本课所有成员变量统一加\texttt{m\_}前缀；成员函数中可直接使用已声明的成员。}
+    \alert{成员变量用\texttt{m\_}前缀，参数和局部变量不用；成员函数可直接使用自己的成员。}\\
+    \small 成员函数用小驼峰命名：首词小写，后续词首字母大写，如\texttt{setName}、\texttt{getName}。
 \end{frame}
 
 \begin{frame}{public、private、protected分别给谁用？}
-    \renewcommand{\arraystretch}{1.35}
-    \begin{tabular}{p{0.18\textwidth}p{0.71\textwidth}}
-        \textbf{访问权限} & \textbf{本课需要记住的含义}\\
-        \hline
-        \texttt{public} & 类外代码也可访问，是对外接口。\\
-        \texttt{private} & 类的成员可访问；普通类外代码和派生类不能直接访问。\\
-        \texttt{protected} & 类的成员可访问，派生类也可按规则访问；普通类外代码不能访问。
-    \end{tabular}
+    \begin{columns}[T]
+        \begin{column}{0.47\textwidth}
+            \begin{itemize}
+                \item \texttt{public}：普通类外代码也可访问。
+                \item \texttt{private}：类的成员可访问，派生类不能直接访问。
+                \item \texttt{protected}：类的成员、派生类可按规则访问，普通类外代码不能访问。
+            \end{itemize}
+            \begin{Code}*{cpp}
+                \lstinputlisting{code/access.inc}
+            \end{Code}
+            \small 左侧仍是Student；右侧用最小继承例子单独说明protected。
+        \end{column}
+        \begin{column}{0.49\textwidth}
+            \begin{Code}*{cpp}
+                \lstinputlisting{code/protected.inc}
+            \end{Code}
+        \end{column}
+    \end{columns}
     \medskip
-    \begin{Code}*{cpp}
-        \lstinputlisting{code/access.inc}
-    \end{Code}
-    \small 权限标签持续生效，直到下一个标签或类结束。友元是另行授权机制，本课不展开。\\
-    \alert{Student的数据选private，操作选public；本课不需要protected数据。}
+    \small 权限标签持续生效到下一个标签或类结束；友元另行授权，本课不展开。\\
+    \alert{派生类的函数能读取继承的protected成员，普通外部代码不能直接读写它。}
 \end{frame}
 
 \begin{frame}{课堂提问：struct与class究竟差在哪里？}
@@ -60,7 +68,7 @@
     \begin{Code}*{cpp}
         \lstinputlisting{code/default-access.inc}
     \end{Code}
-    \small 后两行假定已有\texttt{Base}类型，只用来辨认默认值，不展开继承。\\
+    \small \texttt{Base}已在上方定义；冒号表示继承，这里只辨认未写权限时的默认值。\\
     \alert{两者都能有成员函数、构造函数和访问权限；不是“一个只能放数据”。}
 \end{frame}
 

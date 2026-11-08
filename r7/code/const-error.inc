@@ -1,4 +1,4 @@
-// In class Student: missing const!
+// Inside class Student: missing const!
 std::string getName() { return m_name; }
 
 // In main():

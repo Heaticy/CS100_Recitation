@@ -415,3 +415,10 @@
 - R7远程交付阻碍：普通gitpush因HTTPS缺少用户名凭据失败；连接元数据虽报告push=true，实际GitTrees与Contents写入接口均返回403Resource not accessible by integration，未创建远端R7文件或提交。
 - 保留本地源码提交5034fce与验收提交69c9c15，工作成果未丢失；需该GitHub连接具备仓库Contents写入权限后再继续远端交付，不虚报已推送。
 - 最终个人PDF和Word已保存成功；未打tag，未强制更新远端，未改动r0至r6及共享template。
+
+## 2026.11.09 01:08
+
+- 基于现有963eff0定向修订R7，保留Student主线、25个物理页与原生模板；前置getName的const声明，补全Base及protected继承示例，统一函数命名与片段上下文标记。
+- 默认构造部分删除StudentDraft，数组改用两个整数演示new[]/delete[]，删除末页离堂三问及答案；封装、接口、const、构造/析构和硬件接口类比均保留。
+- 新增可复现的code/check-demos.py与Makefile目标，18个片段的16项正常编译运行、8项预期编译拒绝均通过；实际执行make-j-Cr7成功，无溢出或缺字诊断，字体全部嵌入。
+- 以本轮上传Word为基础仅同步7个受影响页面，渲染后仍为25页，所有物理页号与PDF对应；完整逐页检查通过，讲稿建议60分钟。
