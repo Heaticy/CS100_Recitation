@@ -1,16 +1,16 @@
 (gdb) print sum
 $1 = 3
 (gdb) step
-addValue (sum=3, x=3) at HW1_P3_sum.c:4
-4           sum += x;
+addValue (sum=3, x=3) at code/c/sum-three.c:5
+5           sum += x;
 (gdb) next
-5       }
+6       }
 (gdb) print sum
 $2 = 6
 (gdb) finish
 Run till exit from #0  addValue (sum=6, x=3)
-    at HW1_P3_sum.c:5
-main () at HW1_P3_sum.c:10
-10          printf("%d\n", sum);
+    at code/c/sum-three.c:6
+main () at code/c/sum-three.c:11
+11          printf("%d\n", sum);
 (gdb) print sum
 $3 = 3

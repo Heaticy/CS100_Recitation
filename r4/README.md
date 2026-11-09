@@ -114,7 +114,7 @@ gdb -q -x code/commands/array-session.gdb build/demo/array-loop-asan
 
 两份脚本在错误操作执行前停止：power中`i=1`、`result=50000`、`x=50000`；数组中`i=6`且六个元素均为1。对应命令与源码见[代码索引](code/README.md)。
 
-`code/output/`保存课件引用的历史诊断和用户会话，其中可能出现原演示机的路径或不同文件名。新运行记录写入`build/`，具体地址、进程号与报告格式可随环境变化。
+`code/output/`保存课件引用的实测诊断和用户会话，文本中的源码路径及行号已统一到包内文件，截图保留原样。新运行记录写入`build/`，具体地址、进程号与报告格式可随环境变化。
 
 ## 教学安排
 
@@ -154,7 +154,7 @@ make package
 
 [作业改编说明](code/homework/README.md)与[行为示例说明](code/behavior/README.md)记录来源。HW1／HW2案例依据starter注释制作，是课堂调试变体；不作为完整作业标准答案。原始作业资料位于作者工作区，不是本包的运行或编译依赖。
 
-HW1主线不用数组或动态内存；HW2多项式使用固定数组，不使用堆内存或math.h。释放后使用为独立C内存管理补充示例。课件第12页与`code/commands/use-local-tools.sh`保留历史演示机说明，依赖不随包分发的`build/tools/`；其他机器直接使用自己的GCC与GDB即可。
+HW1主线不用数组或动态内存；HW2多项式使用固定数组，不使用堆内存或math.h。释放后使用为独立C内存管理补充示例。课件中的演示命令统一从提交包的`r4/`目录执行。第12页使用`code/commands/check-server-tools.sh`检查共享服务器中的GCC与GDB；无sudo权限时先按管理员说明加载工具环境。
 
 ## 参考资料
 

@@ -396,3 +396,47 @@
 - v0.3.8正式发布，提交54efae2，pipeline707的build／release均成功，job1656提供七份PDF；R6为44页，SHA-256为c815f64534ea8f73039dca813191ecbf8a1f9925311f320d9c18270e22c640ca。
 - 网站新增R6卡片，主讲蒋烨，包含PDF和计划视频占位；桌面／手机预览检查通过。main构建pipeline709成功，已通过API确认线上SHA为e98e012c05b0fd310dc608cd4100cd3953b3d1d7。
 - 按Release原字节首次初始化R6稳定路径，公网PDF返回200且hash一致；现有课件同步服务运行成功，tag=v0.3.8，七份文件包含R6。
+
+## 2026.11.08 02:18
+
+- 按用户要求将GitLab习题课仓库同步到对应GitHub公开仓库，GitHub不运行CI；读取Actions设置确认enabled=false。
+- 以GitLab最新main提交54efae2为源合入GitHub独有的R4修订b956b86，保留助教上传内容；同步R5、R6及GitLab已有版本标签，不创建新发布标签，不改动GitLab。
+
+## 2026.11.08 23:36
+
+- 新增独立r7源码工程，以Lecture14的Student为主线，聚焦封装、接口和const，补充析构与new/delete；不包含拷贝控制或Dynarray。
+- 沿用R5/R6的VSPBeamer与Minimus、原生封面/章节页/尾页和共享Makefile，仅保留实际引用的17个短代码片段，不复制共享模板和已有演示程序。
+- 本地运行`make -j`编译通过，25个物理页；全部页面已目视检查，修正const表格换行和内存分配对比表排版。
+- 原生编译环境缺失的TeX宏包及NotoCJK字体仅在忽略的r7/build/env补齐，未改共享template或系统环境；未修改r0至r6。
+
+## 2026.11.08 23:39
+
+- 完成R7最终验收：25页PDF全部目视检查，字体均嵌入，无Overfull、Underfull或缺字诊断；保留共享模板既有的非阻断提示。
+- 17个C++17片段通过14项正向编译运行及8项预期编译拒绝检查，覆盖访问控制、const、构造边界、接口状态保持、初始化与析构顺序。
+- 完成25页中文Word逐字授课稿，约1.36万字符，物理页号与PDF逐页对应，预计60分钟含提问与停顿；Word全部页面渲染并检查通过。
+- 个人PDF与Word、代码验收脚本及中间文件仅保留在忽略的build目录，Git仅交付r7源码与必要日志；本轮不打tag、不修改共享模板及r0至r6。
+
+## 2026.11.08 23:42
+
+- R7远程交付阻碍：普通gitpush因HTTPS缺少用户名凭据失败；连接元数据虽报告push=true，实际GitTrees与Contents写入接口均返回403Resource not accessible by integration，未创建远端R7文件或提交。
+- 保留本地源码提交5034fce与验收提交69c9c15，工作成果未丢失；需该GitHub连接具备仓库Contents写入权限后再继续远端交付，不虚报已推送。
+- 最终个人PDF和Word已保存成功；未打tag，未强制更新远端，未改动r0至r6及共享template。
+
+## 2026.11.09 01:08
+
+- 基于现有963eff0定向修订R7，保留Student主线、25个物理页与原生模板；前置getName的const声明，补全Base及protected继承示例，统一函数命名与片段上下文标记。
+- 默认构造部分删除StudentDraft，数组改用两个整数演示new[]/delete[]，删除末页离堂三问及答案；封装、接口、const、构造/析构和硬件接口类比均保留。
+- 新增可复现的code/check-demos.py与Makefile目标，18个片段的16项正常编译运行、8项预期编译拒绝均通过；实际执行`make -j -C r7`成功，无溢出或缺字诊断，字体全部嵌入。
+- 以本轮上传Word为基础仅同步7个受影响页面，渲染后仍为25页，所有物理页号与PDF对应；完整逐页检查通过，讲稿建议60分钟。
+
+## 2026.11.09 01:08
+
+- 将r7/README改为与R5/R6一致的课程项目说明，保留内容结构、构建/代码检查、片段阅读方式及课堂进度，移除内部工作指令和旧验收统计；根README新增R7及八份PDF发布说明。
+- GitLabCI的build/release均纳入R7编译与代码检查，release补齐PDF复制和资产链接；本地YAML解析、八份课件目标/复制/链接对应关系及README链接检查通过，不宣称已执行远端流水线。
+- 本轮仅修改R7、根README、GitLabCI及工作日志；R0至R6、共享template和GitHubActions配置均未改动，不打tag。
+
+## 2026.11.09 16:09
+
+- 按用户要求将GitHub截至4c57bd7的新增R7源码与既有R4修订合并至GitLab主线；仅agent-log发生冲突，按时间顺序保留本地R6发布记录与GitHub工作记录。
+- R7本地编译成功，共25个物理页、20个编号正文帧，已检查全页预览；无Overfull、Underfull或缺字诊断。18个C++17片段通过16项编译运行检查及8项预期编译拒绝检查。
+- 保留上游课件内容与CI配置，普通推送到GitLab验证构建；本轮不打tag、不触发Release或网站发布。

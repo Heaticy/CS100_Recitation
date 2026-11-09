@@ -1,0 +1,51 @@
+\section{查看与const}
+
+\begin{frame}{this指向本次调用的那个对象}
+    \begin{Code}*{cpp}
+        \lstinputlisting{code/this.inc}
+    \end{Code}
+    \begin{itemize}
+        \item 假定\texttt{a}在2026年入学，\texttt{b}在2028年入学：上面两次调用分别得到\texttt{true}和\texttt{false}。
+        \item 在普通非静态成员函数中，\texttt{m\_entranceYear}相当于\texttt{this->m\_entranceYear}。
+        \item 调用传入年份，也隐含指定了\textbf{哪个对象}；不用自己把\texttt{this}写进参数表。
+    \end{itemize}
+    \alert{同一个成员函数可以服务多个对象，每次读取当前对象自己的数据。}
+\end{frame}
+
+\begin{frame}{只查看对象的函数，要在末尾写const}
+    \begin{Code}*{cpp}
+        \lstinputlisting{code/const-view.inc}
+    \end{Code}
+    \begin{itemize}
+        \item 参数表后的\texttt{const}约束\textbf{当前对象}：本例不能修改成员变量。
+        \item 这时\texttt{this}的类型为\texttt{const Student *}，不能通过它调用非const成员函数。
+        \item \texttt{getName()}返回姓名的一个值；外部修改这个返回值不会修改学生内部的姓名。
+    \end{itemize}
+    \alert{查看功能应声明为const，让普通对象和const对象都能使用。}
+\end{frame}
+
+\begin{frame}{少写const，函数体不改数据也会编译失败}
+    \begin{Code}*{cpp}
+        \lstinputlisting{code/const-error.inc}
+    \end{Code}
+    \begin{vspquotered}{原因与修正}
+        编译器依据函数声明判断能否调用，不因函数体“看起来只读”而放行。\\[5pt]
+        修正：\texttt{std::string getName() const \{ return m\_name; \}}
+    \end{vspquotered}
+    \small 参数中的\texttt{const}保护参数；函数末尾的\texttt{const}保护当前对象，位置与含义不同。
+\end{frame}
+
+\begin{frame}{一起判断：哪些函数应为const？}
+    \begin{Code}*{cpp}
+        \lstinputlisting{code/const-exercise.inc}
+    \end{Code}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{lll}
+        \textbf{调用者} & \textbf{const成员函数} & \textbf{非const成员函数}\\
+        \hline
+        普通\texttt{Student}对象 & 可以 & 可以\\
+        \texttt{const Student}对象 & 可以 & 不可以
+    \end{tabular}
+    \par\medskip
+    \alert{A可以调用，结果为true；B若取消注释会编译失败。修改姓名不属于查看。}
+\end{frame}

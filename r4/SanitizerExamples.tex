@@ -10,7 +10,7 @@
             \small 第一次乘法得到50000；第二次的数学结果为\alert{2500000000}。
         \end{column}
         \begin{column}{0.48\textwidth}
-            \small 在\texttt{slides/r4/}中启用UBSan：
+            \small 在\texttt{r4/}中启用UBSan：
             \lstset{basicstyle=\ttfamily\fontsize{6.4}{7.8}\selectfont,
                 numbers=none,xleftmargin=0pt,breakatwhitespace=true}
             \begin{Code}*{bash}
@@ -23,7 +23,7 @@
             \footnotesize 当前32位\texttt{int}上界是2147483647，第二次乘法触发有符号溢出UB。
         \end{column}
     \end{columns}
-    \note{本例使用固定参数，先让学生手算两轮结果。UBSan在result *= x处报告50000 * 50000不能由int表示。原程序与修复版演示副本位于工作区demo/power/，不要依赖原程序关闭检测后出现的某个回绕值。}
+    \note{本例使用固定参数，先让学生手算两轮结果。UBSan在result *= x处报告50000 * 50000不能由int表示。原程序与修复版分别位于code/sanitizer/power.c和code/fixed/power.c，不要依赖原程序关闭检测后出现的某个回绕值。}
 \end{frame}
 
 \begin{frame}{power：GDB定位与修复验证}
@@ -49,7 +49,7 @@
             \footnotesize 使用相同检查选项重新编译，输出\alert{2500000000}，无UBSan诊断。
         \end{column}
     \end{columns}
-    \note{条件断点位于power.c第6行，i==1表示第二次循环，断点停在执行乘法之前。本例结果可以由long long表示；宽类型并不保证任意底数与指数都不溢出，仍应根据输入及中间结果范围设计实现。完整修复版为code/fixed/power.c与工作区demo/power/power_fixed.c。GDB批处理脚本与变量值已经实测验证。}
+    \note{条件断点位于power.c第6行，i==1表示第二次循环，断点停在执行乘法之前。本例结果可以由long long表示；宽类型并不保证任意底数与指数都不溢出，仍应根据输入及中间结果范围设计实现。完整修复版为code/fixed/power.c。GDB批处理脚本与变量值已经实测验证。}
 \end{frame}
 
 \begin{frame}{数组循环：最后一次迭代访问了哪里？}
@@ -64,7 +64,7 @@
             \small 循环包含\texttt{i == 6}；此时访问\texttt{data[6]}，越过数组末尾。
         \end{column}
         \begin{column}{0.48\textwidth}
-            \small 在\texttt{slides/r4/}中单独启用ASan：
+            \small 在\texttt{r4/}中单独启用ASan：
             \lstset{basicstyle=\ttfamily\fontsize{6.4}{7.8}\selectfont,
                 numbers=none,xleftmargin=0pt,breakatwhitespace=true}
             \begin{Code}*{bash}
@@ -77,7 +77,7 @@
             \footnotesize 自增先读后写，本次先报告读取4字节；\texttt{data}范围为\texttt{[32, 56)}，偏移56已越界。
         \end{column}
     \end{columns}
-    \note{这是固定长度的栈数组例子。报告来自本程序实际执行，完整输出位于build/demo/output/array-loop-asan.txt，页面省略部分地址与调用栈。本页单独使用ASan以观察内存访问报告；同时启用UBSan时，也可能先出现数组下标越界诊断。工作区demo/array/提供同内容源码副本。}
+    \note{这是固定长度的栈数组例子。报告来自本程序实际执行，完整输出位于build/demo/output/array-loop-asan.txt，页面省略部分地址与调用栈。本页单独使用ASan以观察内存访问报告；同时启用UBSan时，也可能先出现数组下标越界诊断。完整源码为code/sanitizer/array_loop.c。}
 \end{frame}
 
 \begin{frame}{数组循环：用条件断点验证修复}

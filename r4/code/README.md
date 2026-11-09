@@ -67,7 +67,7 @@ python3 code/check-demos.py --require-gdb
 |---|---|
 | [commands/](commands/) | Bash编译片段与GDB命令，见下表 |
 | [input/](input/) | 固定输入：求和最大值、重复值、单元素、哨兵与溢出边界 |
-| [output/](output/) | 课件引用的历史实测诊断与会话；路径、地址、行号保留原记录 |
+| [output/](output/) | 课件引用的实测诊断与会话；文本路径和行号统一到包内源码，地址保留实测值 |
 | [build-demos.sh](build-demos.sh) | 用C17逐个编译独立程序 |
 | [check-demos.py](check-demos.py) | 检查现象、修复输出、Sanitizer与可选GDB会话 |
 | [check-behavior.py](check-behavior.py) | 检查行为分类示例，预期失败的编译也在此验证 |
@@ -100,7 +100,7 @@ python3 code/check-demos.py --require-gdb
 | [start-gdb.sh](commands/start-gdb.sh) | 第20页：启动HW1调试 |
 | [sum-pointer.gdb](commands/sum-pointer.gdb) | 第43、45页：3+5指针修复观察 |
 | [sum-value.gdb](commands/sum-value.gdb) | 第43、45页：3+5值传递观察 |
-| [use-local-tools.sh](commands/use-local-tools.sh) | 第12页：历史演示机环境；依赖本地build/tools，不随包分发 |
+| [check-server-tools.sh](commands/check-server-tools.sh) | 第12页：检查共享服务器中的GCC与GDB |
 | [verify-install.gdb](commands/verify-install.gdb) | 第13—15页：GDB帮助与退出 |
 | [verify-install.sh](commands/verify-install.sh) | 第13—15页：终端验证 |
 | [verify.sh](commands/verify.sh) | 第30页：HW1修复回归 |
