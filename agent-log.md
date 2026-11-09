@@ -446,3 +446,10 @@
 - 按用户要求将GitHub的1f01294照片更新合并到GitLab主线，保留双方提交历史；新增开发板／笔记本照片及许可说明，核心教学代码不变。
 - R7重新编译为25页，第11页包含两张照片，与此前隔离编译的GitHub版本逐页文本一致，无Overfull、Underfull或缺字诊断。
 - 本轮普通推送验证GitLab编译，不打tag，不触发课件Release或网站发布。
+
+## 2026.11.09 17:30
+
+- 根据用户要求正式发布R7为v0.3.9，指向a412539；pipeline768的build／release均成功，job1719提供八份PDF。R7保留当前课堂代码及照片，共25页。
+- 网站新增R7卡片，主讲孟祥琨，标注11月9日（周一）晚，含稳定PDF及计划视频占位；草稿构建与一次浏览器预览检查通过，经合并请求54发布，main构建pipeline770成功。
+- 已通过API确认线上SHA为fec63fb135f80ba76d7fc0c6f4f1316b6436513a；按Release原始字节初始化R7稳定资源，并触发既有同步服务，状态ok=true、tag=v0.3.9，八份托管PDF包含R7。
+- 公网PDF返回200并解析为25页，SHA-256为5bc0997475825a8795fc7b9c8ca25d75fb244f21e78cf766fb13b00b86c3c519，与Release资产一致；课程页为https://vsplab.cn/courses/cs100/，课件地址为https://vsplab.cn/resources/cs100/recitations/fall2026/CS100_Recitation7.pdf。
