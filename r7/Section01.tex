@@ -126,20 +126,26 @@
     \begin{columns}[T]
         \begin{column}{0.47\textwidth}
             \begin{vspquotered}{单片机开发板}
-                开放GPIO、芯片引脚等低层连接。\\[7pt]
-                开发者自由度高，也需要自己遵守电压、接线等限制。\\[7pt]
-                直接接触内部，影响内部状态的路径更多。
+                \begin{center}
+                    \includegraphics[width=0.90\linewidth,height=2.15cm,keepaspectratio]{image/arduino-uno.jpg}\\[-1pt]
+                    {\fontsize{5.5}{6.5}\selectfont 照片：\href{https://commons.wikimedia.org/wiki/File:Arduino_Uno_dllu.jpg}{Dllu} / \href{https://creativecommons.org/licenses/by-sa/4.0/}{CC BY-SA 4.0}}
+                \end{center}
+                \small 开放GPIO等低层连接，可以直接影响内部状态。\\[4pt]
+                开发者自由度高，也要遵守电压与接线限制。
             \end{vspquotered}
         \end{column}
         \begin{column}{0.47\textwidth}
             \begin{vspquotered}{日常使用的笔记本}
-                通常通过USB、键盘、电源键操作，通过屏幕查看结果。\\[7pt]
-                使用者通过约定接口完成任务，无需直接操作内部芯片。\\[7pt]
-                类似通过成员函数使用Student。
+                \begin{center}
+                    \includegraphics[width=0.90\linewidth,height=2.15cm,keepaspectratio]{image/laptop.jpg}\\[-1pt]
+                    {\fontsize{5.5}{6.5}\selectfont 照片：\href{https://commons.wikimedia.org/wiki/File:ThinkPad_T14.jpg}{Edvard10} / \href{https://creativecommons.org/publicdomain/zero/1.0/}{CC0 1.0}}
+                \end{center}
+                \small 通过USB、键盘、电源键操作，用屏幕查看结果。\\[4pt]
+                无需直接操作内部芯片，类似通过成员函数使用Student。
             \end{vspquotered}
         \end{column}
     \end{columns}
-    \medskip
-    \small 开发板开放引脚是有意的设计，不代表质量差。这里类比的是\textbf{接口边界与使用责任}。\\
+    \smallskip
+    \small 开发板开放GPIO是有意的设计，不是设计缺陷；这里类比的是\textbf{接口边界与使用责任}。\\
     \alert{回到Student：隐藏成员变量，开放经过检查的操作。}
 \end{frame}
